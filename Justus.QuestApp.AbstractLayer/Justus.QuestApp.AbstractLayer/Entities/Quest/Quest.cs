@@ -8,12 +8,9 @@ namespace Justus.QuestApp.AbstractLayer.Entities.Quest
     public abstract class Quest : IdentifiedEntity
     {
         /// <summary>
-        /// Default constructor.Initializes Children list.
+        /// Parents quest id.
         /// </summary>
-        protected Quest()
-        {
-            Children = new List<Quest>();
-        }
+        public abstract int ParentId { get; set; }
 
         /// <summary>
         /// Quest title.
@@ -26,18 +23,18 @@ namespace Justus.QuestApp.AbstractLayer.Entities.Quest
         public abstract string Description { get; set; }
 
         /// <summary>
-        /// Try to progress quest, which change its state.
+        /// Reference to parent quest.
         /// </summary>
-        public abstract void Progress();
+        public abstract Quest Parent { get; set; }
+
+        /// <summary>
+        /// Quest children.
+        /// </summary>
+        public abstract List<Quest> Children { get; set; }
 
         /// <summary>
         /// Current quest state.
         /// </summary>
         public QuestState CurrentState { get; set; }
-
-        /// <summary>
-        /// Quest children.
-        /// </summary>
-        public List<Quest> Children { get; }
     }
 }

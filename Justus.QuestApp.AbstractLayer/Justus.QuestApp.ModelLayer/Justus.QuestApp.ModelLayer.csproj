@@ -5,11 +5,11 @@
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9D27BB00-D325-4644-B1D2-B13196C4D8AC}</ProjectGuid>
+    <ProjectGuid>{72C61B17-7E0A-4C31-9AB4-2A5E0935166E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Justus.QuestApp.AbstractLayer</RootNamespace>
-    <AssemblyName>Justus.QuestApp.AbstractLayer</AssemblyName>
+    <RootNamespace>Justus.QuestApp.ModelLayer</RootNamespace>
+    <AssemblyName>Justus.QuestApp.ModelLayer</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,16 +35,10 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <Folder Include="Data\" />
+    <Folder Include="Entities\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\Command.cs" />
-    <Compile Include="Data\IAsyncDataLayerInterface.cs" />
-    <Compile Include="Data\IDataLayerInterface.cs" />
-    <Compile Include="Entities\IdentifiedEntity.cs" />
-    <Compile Include="Entities\Quest\Quest.cs" />
-    <Compile Include="Entities\Quest\QuestState.cs" />
-    <Compile Include="Model\AbstractQuestFacade.cs" />
-    <Compile Include="Model\IQuestManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

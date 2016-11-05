@@ -12,10 +12,12 @@ namespace Justus.QuestApp.AbstractLayer.Data
     /// </summary>
     public interface IDataLayerInterface<TEntity> : IDisposable where TEntity : IdentifiedEntity
     {
+
         /// <summary>
-        /// Opens connection to data storage.
+        /// Opens data storage.
         /// </summary>
-        void Open();
+        /// <param name="pathToStorage"></param>
+        void Open(string pathToStorage);
 
         /// <summary>
         /// Closes connection to data storage.

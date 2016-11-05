@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assemblies", "assemblies", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ABF62E69-20D2-4DBE-B078-D539D2557A3A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Justus.QuestApp.DataLayer", "Justus.QuestApp.DataLayer\Justus.QuestApp.DataLayer.csproj", "{B75CF226-5D52-4A6D-A6FD-2E755D80AA57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,11 +21,16 @@ Global
 		{9D27BB00-D325-4644-B1D2-B13196C4D8AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D27BB00-D325-4644-B1D2-B13196C4D8AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D27BB00-D325-4644-B1D2-B13196C4D8AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B75CF226-5D52-4A6D-A6FD-2E755D80AA57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B75CF226-5D52-4A6D-A6FD-2E755D80AA57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B75CF226-5D52-4A6D-A6FD-2E755D80AA57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B75CF226-5D52-4A6D-A6FD-2E755D80AA57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9D27BB00-D325-4644-B1D2-B13196C4D8AC} = {58D74921-E6B8-4C46-9963-D8950F5CA484}
+		{B75CF226-5D52-4A6D-A6FD-2E755D80AA57} = {58D74921-E6B8-4C46-9963-D8950F5CA484}
 	EndGlobalSection
 EndGlobal

@@ -26,18 +26,32 @@ namespace Justus.QuestApp.AbstractLayer.Data
         Task Close();
 
         /// <summary>
-        /// Saves entity.
+        /// Inserts entity.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        Task Save(TEntity entity);
+        Task Insert(TEntity entity);
 
         /// <summary>
-        /// Saves all entities.
+        /// Inserts all entities.
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        Task SaveAll(List<TEntity> entities);
+        Task InsertAll(List<TEntity> entities);
+
+        /// <summary>
+        /// Updates entity.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task Update(TEntity entity);
+
+        /// <summary>
+        /// Updates all entities.
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        Task UpdateAll(List<TEntity> entities);
 
         /// <summary>
         /// Returns entity by id.
@@ -51,5 +65,18 @@ namespace Justus.QuestApp.AbstractLayer.Data
         /// </summary>
         /// <returns></returns>
         Task<List<TEntity>> GetAll();
+
+        /// <summary>
+        /// Deletes by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task Delete(int id);
+
+        /// <summary>
+        /// Deletes all entities.
+        /// </summary>
+        /// <returns></returns>
+        Task DeleteAll();
     }
 }

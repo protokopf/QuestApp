@@ -12,7 +12,6 @@ namespace Justus.QuestApp.AbstractLayer.Data
     /// </summary>
     public interface IDataLayerInterface<TEntity> : IDisposable where TEntity : IdentifiedEntity
     {
-
         /// <summary>
         /// Opens data storage.
         /// </summary>
@@ -25,16 +24,28 @@ namespace Justus.QuestApp.AbstractLayer.Data
         void Close();
 
         /// <summary>
-        /// Saves entity.
+        /// Insert entity.
         /// </summary>
         /// <param name="entity"></param>
-        void Save(TEntity entity);
+        void Insert(TEntity entity);
 
         /// <summary>
-        /// Saves all entities.
+        /// Insert all entities.
         /// </summary>
         /// <param name="entities"></param>
-        void SaveAll(List<TEntity> entities);
+        void InsertAll(List<TEntity> entities);
+
+        /// <summary>
+        /// Update entity.
+        /// </summary>
+        /// <param name="entity"></param>
+        void Update(TEntity entity);
+
+        /// <summary>
+        /// Update all entities.
+        /// </summary>
+        /// <param name="entities"></param>
+        void UpdateAll(List<TEntity> entities);
 
         /// <summary>
         /// Returns entity by id.
@@ -48,5 +59,16 @@ namespace Justus.QuestApp.AbstractLayer.Data
         /// </summary>
         /// <returns></returns>
         List<TEntity> GetAll();
+
+        /// <summary>
+        /// Deletes entity by id.
+        /// </summary>
+        /// <param name="id"></param>
+        void Delete(int id);
+
+        /// <summary>
+        /// Deletes all entities.
+        /// </summary>
+        void DeleteAll();
     }
 }

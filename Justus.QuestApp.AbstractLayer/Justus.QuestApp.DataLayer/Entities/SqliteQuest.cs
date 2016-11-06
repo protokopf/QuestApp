@@ -24,7 +24,7 @@ namespace Justus.QuestApp.DataLayer.Entities
         #region Quest overriding
 
         ///<inheritdoc/>
-        [PrimaryKey, AutoIncrement, Column("Id")]
+        [PrimaryKey, AutoIncrement,Unique]
         public override int Id { get; set; }
 
         ///<inheritdoc/>

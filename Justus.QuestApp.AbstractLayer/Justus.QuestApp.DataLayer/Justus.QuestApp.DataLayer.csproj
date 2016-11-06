@@ -41,6 +41,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\SqliteDataStorage.cs" />
     <Compile Include="Entities\SqliteQuest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

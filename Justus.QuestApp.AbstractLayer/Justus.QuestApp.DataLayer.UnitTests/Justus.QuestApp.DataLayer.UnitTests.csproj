@@ -34,6 +34,10 @@
       <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,11 +48,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\SqliteDataStorageTests.cs" />
+    <Compile Include="Data\Stubs\FakeQuest.cs" />
+    <Compile Include="Data\Stubs\FakeQuestStorage.cs" />
+    <Compile Include="Data\GeneralQuestStorageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Justus.QuestApp.AbstractLayer\Justus.QuestApp.AbstractLayer.csproj">
+      <Project>{9d27bb00-d325-4644-b1d2-b13196c4d8ac}</Project>
+      <Name>Justus.QuestApp.AbstractLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Justus.QuestApp.DataLayer\Justus.QuestApp.DataLayer.csproj">
+      <Project>{b75cf226-5d52-4a6d-a6fd-2e755d80aa57}</Project>
+      <Name>Justus.QuestApp.DataLayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

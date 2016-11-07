@@ -18,7 +18,6 @@ namespace Justus.QuestApp.DataLayer.Entities
         /// </summary>
         public SqliteQuest()
         {
-            Children = new List<Quest>();
         }
 
         #region Quest overriding

@@ -8,75 +8,73 @@ using Justus.QuestApp.AbstractLayer.Entities;
 namespace Justus.QuestApp.AbstractLayer.Data
 {
     /// <summary>
-    /// Interface for data storages, that implement functionality in asynchronous way.
+    /// Interface to data layer.
     /// </summary>
-    public interface IAsyncDataLayerInterface<TEntity> : IDisposable where TEntity : IdentifiedEntity
+    public interface IDataAccessInterface<TEntity> : IDisposable where TEntity : IdentifiedEntity
     {
         /// <summary>
         /// Opens data storage.
         /// </summary>
         /// <param name="pathToStorage"></param>
-        /// <returns></returns>
-        Task Open(string pathToStorage);
+        void Open(string pathToStorage);
 
         /// <summary>
-        /// Closes data storage.
+        /// Closes connection to data storage.
+        /// </summary>
+        void Close();
+
+        /// <summary>
+        /// Determines, if access is closed.
         /// </summary>
         /// <returns></returns>
-        Task Close();
+        bool IsClosed();
 
         /// <summary>
-        /// Inserts entity.
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        Task Insert(TEntity entity);
-
-        /// <summary>
-        /// Inserts all entities.
-        /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        Task InsertAll(List<TEntity> entities);
-
-        /// <summary>
-        /// Updates entity.
+        /// Insert entity.
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns></returns>
-        Task Update(TEntity entity);
+        void Insert(TEntity entity);
 
         /// <summary>
-        /// Updates all entities.
+        /// Insert all entities.
         /// </summary>
         /// <param name="entities"></param>
-        /// <returns></returns>
-        Task UpdateAll(List<TEntity> entities);
+        void InsertAll(List<TEntity> entities);
+
+        /// <summary>
+        /// Update entity.
+        /// </summary>
+        /// <param name="entity"></param>
+        void Update(TEntity entity);
+
+        /// <summary>
+        /// Update all entities.
+        /// </summary>
+        /// <param name="entities"></param>
+        void UpdateAll(List<TEntity> entities);
 
         /// <summary>
         /// Returns entity by id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<TEntity> Get(int id);
+        TEntity Get(int id);
 
         /// <summary>
-        /// Returns all entities.
+        /// Returns all entities from data storage.
         /// </summary>
         /// <returns></returns>
-        Task<List<TEntity>> GetAll();
+        List<TEntity> GetAll();
 
         /// <summary>
-        /// Deletes by id.
+        /// Deletes entity by id.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
-        Task Delete(int id);
+        void Delete(int id);
 
         /// <summary>
         /// Deletes all entities.
         /// </summary>
-        /// <returns></returns>
-        Task DeleteAll();
+        void DeleteAll();
     }
 }

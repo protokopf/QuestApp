@@ -11,19 +11,10 @@ namespace Justus.QuestApp.DataLayer.Entities
     [Table("Quests")]
     public class SqliteQuest : Quest
     {
-        private Quest _parent;
-
-        /// <summary>
-        /// Default constructor. Initialize Children list.
-        /// </summary>
-        public SqliteQuest()
-        {
-        }
-
         #region Quest overriding
 
         ///<inheritdoc/>
-        [PrimaryKey, AutoIncrement,Unique]
+        [PrimaryKey]
         public override int Id { get; set; }
 
         ///<inheritdoc/>
@@ -36,18 +27,8 @@ namespace Justus.QuestApp.DataLayer.Entities
         public override string Description { get; set; }
 
         ///<inheritdoc/>
-        public override Quest Parent
-        {
-            get
-            {
-                return _parent;
-            }
-            set
-            {
-                _parent = value;
-                ParentId = _parent.Id;
-            }
-        }
+        [Ignore]
+        public override Quest Parent { get; set; }
 
         ///<inheritdoc/>
         [Ignore]

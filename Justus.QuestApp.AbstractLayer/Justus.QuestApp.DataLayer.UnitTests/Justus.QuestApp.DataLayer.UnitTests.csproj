@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="Data\Stubs\FakeQuest.cs" />
     <Compile Include="Data\Stubs\FakeQuestStorage.cs" />
-    <Compile Include="Data\GeneralQuestStorageTests.cs" />
+    <Compile Include="Data\BindedQuestsDataStorageTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

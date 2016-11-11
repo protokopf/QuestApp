@@ -13,12 +13,12 @@ namespace Justus.QuestApp.DataLayer.UnitTests.Data.Stubs
         public List<Quest> QuestStorage { get; set; }
         private bool _isClosed = true;
 
-        public void Dispose()
+        public virtual void  Dispose()
         {
             Close();
         }
 
-        public void Open(string pathToStorage)
+        public virtual void Open(string pathToStorage)
         {
             if(QuestStorage == null)
             {
@@ -27,77 +27,74 @@ namespace Justus.QuestApp.DataLayer.UnitTests.Data.Stubs
             _isClosed = false;
         }
 
-        public void Close()
+        public virtual void Close()
         {
             _isClosed = true;
         }
 
-        public bool IsClosed()
+        public virtual bool IsClosed()
         {
             return _isClosed;
         }
 
-        public void Insert(Quest entity)
+        public virtual void Insert(Quest entity)
         {
-            if(QuestStorage != null)
+            QuestStorage?.Add(entity);
+        }
+
+        public virtual void InsertAll(List<Quest> entities)
+        {
+            QuestStorage?.AddRange(entities);
+        }
+
+        public virtual void Update(Quest entity)
+        {
+            if (QuestStorage != null)
             {
+                QuestStorage.RemoveAll(x => x.Id == entity.Id);
                 QuestStorage.Add(entity);
             }
         }
 
-        public void InsertAll(List<Quest> entities)
+        public virtual void UpdateAll(List<Quest> entities)
         {
             if (QuestStorage != null)
             {
+                foreach (Quest quest in entities)
+                {
+                    QuestStorage.RemoveAll(x => x.Id == quest.Id);
+                }
                 QuestStorage.AddRange(entities);
             }
         }
 
-        public void Update(Quest entity)
+        public virtual Quest Get(int id)
         {
+            return QuestStorage?.Find(x => x.Id == id);
         }
 
-        public void UpdateAll(List<Quest> entities)
+        public virtual List<Quest> GetAll()
         {
-            
-        }
-
-        public Quest Get(int id)
-        {
-            if (QuestStorage != null)
+            List<Quest> clonedList = new List<Quest>(QuestStorage.Count);
+            foreach (Quest quest in QuestStorage)
             {
-                return QuestStorage.Find(x => x.Id == id);
+                clonedList.Add(quest);
             }
-            return null;
+            return clonedList;
         }
 
-        public List<Quest> GetAll()
+        public virtual void Delete(int id)
         {
-            if (QuestStorage != null)
+            Quest quest = QuestStorage?.Find(x => x.Id == id);
+            if(quest != null)
             {
-                return QuestStorage;
-            }
-            return null;
-        }
-
-        public void Delete(int id)
-        {
-            if (QuestStorage != null)
-            {
-                Quest quest = QuestStorage.Find(x => x.Id == id);
-                if(quest != null)
-                {
-                    QuestStorage.Remove(quest);
-                }
+                QuestStorage.Remove(quest);
             }
         }
 
-        public void DeleteAll()
+        public virtual void DeleteAll()
         {
-            if (QuestStorage != null)
-            {
-                QuestStorage.Clear();
-            }
+            QuestStorage?.Clear();
         }
     }
 }

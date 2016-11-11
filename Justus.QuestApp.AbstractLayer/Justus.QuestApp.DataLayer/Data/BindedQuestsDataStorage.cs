@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Data;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.DataLayer.Entities;
-using SQLite;
 
 namespace Justus.QuestApp.DataLayer.Data
 {
@@ -16,6 +12,7 @@ namespace Justus.QuestApp.DataLayer.Data
     public class BindedQuestsDataStorage : IDataAccessInterface<Quest>
     {
         private readonly IDataAccessInterface<Quest> _innerStorage;
+
         private List<Quest> _innerCache;
         private bool _shouldRetrieveAllData;
         private int _currentId;
@@ -82,7 +79,7 @@ namespace Justus.QuestApp.DataLayer.Data
 
             if (entity.Children != null)
             {
-                RecursiveInsert(entity,entity.Children);
+                RecursiveInsert(entity.Children);
             }                  
         }
 
@@ -94,17 +91,8 @@ namespace Justus.QuestApp.DataLayer.Data
             {
                 throw new ArgumentNullException(nameof(entities));
             }
-
-            _innerStorage.InsertAll(entities);
             _innerCache.AddRange(entities);
-
-            foreach (Quest entity in entities)
-            {
-                if (entity.Children != null)
-                {
-                    RecursiveInsert(entity, entity.Children);
-                }
-            }
+            RecursiveInsert(entities);
         }
 
         ///<inheritdoc/>
@@ -116,7 +104,6 @@ namespace Justus.QuestApp.DataLayer.Data
                 throw new ArgumentNullException(nameof(entity));
             }
             _innerStorage.Update(entity);
-            _shouldRetrieveAllData = true;
         }
 
         ///<inheritdoc/>
@@ -128,7 +115,6 @@ namespace Justus.QuestApp.DataLayer.Data
                 throw new ArgumentNullException(nameof(entities));
             }
             _innerStorage.UpdateAll(entities);
-            _shouldRetrieveAllData = true;
         }
 
         ///<inheritdoc/>
@@ -151,8 +137,17 @@ namespace Justus.QuestApp.DataLayer.Data
         public void Delete(int id)
         {
             ThrowIfClosed();
+            RefreshCache();
+            Quest toDelete = _innerCache.Find(x => x.Id == id);
+            if (toDelete != null)
+            {
+                _innerCache.Remove(toDelete);
+                if (toDelete.Children != null)
+                {
+                    RecursiveDelete(toDelete.Children);
+                }
+            }
             _innerStorage.Delete(id);
-            _shouldRetrieveAllData = true;
         }
 
         ///<inheritdoc/>
@@ -160,7 +155,7 @@ namespace Justus.QuestApp.DataLayer.Data
         {
             ThrowIfClosed();
             _innerStorage.DeleteAll();
-            _shouldRetrieveAllData = true;
+            _innerCache.Clear();
         }
 
         ///<inheritdoc/>
@@ -192,20 +187,38 @@ namespace Justus.QuestApp.DataLayer.Data
             }
         }
 
-        private void RecursiveInsert(Quest parent, List<Quest> children)
+        private void RecursiveInsert(List<Quest> children)
         {
             if (children.Count > 0)
             {             
                 foreach (Quest quest in children)
                 {
                     SetId(quest);
-                    quest.ParentId = parent.Id;
+                    if (quest.Parent != null)
+                    {
+                        quest.ParentId = quest.Parent.Id;
+                    }
                     if (quest.Children != null)
                     {
-                        RecursiveInsert(quest, quest.Children);
+                        RecursiveInsert(quest.Children);
                     }
                 }
                 _innerStorage.InsertAll(children);
+            }
+        }
+
+        private void RecursiveDelete(List<Quest> children)
+        {
+            if (children.Count > 0)
+            {
+                foreach (Quest quest in children)
+                {                   
+                    if (quest.Children != null)
+                    {
+                        RecursiveDelete(quest.Children);
+                    }
+                    _innerStorage.Delete(quest.Id);
+                }
             }
         }
 
@@ -219,40 +232,39 @@ namespace Justus.QuestApp.DataLayer.Data
 
         private void RefreshCache()
         {
+            //If we should retrieve data
             if (_shouldRetrieveAllData)
             {
+                //Retrieve data from 'low level' storage
                 _innerCache = _innerStorage.GetAll();
+                //Bind all entities
                 if (_innerCache != null)
                 {
-                    foreach (Quest quest in _innerCache)
-                    {
-                        BindWithChildren(quest,_innerCache);
-                    }
-                }
+                    CycleBinding(_innerCache);
+                    //Remain only top-level entities.
+                    _innerCache.RemoveAll(quest => quest.Parent != null);
+                }        
                 _shouldRetrieveAllData = false;
             }
         }
 
-        private void BindWithChildren(Quest quest, List<Quest> others)
+        private void CycleBinding(List<Quest> toBind)
         {
-            if (quest == null || others == null)
+            int length = toBind.Count;
+            for (int main = 0; main < length; ++main)
             {
-                return;
-            }
-            quest.Children = new List<Quest>();
-            int id = quest.Id;
-            int othersLength = _innerCache.Count;
-            for (int i = 0; i < othersLength; ++i)
-            {
-                Quest current = _innerCache[i];
-                if (id == current.ParentId)
+                Quest mainQuest = toBind[main];
+                mainQuest.Children = new List<Quest>();
+                for (int sub = 0; sub < length; ++sub)
                 {
-                    current.Parent = quest;
-                    current.ParentId = quest.Id;
-                    quest.Children.Add(current);
+                    Quest subQuest = toBind[sub];
+                    if (subQuest.ParentId == mainQuest.Id)
+                    {
+                        mainQuest.Children.Add(subQuest);
+                        subQuest.Parent = mainQuest;
+                    }
                 }
             }
-        
         }
 
         #endregion

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Justus.QuestApp.AbstractLayer.Model
+namespace Justus.QuestApp.AbstractLayer.Helpers
 {
     /// <summary>
     /// Interface for task wrappers.

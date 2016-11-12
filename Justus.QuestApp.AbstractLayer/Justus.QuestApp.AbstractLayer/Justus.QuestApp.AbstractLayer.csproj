@@ -43,8 +43,9 @@
     <Compile Include="Entities\Quest\Quest.cs" />
     <Compile Include="Entities\Quest\QuestState.cs" />
     <Compile Include="Model\AbstractQuestFacade.cs" />
+    <Compile Include="Factories\IQuestCreator.cs" />
     <Compile Include="Model\IQuestManager.cs" />
-    <Compile Include="Model\ITaskWrapper.cs" />
+    <Compile Include="Helpers\ITaskWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

@@ -1,42 +1,134 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
-using Justus.QuestApp.ModelLayer.Model;
 using Justus.QuestApp.ModelLayer.Model.QuestManagement;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
-using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using NUnit.Framework;
 
-namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
+namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.QuestManagementTest
 {
     [TestFixture]
     class RecursiveQuestManagetTest
     {
-        #region Help methods
-
-        
-
-        #endregion
-
         [Test]
         public void StartWithNullQuestTest()
         {
             //Arrange
-            IQuestManager manager = new RecursiveQuestManager();
+            IQuestActionManager actionManager = new RecursiveQuestActionManager();
 
             //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => manager.Start(null));
-
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => actionManager.Start(null));
 
             //Assert
             Assert.IsNotNull(ex);
             Assert.AreEqual("quest", ex.ParamName);
+        }
+
+        [Test]
+        public void StartSuccessfulWithAllParentsTest()
+        {
+            //Arrange
+            IQuestActionManager manager = new RecursiveQuestActionManager();
+            Quest quest = QuestHelper.CreateQuest(QuestState.Ready);
+            quest.Parent = QuestHelper.CreateQuest(QuestState.Ready);
+            quest.Parent.Parent = QuestHelper.CreateQuest(QuestState.Ready);
+
+            //Act
+            manager.Start(quest);
+
+            //Assert
+            Assert.AreEqual(QuestState.Progress, quest.CurrentState);
+            Quest parent = quest.Parent;
+            while (parent != null)
+            {
+                Assert.AreEqual(QuestState.Progress, parent.CurrentState);
+                parent = parent.Parent;
+            }
+        }
+
+        [Test]
+        public void IdleWithNullQuestTest()
+        {
+            //Arrange
+            IQuestActionManager actionManager = new RecursiveQuestActionManager();
+
+            //Act
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => actionManager.Idle(null));
+
+            //Assert
+            Assert.IsNotNull(ex);
+            Assert.AreEqual("quest", ex.ParamName);
+        }
+
+        [Test]
+        public void IdleSuccessfulWithAllChildrenTest()
+        {
+            //Arrange
+            IQuestActionManager manager = new RecursiveQuestActionManager();
+            Quest quest = QuestHelper.CreateCompositeQuest(2, 2, QuestState.Progress);
+
+            //Act
+            manager.Idle(quest);
+
+            //Assert
+            Assert.AreEqual(QuestState.Ready, quest.CurrentState);
+            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(quest.Children, q => q.CurrentState == QuestState.Ready));
+        }
+
+        [Test]
+        public void FailWithNullQuestTest()
+        {
+            //Arrange
+            IQuestActionManager actionManager = new RecursiveQuestActionManager();
+
+            //Act
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => actionManager.Fail(null));
+
+            //Assert
+            Assert.IsNotNull(ex);
+            Assert.AreEqual("quest", ex.ParamName);
+        }
+
+        [Test]
+        public void FailSuccessfulTest()
+        {
+            //Arrange
+            IQuestActionManager manager = new RecursiveQuestActionManager();
+            Quest quest = QuestHelper.CreateQuest(QuestState.Progress);
+
+            //Act
+            manager.Fail(quest);
+
+            //Assert
+            Assert.AreEqual(QuestState.Failed, quest.CurrentState);
+        }
+
+        [Test]
+        public void FinishWithNullQuestTest()
+        {
+            //Arrange
+            IQuestActionManager actionManager = new RecursiveQuestActionManager();
+
+            //Act
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => actionManager.Finish(null));
+
+            //Assert
+            Assert.IsNotNull(ex);
+            Assert.AreEqual("quest", ex.ParamName);
+        }
+
+        [Test]
+        public void FinishSuccessfulTest()
+        {
+            //Arrange
+            IQuestActionManager manager = new RecursiveQuestActionManager();
+            Quest quest = QuestHelper.CreateQuest(QuestState.Progress);
+
+            //Act
+            manager.Finish(quest);
+
+            //Assert
+            Assert.AreEqual(QuestState.Done, quest.CurrentState);
         }
 
     }

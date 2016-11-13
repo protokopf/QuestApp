@@ -39,7 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Factories\SqliteQuestCreator.cs" />
-    <Compile Include="Model\QuestManagement\RecursiveQuestManager.cs" />
+    <Compile Include="Model\QuestManagement\RecursiveQuestActionManager.cs" />
     <Compile Include="Model\QuestManagement\Validators\StartQuestValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -11,24 +11,30 @@ namespace Justus.QuestApp.AbstractLayer.Model
     /// <summary>
     /// Interface for types, that implement quest progressors logic.
     /// </summary>
-    public interface IQuestManager
+    public interface IQuestActionManager
     {
         /// <summary>
-        /// Starts quest.
+        /// Mark quest as Progress.
         /// </summary>
         /// <param name="quest"></param>
-        Response Start(Quest quest);
+        void Start(Quest quest);
 
         /// <summary>
-        /// Finishes quest.
+        /// Mark quest as Done.
         /// </summary>
         /// <param name="quest"></param>
-        Response Finish(Quest quest);
+        void Finish(Quest quest);
 
         /// <summary>
-        /// Mark quest as failed.
+        /// Mark quest as Failed.
         /// </summary>
         /// <param name="quest"></param>
-        Response Fail(Quest quest);
+        void Fail(Quest quest);
+
+        /// <summary>
+        /// Mark quest as Ready.
+        /// </summary>
+        /// <param name="quest"></param>
+        void Idle(Quest quest);
     }
 }

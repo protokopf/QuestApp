@@ -45,7 +45,7 @@
     <Compile Include="Entities\Quest\QuestState.cs" />
     <Compile Include="Model\AbstractQuestFacade.cs" />
     <Compile Include="Factories\IQuestCreator.cs" />
-    <Compile Include="Model\IQuestManager.cs" />
+    <Compile Include="Model\IQuestActionManager.cs" />
     <Compile Include="Helpers\ITaskWrapper.cs" />
     <Compile Include="Model\IQuestProgressCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

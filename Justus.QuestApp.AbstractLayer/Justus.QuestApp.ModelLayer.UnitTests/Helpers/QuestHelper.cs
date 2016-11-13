@@ -26,5 +26,33 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
                 Parent = null
             };
         }
+
+        public static Quest CreateCompositeQuest(int compositionLevel, int childNumber, QuestState state)
+        {
+            Quest quest = CreateQuest(state);
+            if (compositionLevel == 0 || childNumber == 0)
+            {
+                return quest;
+            }
+            for (int i = 0; i < childNumber; ++i)
+            {
+                Quest child = CreateCompositeQuest(compositionLevel - 1, childNumber, state);
+                child.Parent = quest;
+                quest.Children.Add(child);
+            }
+            return quest;
+        }
+
+        public static bool CheckThatAllQuestsHierarchyMatchPredicate(List<Quest> quests, Func<Quest,bool> predicate)
+        {
+            foreach (Quest quest in quests)
+            {
+                if (!predicate( quest) || !CheckThatAllQuestsHierarchyMatchPredicate(quest.Children, predicate))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

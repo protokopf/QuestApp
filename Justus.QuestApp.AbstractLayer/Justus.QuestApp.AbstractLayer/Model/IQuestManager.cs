@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 
 namespace Justus.QuestApp.AbstractLayer.Model
@@ -16,18 +17,18 @@ namespace Justus.QuestApp.AbstractLayer.Model
         /// Starts quest.
         /// </summary>
         /// <param name="quest"></param>
-        void Start(Quest quest);
+        Response Start(Quest quest);
 
         /// <summary>
         /// Finishes quest.
         /// </summary>
         /// <param name="quest"></param>
-        void Finish(Quest quest);
+        Response Finish(Quest quest);
 
         /// <summary>
         /// Mark quest as failed.
         /// </summary>
         /// <param name="quest"></param>
-        void Fail(Quest quest);
+        Response Fail(Quest quest);
     }
 }

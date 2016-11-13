@@ -36,10 +36,11 @@
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
     <Folder Include="Entities\" />
-    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Factories\SqliteQuestCreator.cs" />
+    <Compile Include="Model\QuestManagement\RecursiveQuestManager.cs" />
+    <Compile Include="Model\QuestManagement\Validators\StartQuestValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

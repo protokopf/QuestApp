@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Data\IDataAccessInterface.cs" />
+    <Compile Include="Entities\Response.cs" />
     <Compile Include="Entities\IdentifiedEntity.cs" />
     <Compile Include="Entities\Quest\Quest.cs" />
     <Compile Include="Entities\Quest\QuestState.cs" />
@@ -46,7 +47,9 @@
     <Compile Include="Factories\IQuestCreator.cs" />
     <Compile Include="Model\IQuestManager.cs" />
     <Compile Include="Helpers\ITaskWrapper.cs" />
+    <Compile Include="Model\IQuestProgressCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\IQuestValidator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

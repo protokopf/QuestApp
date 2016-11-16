@@ -47,7 +47,9 @@
     <Compile Include="FactoriesTest\SqliteQuestCreatorTest.cs" />
     <Compile Include="Helpers\QuestHelper.cs" />
     <Compile Include="ModelTest\QuestManagementTest\RecursiveQuestManagetTest.cs" />
-    <Compile Include="ModelTest\QuestManagementTest\ValidatorsTest\StartQuestValidatorTest.cs" />
+    <Compile Include="ValidatorsTest\ActionsTest\FailQuestValidatorTest.cs" />
+    <Compile Include="ValidatorsTest\ActionsTest\FinishQuestValidatorTest.cs" />
+    <Compile Include="ValidatorsTest\ActionsTest\StartQuestValidatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\FakeQuest.cs" />
   </ItemGroup>

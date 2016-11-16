@@ -27,7 +27,7 @@ namespace Justus.QuestApp.DataLayer.UnitTests.Data
                 Id = id,
                 Title = "title",
                 Description = "description",                
-                CurrentState = QuestState.Ready,
+                CurrentState = QuestState.Idle,
                 Children = new List<Quest>()              
             };
         }

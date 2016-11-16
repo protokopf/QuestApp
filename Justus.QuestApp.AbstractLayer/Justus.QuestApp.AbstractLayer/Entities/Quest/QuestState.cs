@@ -8,7 +8,7 @@
         /// <summary>
         /// Quest is ready for picking up.
         /// </summary>
-        Ready = 0,
+        Idle = 0,
 
         /// <summary>
         /// Quest is in progress now.

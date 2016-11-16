@@ -29,9 +29,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.QuestManagementTest
         {
             //Arrange
             IQuestActionManager manager = new RecursiveQuestActionManager();
-            Quest quest = QuestHelper.CreateQuest(QuestState.Ready);
-            quest.Parent = QuestHelper.CreateQuest(QuestState.Ready);
-            quest.Parent.Parent = QuestHelper.CreateQuest(QuestState.Ready);
+            Quest quest = QuestHelper.CreateQuest(QuestState.Idle);
+            quest.Parent = QuestHelper.CreateQuest(QuestState.Idle);
+            quest.Parent.Parent = QuestHelper.CreateQuest(QuestState.Idle);
 
             //Act
             manager.Start(quest);
@@ -71,8 +71,8 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.QuestManagementTest
             manager.Idle(quest);
 
             //Assert
-            Assert.AreEqual(QuestState.Ready, quest.CurrentState);
-            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(quest.Children, q => q.CurrentState == QuestState.Ready));
+            Assert.AreEqual(QuestState.Idle, quest.CurrentState);
+            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(quest.Children, q => q.CurrentState == QuestState.Idle));
         }
 
         [Test]

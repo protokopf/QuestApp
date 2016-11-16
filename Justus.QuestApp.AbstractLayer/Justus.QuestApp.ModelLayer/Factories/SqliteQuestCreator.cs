@@ -18,7 +18,7 @@ namespace Justus.QuestApp.ModelLayer.Factories
             return new SqliteQuest()
             {
                 Children = new List<Quest>(),
-                CurrentState = QuestState.Ready
+                CurrentState = QuestState.Idle
             };
         }
 

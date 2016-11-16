@@ -3,7 +3,6 @@ using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.AbstractLayer.Validators;
-using Justus.QuestApp.ModelLayer.Model.QuestManagement.Validators;
 
 namespace Justus.QuestApp.ModelLayer.Model.QuestManagement
 {
@@ -52,7 +51,7 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestManagement
             {
                 throw new ArgumentNullException(nameof(quest));
             }
-            AssignStateAllChildHierarchy(quest, QuestState.Ready);
+            AssignStateAllChildHierarchy(quest, QuestState.Idle);
         }
 
         #endregion

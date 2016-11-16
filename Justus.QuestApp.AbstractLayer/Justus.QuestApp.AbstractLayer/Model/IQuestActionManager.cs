@@ -32,7 +32,7 @@ namespace Justus.QuestApp.AbstractLayer.Model
         void Fail(Quest quest);
 
         /// <summary>
-        /// Mark quest as Ready.
+        /// Mark quest as Idle.
         /// </summary>
         /// <param name="quest"></param>
         void Idle(Quest quest);

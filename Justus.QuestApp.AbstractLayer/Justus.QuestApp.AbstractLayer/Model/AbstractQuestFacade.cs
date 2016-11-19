@@ -16,9 +16,9 @@ namespace Justus.QuestApp.AbstractLayer.Model
         /// <summary>
         /// Returns quest by IdentifiedEntity object.
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="predicate"></param>
         /// <returns></returns>
-        public abstract Quest GetQuest(IdentifiedEntity entity);
+        public abstract Quest GetQuest(Func<Quest> predicate);
 
         /// <summary>
         /// Saves quest.

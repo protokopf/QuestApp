@@ -1,11 +1,11 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
-using Justus.QuestApp.ModelLayer.Model.QuestManagement;
+using Justus.QuestApp.ModelLayer.Model;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using NUnit.Framework;
 
-namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.QuestManagementTest
+namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 {
     [TestFixture]
     class RecursiveQuestManagetTest
@@ -129,6 +129,55 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.QuestManagementTest
 
             //Assert
             Assert.AreEqual(QuestState.Done, quest.CurrentState);
+        }
+
+        [Test]
+        public void FinishAllParentHierarchyTest()
+        {
+            //Arrange
+            IQuestActionManager manager = new RecursiveQuestActionManager();
+
+            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, QuestState.Done);
+            parent.CurrentState = QuestState.Progress;
+
+            Quest current = parent;
+            while (current.Children.Count != 0)
+            {
+                current.Children[0].CurrentState = QuestState.Progress;
+                current = current.Children[0];
+            }
+
+            //Act
+            manager.Finish(current);
+
+            Assert.AreEqual(QuestState.Done, current.CurrentState);
+            Assert.AreEqual(QuestState.Done, parent.CurrentState);
+            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.CurrentState == QuestState.Done));
+        }
+
+        [Test]
+        public void FinishAllParentHierarchyFailTest()
+        {
+            //Arrange
+            IQuestActionManager manager = new RecursiveQuestActionManager();
+
+            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, QuestState.Done);
+            parent.CurrentState = QuestState.Progress;
+
+            Quest current = parent;
+            current.Children[0].Children[1].CurrentState = QuestState.Progress;
+            while (current.Children.Count != 0)
+            {
+                current.Children[0].CurrentState = QuestState.Progress;
+                current = current.Children[0];
+            }
+
+            //Act
+            manager.Finish(current);
+
+            Assert.AreEqual(QuestState.Done, current.CurrentState);
+            Assert.AreNotEqual(QuestState.Done, parent.CurrentState);
+            Assert.IsFalse(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.CurrentState == QuestState.Done));
         }
 
     }

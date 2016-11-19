@@ -17,7 +17,6 @@ namespace Justus.QuestApp.DataLayer.UnitTests.Data
     [TestFixture]
     class BindedQuestsDataStorageTest
     {
-
         #region Help methods
 
         private Quest CreateQuest(int id = 0)

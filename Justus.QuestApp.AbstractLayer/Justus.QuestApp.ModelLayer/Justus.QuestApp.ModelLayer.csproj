@@ -39,9 +39,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Factories\SqliteQuestCreator.cs" />
-    <Compile Include="Model\QuestManagement\RecursiveQuestActionManager.cs" />
+    <Compile Include="Helpers\ServiceLocator.cs" />
+    <Compile Include="Model\RecursiveQuestActionManager.cs" />
+    <Compile Include="Model\RecursiveQuestProgressCounter.cs" />
     <Compile Include="Validators\Actions\FailQuestValidator.cs" />
     <Compile Include="Validators\Actions\FinishQuestVaidator.cs" />
+    <Compile Include="Validators\Actions\IdleQuestValidator.cs" />
     <Compile Include="Validators\Actions\StartQuestValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

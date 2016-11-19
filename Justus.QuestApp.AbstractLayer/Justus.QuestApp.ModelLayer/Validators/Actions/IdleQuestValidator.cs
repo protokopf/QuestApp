@@ -10,9 +10,9 @@ using Justus.QuestApp.AbstractLayer.Validators;
 namespace Justus.QuestApp.ModelLayer.Validators.Actions
 {
     /// <summary>
-    /// Validates, whether quest can be failed or not.
+    /// Validates, whether quest can be idled or not.
     /// </summary>
-    public class FailQuestValidator : IQuestValidator
+    public class IdleQuestValidator : IQuestValidator
     {
         #region IQuestValidator implementation
 
@@ -24,31 +24,13 @@ namespace Justus.QuestApp.ModelLayer.Validators.Actions
                 throw new ArgumentNullException(nameof(quest));
             }
             Response result = new Response();
-            if (quest.CurrentState != QuestState.Progress)
+            if (quest.CurrentState == QuestState.Idle)
             {
                 result.Errors.Add("ERR_QUEST_ACT_WRONG_STATE");
-                return result;
-            }
-            if (AreChildrenFailed(quest.Children) == false)
-            {
-                result.Errors.Add("ERR_QUEST_ACT_CHILDREN_NOT_SAME_STATE");
             }
             return result;
         }
-
+         
         #endregion
-
-        private bool AreChildrenFailed(List<Quest> children)
-        {
-            int length = children.Count;
-            for (int i = 0; i < length; ++i)
-            {
-                if (children[i].CurrentState != QuestState.Failed)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
     }
 }

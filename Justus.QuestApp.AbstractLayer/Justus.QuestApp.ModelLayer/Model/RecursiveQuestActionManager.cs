@@ -1,10 +1,9 @@
 ﻿using System;
-using Justus.QuestApp.AbstractLayer.Entities;
+using System.Collections.Generic;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
-using Justus.QuestApp.AbstractLayer.Validators;
 
-namespace Justus.QuestApp.ModelLayer.Model.QuestManagement
+namespace Justus.QuestApp.ModelLayer.Model
 {
     /// <summary>
     /// Manage quests in recursive way.
@@ -31,7 +30,7 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestManagement
             {
                 throw new ArgumentNullException(nameof(quest));
             }
-            quest.CurrentState = QuestState.Done;
+            AssignStateAllParentHierarchyIfSiblingsHasSameState(quest, QuestState.Done);
         }
 
         ///<inheritdoc/>
@@ -75,6 +74,32 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestManagement
             {
                 AssignStateAllChildHierarchy(quest.Children[i], state);
             }
+        }
+
+        private void AssignStateAllParentHierarchyIfSiblingsHasSameState(Quest parent, QuestState state)
+        {
+            if (parent == null)
+            {
+                return;
+            }
+            if (AllQuestsHasState(parent.Children, state))
+            {
+                parent.CurrentState = state;
+            }
+            AssignStateAllParentHierarchyIfSiblingsHasSameState(parent.Parent, state);
+        }
+
+        private bool AllQuestsHasState(List<Quest> quests, QuestState state)
+        {
+            int length = quests.Count;
+            for (int i = 0; i < length; ++i)
+            {
+                if (quests[i].CurrentState != state)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

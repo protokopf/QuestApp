@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.AbstractLayer.Validators;
-using Justus.QuestApp.ModelLayer.Model.QuestManagement;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using Justus.QuestApp.ModelLayer.Validators.Actions;
 using NUnit.Framework;
 
-namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.QuestManagementTest.ValidatorsTest
+namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
 {
     [TestFixture]
     class StartQuestValidatorTest

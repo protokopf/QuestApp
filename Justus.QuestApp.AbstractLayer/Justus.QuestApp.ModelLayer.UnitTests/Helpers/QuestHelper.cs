@@ -54,5 +54,19 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
             }
             return true;
         }
+
+        public static int CountSubQuests(List<Quest> childs)
+        {
+            if (childs == null || childs.Count == 0)
+            {
+                return 0;
+            }
+            int totalCount = childs.Count;
+            foreach (Quest child in childs)
+            {
+                totalCount += CountSubQuests(child.Children);
+            }
+            return totalCount;
+        }
     }
 }

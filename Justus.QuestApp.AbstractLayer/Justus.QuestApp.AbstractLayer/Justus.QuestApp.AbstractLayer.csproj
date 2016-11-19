@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Data\IDataAccessInterface.cs" />
+    <Compile Include="Entities\ProgressValue.cs" />
     <Compile Include="Entities\Response.cs" />
     <Compile Include="Entities\IdentifiedEntity.cs" />
     <Compile Include="Entities\Quest\Quest.cs" />

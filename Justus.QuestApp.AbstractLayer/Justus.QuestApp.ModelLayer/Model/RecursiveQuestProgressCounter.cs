@@ -18,7 +18,7 @@ namespace Justus.QuestApp.ModelLayer.Model
         /// <summary>
         /// Reference to list with leaf weights, which used to count LCM.
         /// </summary>
-        private readonly List<int> _leafWeights;
+        private readonly HashSet<int> _leafWeights;
 
         /// <summary>
         /// Weights of done leafs.
@@ -30,7 +30,7 @@ namespace Justus.QuestApp.ModelLayer.Model
         /// </summary>
         public RecursiveQuestProgressCounter()
         {
-            _leafWeights = new List<int>();
+            _leafWeights = new HashSet<int>();
             _doneLeafsWeights = new List<int>();
         }
 
@@ -49,7 +49,6 @@ namespace Justus.QuestApp.ModelLayer.Model
             _doneLeafsWeights.Clear();
 
             //2. Count leaf weights and done leaf weights.
-
             FindLeafGenerationsWeightAndCountDoneWeights(quest,quest.Children, 1);
 
             //3. Find total weight, using LCM, and current weight.
@@ -86,12 +85,8 @@ namespace Justus.QuestApp.ModelLayer.Model
             int length = children.Count;
 
             if (length == 0)
-            {
-                if (!_leafWeights.Contains(weight))
-                {
-                    _leafWeights.Add(weight);
-                }
-
+            {           
+                _leafWeights.Add(weight);
                 if (parent.CurrentState == QuestState.Done)
                 {
                     _doneLeafsWeights.Add(weight);
@@ -108,17 +103,20 @@ namespace Justus.QuestApp.ModelLayer.Model
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        private int LeastCommonMultipleOfNValues(List<int> values)
+        private int LeastCommonMultipleOfNValues(IEnumerable<int> values)
         {
-            int length = values.Count;
-            if (length == 0)
+            int previous = 0;
+            using (IEnumerator<int> enumerator = values.GetEnumerator())
             {
-                return 0;
-            }
-            int previous = values[0];
-            for (int i = 1; i < length; ++i)
-            {
-                previous = LeastCommonMultiple(previous, values[i]);
+                if (!enumerator.MoveNext())
+                {
+                    return previous;
+                }
+                previous = enumerator.Current;
+                while (enumerator.MoveNext())
+                {
+                    previous = LeastCommonMultiple(previous, enumerator.Current);
+                }
             }
             return previous;
         }

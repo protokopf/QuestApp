@@ -31,7 +31,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         }
 
         [Test]
-        public void CountExpectedQuestWithoutChildrenTest()
+        public void QuestProgressWithoutChildrenTest()
         {
             //Arrange
             IQuestProgressCounter counter = new RecursiveQuestProgressCounter();
@@ -49,7 +49,25 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         }
 
         [Test]
-        public void CountExpectedQuestWithOneLevelChildrenTest()
+        public void QuestDoneWithoutChildrenTest()
+        {
+            //Arrange
+            IQuestProgressCounter counter = new RecursiveQuestProgressCounter();
+            Quest testQuest = QuestHelper.CreateQuest(QuestState.Done);
+
+            int expectedTotal = 1;
+            int expectedCurrent = 1;
+
+            //Act
+            ProgressValue result = counter.CountProgress(testQuest);
+
+            //Assert
+            Assert.AreEqual(expectedTotal, result.Total);
+            Assert.AreEqual(expectedCurrent, result.Current);
+        }
+
+        [Test]
+        public void QuestWithOneLevelChildrenTest()
         {
             //Arrange
             IQuestProgressCounter counter = new RecursiveQuestProgressCounter();
@@ -70,7 +88,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         }
 
         [Test]
-        public void CountExpectedQuestWithTwoLevelChildrenTest()
+        public void QuestWithTwoLevelChildrenTest()
         {
             //Arrange
             IQuestProgressCounter counter = new RecursiveQuestProgressCounter();
@@ -94,6 +112,5 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             Assert.AreEqual(expectedTotal, result.Total);
             Assert.AreEqual(expectedCurrent, result.Current);
         }
-
     }
 }

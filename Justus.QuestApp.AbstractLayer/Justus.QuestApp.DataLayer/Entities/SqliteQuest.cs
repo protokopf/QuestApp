@@ -27,6 +27,9 @@ namespace Justus.QuestApp.DataLayer.Entities
         public override string Description { get; set; }
 
         ///<inheritdoc/>
+        public override DateTime Deadline { get; set; }
+
+        ///<inheritdoc/>
         [Ignore]
         public override Quest Parent { get; set; }
 

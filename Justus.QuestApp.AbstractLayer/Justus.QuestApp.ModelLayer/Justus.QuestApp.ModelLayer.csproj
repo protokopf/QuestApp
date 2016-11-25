@@ -42,6 +42,7 @@
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Model\RecursiveQuestActionManager.cs" />
     <Compile Include="Model\RecursiveQuestProgressCounter.cs" />
+    <Compile Include="Model\RecursiveQuestRepository.cs" />
     <Compile Include="Validators\Actions\FailQuestValidator.cs" />
     <Compile Include="Validators\Actions\FinishQuestVaidator.cs" />
     <Compile Include="Validators\Actions\IdleQuestValidator.cs" />

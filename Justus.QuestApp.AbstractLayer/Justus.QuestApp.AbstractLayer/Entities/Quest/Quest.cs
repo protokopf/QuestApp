@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Justus.QuestApp.AbstractLayer.Entities.Quest
 {
@@ -31,6 +32,11 @@ namespace Justus.QuestApp.AbstractLayer.Entities.Quest
         /// Quest children.
         /// </summary>
         public abstract List<Quest> Children { get; set; }
+
+        /// <summary>
+        /// Time, until which quest should be done.
+        /// </summary>
+        public abstract DateTime Deadline { get; set; }
 
         /// <summary>
         /// Current quest state.

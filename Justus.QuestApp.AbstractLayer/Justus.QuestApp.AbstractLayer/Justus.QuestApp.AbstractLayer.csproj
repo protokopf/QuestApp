@@ -48,6 +48,7 @@
     <Compile Include="Factories\IQuestCreator.cs" />
     <Compile Include="Model\IQuestActionManager.cs" />
     <Compile Include="Helpers\ITaskWrapper.cs" />
+    <Compile Include="Model\IQuestRepository.cs" />
     <Compile Include="Model\IQuestProgressCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\IQuestValidator.cs" />

@@ -618,6 +618,34 @@ namespace Justus.QuestApp.DataLayer.UnitTests.Data
             fakeStorage.VerifyAllExpectations();
         }
 
-        //TO DO: Get all binds all parent-child quests test.
+        [Test]
+        public void GetReturnsQuestWithInitializedChildrenTest()
+        {
+            FakeQuestStorage fakeStorage = new FakeQuestStorage();
+            fakeStorage.QuestStorage = new List<Quest>();
+            fakeStorage.QuestStorage.Add(
+                new FakeQuest()
+                {
+                    Children = null,
+                    Id = 1
+                }
+                );
+
+            IDataAccessInterface<Quest> bindedDs = new BindedQuestsDataStorage(fakeStorage);
+
+            //Act
+            bindedDs.Open("does not metter");
+            Quest found = bindedDs.Get(1);
+
+            //Assert
+            Assert.IsNotNull(found);
+            Assert.AreEqual(1, found.Id);
+            Assert.AreEqual(0, found.ParentId);
+
+            Assert.IsNotNull(found.Children);
+
+            //Clean-up
+            bindedDs.Close();
+        }
     }
 }

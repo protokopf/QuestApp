@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 
 namespace Justus.QuestApp.DataLayer.UnitTests.Data.Stubs
@@ -11,5 +12,6 @@ namespace Justus.QuestApp.DataLayer.UnitTests.Data.Stubs
         public override string Description { get; set; }
         public override Quest Parent { get; set; }
         public override List<Quest> Children { get; set; }
+        public override DateTime Deadline { get; set; }
     }
 }

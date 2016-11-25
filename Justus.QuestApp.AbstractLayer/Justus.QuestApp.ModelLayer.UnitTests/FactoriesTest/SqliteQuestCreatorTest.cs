@@ -28,6 +28,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.FactoriesTest
             Assert.IsNotNull(item.Children);
             Assert.IsEmpty(item.Children);
             Assert.AreEqual(QuestState.Idle, item.CurrentState);
+            Assert.AreEqual(String.Empty, item.Title);
+            Assert.AreEqual(String.Empty, item.Description);
+            Assert.AreEqual(DateTime.MinValue, item.Deadline);
         }
     }
 }

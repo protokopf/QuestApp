@@ -15,5 +15,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Stubs
         public override string Description { get; set; }
         public override Quest Parent { get; set; }
         public override List<Quest> Children { get; set; }
+        public override DateTime Deadline { get; set; }
     }
 }

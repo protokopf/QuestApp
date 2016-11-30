@@ -7,24 +7,27 @@ using System.Threading.Tasks;
 namespace Justus.QuestApp.AbstractLayer.Commands
 {
     /// <summary>
-    /// Interface to all commands.
+    /// Abstract type for all commands.
     /// </summary>
-    public interface Command
+    public abstract class Command
     {
         /// <summary>
         /// Executes command.
         /// </summary>
-        void Execute();
+        public abstract void Execute();
 
         /// <summary>
         /// Reverts command influence.
         /// </summary>
-        void Undo();
+        public abstract void Undo();
 
         /// <summary>
         /// Check, whether command is valid or not.
         /// </summary>
         /// <returns></returns>
-        bool IsValid();
+        public virtual bool IsValid()
+        {
+            return true;
+        }
     }
 }

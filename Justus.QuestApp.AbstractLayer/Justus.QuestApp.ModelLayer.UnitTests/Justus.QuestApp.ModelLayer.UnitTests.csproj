@@ -34,6 +34,9 @@
       <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,6 +51,8 @@
     <Compile Include="Helpers\QuestHelper.cs" />
     <Compile Include="ModelTest\RecursiveQuestManagetTest.cs" />
     <Compile Include="ModelTest\RecursiveQuestProgressCounterTest.cs" />
+    <Compile Include="ModelTest\RecursiveQuestRepositoryTest.cs" />
+    <Compile Include="Stubs\FakeQuestStorage.cs" />
     <Compile Include="ValidatorsTest\ActionsTest\FailQuestValidatorTest.cs" />
     <Compile Include="ValidatorsTest\ActionsTest\FinishQuestValidatorTest.cs" />
     <Compile Include="ValidatorsTest\ActionsTest\IdleQuestValidatorTest.cs" />

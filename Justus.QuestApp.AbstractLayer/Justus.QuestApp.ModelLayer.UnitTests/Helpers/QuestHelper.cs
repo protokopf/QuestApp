@@ -68,5 +68,81 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
             }
             return totalCount;
         }
+
+        public static Quest CreateQuest(int id = 0)
+        {
+            return new FakeQuest()
+            {
+                Id = id,
+                Title = "title",
+                Description = "description",
+                CurrentState = QuestState.Idle,
+                Children = new List<Quest>()
+            };
+        }
+
+        public static Quest CreateCompositeQuestFromAbove(int compositionLevel, int childNumber)
+        {
+            Quest quest = CreateQuest();
+            if (compositionLevel == 0 || childNumber == 0)
+            {
+                return quest;
+            }
+            for (int i = 0; i < childNumber; ++i)
+            {
+                Quest child = CreateCompositeQuestFromAbove(compositionLevel - 1, childNumber);
+                child.Parent = quest;
+                quest.Children.Add(child);
+            }
+            return quest;
+        }
+
+        public static List<Quest> CreateCompositeQuestFromBelow(int compositionLevel, int childNumber, int startId = 1)
+        {
+            List<Quest> result = new List<Quest>();
+
+            while (compositionLevel != 0)
+            {
+                Quest quest = CreateQuest(startId);
+                result.Add(quest);
+
+                for (int i = 0; i < childNumber; ++i)
+                {
+                    Quest child = CreateQuest(++startId);
+                    result.Add(child);
+                    child.ParentId = quest.Id;
+                }
+                compositionLevel--;
+                startId++;
+            }
+            return result;
+        }
+
+        public static int CountExpectedSubQuests(int depth, int child)
+        {
+            int total = 0;
+            if (depth == 0 || child == 0)
+            {
+                return total;
+            }
+            do
+            {
+                total += child;
+                child = (int)Math.Pow(child, 2);
+                --depth;
+            } while (depth != 0);
+
+            return total;
+        }
+
+        public static List<Quest> CreateQuests(int count)
+        {
+            List<Quest> quests = new List<Quest>();
+            for (int i = 0; i < count; ++i)
+            {
+                quests.Add(CreateQuest(i + 1));
+            }
+            return quests;
+        }
     }
 }

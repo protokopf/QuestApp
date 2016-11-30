@@ -38,6 +38,7 @@
     <Folder Include="Entities\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Repository\DeleteQuestCommand.cs" />
     <Compile Include="Factories\SqliteQuestCreator.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Model\RecursiveQuestActionManager.cs" />

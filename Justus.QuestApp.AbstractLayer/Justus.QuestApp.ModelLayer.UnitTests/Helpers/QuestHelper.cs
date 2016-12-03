@@ -55,6 +55,22 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
             return true;
         }
 
+        public static bool CheckThatAnyQuestFromHierarchyMatchPredicate(List<Quest> quests, Func<Quest, bool> predicate)
+        {
+            foreach (Quest quest in quests)
+            {
+                if(predicate(quest))
+                {
+                    return true;
+                }
+                if (CheckThatAllQuestsHierarchyMatchPredicate(quest.Children, predicate))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static int CountSubQuests(List<Quest> childs)
         {
             if (childs == null || childs.Count == 0)

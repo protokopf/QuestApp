@@ -87,27 +87,8 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             _hasChecked = true;
             return _isValid;
         }
-        #endregion
 
-        private static bool DeleteRecursive(List<Quest> quests,Quest toDelete)
-        {
-            if(quests == null || quests.Count == 0)
-            {
-                return false;
-            }
-            if(quests.Remove(toDelete))
-            {
-                return true;
-            }
-            foreach(Quest quest in quests)
-            {
-                if(DeleteRecursive(quest.Children,toDelete))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        #endregion
 
         private bool FindRecursive(List<Quest> quests, Quest toDelete)
         {

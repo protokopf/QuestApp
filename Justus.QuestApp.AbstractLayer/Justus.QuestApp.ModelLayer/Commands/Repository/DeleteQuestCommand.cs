@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 
@@ -18,14 +14,13 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// <summary>
     /// Command, which deletes quest from repository.
     /// </summary>
-    public class DeleteQuestCommand : Command
+    public class DeleteQuestCommand : RepositoryCommand
     {
         private bool _isValid = false;
         private bool _hasChecked = false;
         private bool _hasExecuted = false;
 
         private List<Quest> _fromDelete = null;
-        private IQuestRepository _repository = null;
         private Quest _toDelete = null;
 
         /// <summary>
@@ -33,12 +28,8 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         /// </summary>
         /// <param name="repository"></param>
         /// <param name="toDelete"></param>
-        public DeleteQuestCommand(IQuestRepository repository, Quest questToDelete)
+        public DeleteQuestCommand(IQuestRepository repository, Quest questToDelete) : base(repository)
         {
-            if (repository == null)
-            {
-                throw new ArgumentNullException(nameof(repository));
-            }
             if (questToDelete == null)
             {
                 throw new ArgumentNullException(nameof(questToDelete));
@@ -47,7 +38,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             _toDelete = questToDelete;
         }
 
-        #region Command overriding
+        #region RepositoryCommand overriding
 
         ///<inheritdoc/>
         public override void Execute()

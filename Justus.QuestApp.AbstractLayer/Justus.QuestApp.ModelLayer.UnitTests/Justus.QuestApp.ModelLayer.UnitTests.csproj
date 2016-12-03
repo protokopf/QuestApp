@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandsTest\RepositoryTest\AddQuestCommandTestcs.cs" />
     <Compile Include="CommandsTest\RepositoryTest\DeleteQuestCommandTest.cs" />
     <Compile Include="FactoriesTest\SqliteQuestCreatorTest.cs" />
     <Compile Include="Helpers\QuestHelper.cs" />

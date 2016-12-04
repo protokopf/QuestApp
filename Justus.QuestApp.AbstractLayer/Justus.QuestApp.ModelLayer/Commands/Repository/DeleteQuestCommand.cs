@@ -16,10 +16,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// </summary>
     public class DeleteQuestCommand : AbstractRepositoryCommand
     {
-        private bool _isValid = false;
-        private bool _hasChecked = false;
-
-        private List<Quest> _fromDelete = null;
+        private Quest _parentOfDeleted = null;
         private Quest _toDelete = null;
 
         /// <summary>
@@ -44,16 +41,18 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         {
             if (!_hasExecuted)
             {
-                if(!_hasChecked)
+                _parentOfDeleted = _toDelete.Parent;
+                if(_parentOfDeleted != null)
                 {
-                    IsValid();
+                    _parentOfDeleted.Children.Remove(_toDelete);
                 }
-                if (_isValid)
+                else
                 {
-                    _repository.Delete(_toDelete);
-                    _fromDelete.Remove(_toDelete);
-                    _hasExecuted = true;
+                    //If quest does not have parent -> it is top level quest.
+                    _repository.GetAll().Remove(_toDelete);
                 }
+                _repository.Delete(_toDelete);
+                _hasExecuted = true;
             }        
         }
 
@@ -63,42 +62,18 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             if (_hasExecuted)
             {
                 _repository.RevertDelete(_toDelete);
-                //TODO: вставить команду обратно в список детей того родителя, откуда команда удалилась!
-                _fromDelete.Add(_toDelete);
+                if(_parentOfDeleted != null)
+                {
+                    _parentOfDeleted.Children.Add(_toDelete);
+                }
+                else
+                {
+                    _repository.GetAll().Add(_toDelete);
+                }
                 _hasExecuted = false;
-                _hasChecked = false;
             }
-        }
-
-        ///<inheritdoc/>
-        public override bool IsValid()
-        {
-            _isValid = FindRecursive(_repository.GetAll(), _toDelete);
-            _hasChecked = true;
-            return _isValid;
         }
 
         #endregion
-
-        private bool FindRecursive(List<Quest> quests, Quest toDelete)
-        {
-            if (quests == null || quests.Count == 0)
-            {
-                return false;
-            }
-            if (quests.Find(quest => quest == toDelete)!= null)
-            {
-                _fromDelete = quests;
-                return true;
-            }
-            foreach (Quest quest in quests)
-            {
-                if (FindRecursive(quest.Children, toDelete))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }

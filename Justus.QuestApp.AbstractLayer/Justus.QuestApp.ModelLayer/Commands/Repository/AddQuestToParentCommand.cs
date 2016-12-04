@@ -64,26 +64,6 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
 
         #endregion
 
-        private bool FindQuestRecursive(List<Quest> quests, Quest quest)
-        {
-            if (quests == null || quests.Count == 0)
-            {
-                return false;
-            }
-            if (quests.Find(q => q == quest) != null)
-            {
-                return true;
-            }
-            foreach (Quest q in quests)
-            {
-                if (FindQuestRecursive(quest.Children, quest))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         /// <summary>
         /// Breaks connection between parent and child.
         /// </summary>

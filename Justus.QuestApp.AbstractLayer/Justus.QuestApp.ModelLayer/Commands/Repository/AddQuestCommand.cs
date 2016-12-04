@@ -7,7 +7,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// <summary>
     /// Add quest to repository.
     /// </summary>
-    public class AddQuestCommand : RepositoryCommand
+    public class AddQuestCommand : AbstractRepositoryCommand
     {
         private Quest _toAdd;
 
@@ -26,7 +26,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             _hasExecuted = false;
         }
 
-        #region RepositoryCommand overriding
+        #region AbstractRepositoryCommand overriding
 
         ///<inheritdoc/>
         public override void Execute()

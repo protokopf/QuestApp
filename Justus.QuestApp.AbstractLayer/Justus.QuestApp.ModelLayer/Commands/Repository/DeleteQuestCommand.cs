@@ -14,7 +14,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// <summary>
     /// Command, which deletes quest from repository.
     /// </summary>
-    public class DeleteQuestCommand : RepositoryCommand
+    public class DeleteQuestCommand : AbstractRepositoryCommand
     {
         private bool _isValid = false;
         private bool _hasChecked = false;
@@ -37,7 +37,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             _toDelete = questToDelete;
         }
 
-        #region RepositoryCommand overriding
+        #region AbstractRepositoryCommand overriding
 
         ///<inheritdoc/>
         public override void Execute()

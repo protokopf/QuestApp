@@ -7,7 +7,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// <summary>
     /// Abstract command for repositories commands.
     /// </summary>
-    public abstract class RepositoryCommand : Command
+    public abstract class AbstractRepositoryCommand : Command
     {
         /// <summary>
         /// Reference to repository.
@@ -23,7 +23,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         /// Initialize repository reference.
         /// </summary>
         /// <param name="repository"></param>
-        protected RepositoryCommand(IQuestRepository repository)
+        protected AbstractRepositoryCommand(IQuestRepository repository)
         {
             if(repository == null)
             {

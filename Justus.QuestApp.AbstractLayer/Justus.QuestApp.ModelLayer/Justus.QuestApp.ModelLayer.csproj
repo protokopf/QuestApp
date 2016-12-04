@@ -42,7 +42,8 @@
     <Compile Include="Commands\Repository\AddQuestToParentCommand.cs" />
     <Compile Include="Commands\Repository\DeleteQuestCommand.cs" />
     <Compile Include="Commands\Repository\RebindQuestCommand.cs" />
-    <Compile Include="Commands\Repository\RepositoryCommand.cs" />
+    <Compile Include="Commands\Repository\AbstractRepositoryCommand.cs" />
+    <Compile Include="Commands\Repository\UpdateQuestCommand.cs" />
     <Compile Include="Factories\SqliteQuestCreator.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Model\RecursiveQuestActionManager.cs" />

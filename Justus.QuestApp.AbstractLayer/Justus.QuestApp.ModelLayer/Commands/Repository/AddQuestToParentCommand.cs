@@ -12,7 +12,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// Adds quest to parent. If received quest has parent - command breaks relation between given
     /// quest and old parent and create new relations.
     /// </summary>
-    public class AddQuestToParentCommand : RepositoryCommand
+    public class AddQuestToParentCommand : AbstractRepositoryCommand
     {
         protected Quest _parent;
         protected Quest _toAdd;
@@ -38,7 +38,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             _toAdd = questToAdd;
         }
 
-        #region RepositoryCommand overriding
+        #region AbstractRepositoryCommand overriding
 
         ///<inheritdoc/>
         public override void Execute()

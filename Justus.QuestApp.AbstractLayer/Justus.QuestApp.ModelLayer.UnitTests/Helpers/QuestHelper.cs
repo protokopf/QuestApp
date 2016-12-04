@@ -60,7 +60,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
                 {
                     return true;
                 }
-                if (CheckThatAllQuestsHierarchyMatchPredicate(quest.Children, predicate))
+                if (CheckThatAnyQuestFromHierarchyMatchPredicate(quest.Children, predicate))
                 {
                     return true;
                 }

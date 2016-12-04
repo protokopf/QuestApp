@@ -7,21 +7,25 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
 {
     [TestFixture]
-    class AddQuestCommandTestcs
+    class AddQuestToParentCommandTest
     {
         [Test]
         public void InitializeFailRepositoryNullTest()
         {
             //Arrange
-            Quest toDelete = QuestHelper.CreateQuest();
+            Quest toAdd = QuestHelper.CreateQuest();
+            Quest parent = QuestHelper.CreateQuest();
             IQuestRepository repository = null;
 
             //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new AddQuestCommand(repository, toDelete));
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new AddQuestToParentCommand(repository, parent, toAdd));
 
             //Assert
             Assert.IsNotNull(ex);
@@ -32,15 +36,32 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
         public void InitializeFailQuestNullTest()
         {
             //Arrange
-            Quest toDelete = null;
+            Quest toAdd = null;
+            Quest parent = QuestHelper.CreateQuest();
             IQuestRepository repository = MockRepository.GenerateMock<IQuestRepository>();
 
             //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new AddQuestCommand(repository, toDelete));
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new AddQuestToParentCommand(repository, parent, toAdd));
 
             //Assert
             Assert.IsNotNull(ex);
             Assert.AreEqual("questToAdd", ex.ParamName);
+        }
+
+        [Test]
+        public void InitializeFailParentNullTest()
+        {
+            //Arrange
+            Quest toAdd = QuestHelper.CreateQuest();
+            Quest parent = null;
+            IQuestRepository repository = MockRepository.GenerateMock<IQuestRepository>();
+
+            //Act
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new AddQuestToParentCommand(repository, parent, toAdd));
+
+            //Assert
+            Assert.IsNotNull(ex);
+            Assert.AreEqual("parent", ex.ParamName);
         }
 
         [Test]
@@ -54,19 +75,22 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             };
             int beforeCommandlength = QuestHelper.CountSubQuests(repositoryCache);
 
+            Quest parent = repositoryCache[0].Children[0].Children[0];
+
             Quest toAdd = QuestHelper.CreateQuest(100);
             int addedId = toAdd.Id;
 
             repository.Expect(rep => rep.Insert(null)).IgnoreArguments().Repeat.Once();
-            repository.Expect(rep => rep.GetAll()).IgnoreArguments().Return(repositoryCache).Repeat.Once();
 
-            Command command = new AddQuestCommand(repository, toAdd);
+            Command command = new AddQuestToParentCommand(repository,parent, toAdd);
 
             //Act
             command.Execute();
 
             //Assert
-            Assert.AreEqual(beforeCommandlength + 1, QuestHelper.CountSubQuests(repositoryCache));
+            Assert.AreEqual(beforeCommandlength + 1, QuestHelper.CountSubQuests(repositoryCache));          
+            Assert.AreEqual(parent, toAdd.Parent);
+            Assert.Contains(toAdd, parent.Children);
 
             Assert.IsTrue(QuestHelper.CheckThatAnyQuestFromHierarchyMatchPredicate(repositoryCache, q => q.Id == addedId));
 
@@ -82,23 +106,26 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             {
                 QuestHelper.CreateCompositeQuest(2,3,QuestState.Progress)
             };
-            int beforeCommandLength = QuestHelper.CountSubQuests(repositoryCache);
+            int beforeCommandlength = QuestHelper.CountSubQuests(repositoryCache);
+
+            Quest parent = repositoryCache[0].Children[0].Children[0];
 
             Quest toAdd = QuestHelper.CreateQuest(100);
             int addedId = toAdd.Id;
 
             repository.Expect(rep => rep.Insert(null)).IgnoreArguments().Repeat.Once();
             repository.Expect(rep => rep.RevertInsert(null)).IgnoreArguments().Return(true).Repeat.Once();
-            repository.Expect(rep => rep.GetAll()).IgnoreArguments().Return(repositoryCache).Repeat.Twice();
 
-            Command command = new AddQuestCommand(repository, toAdd);
+            Command command = new AddQuestToParentCommand(repository, parent, toAdd);
 
             //Act
             command.Execute();
             command.Undo();
 
             //Assert
-            Assert.AreEqual(beforeCommandLength, QuestHelper.CountSubQuests(repositoryCache));
+            Assert.AreEqual(beforeCommandlength , QuestHelper.CountSubQuests(repositoryCache));
+            Assert.AreEqual(null, toAdd.Parent);
+            Assert.IsFalse(parent.Children.Contains(toAdd));
 
             Assert.IsFalse(QuestHelper.CheckThatAnyQuestFromHierarchyMatchPredicate(repositoryCache, q => q.Id == addedId));
 

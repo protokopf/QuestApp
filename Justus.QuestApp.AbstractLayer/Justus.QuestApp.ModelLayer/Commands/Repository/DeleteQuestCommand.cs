@@ -18,7 +18,6 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     {
         private bool _isValid = false;
         private bool _hasChecked = false;
-        private bool _hasExecuted = false;
 
         private List<Quest> _fromDelete = null;
         private Quest _toDelete = null;

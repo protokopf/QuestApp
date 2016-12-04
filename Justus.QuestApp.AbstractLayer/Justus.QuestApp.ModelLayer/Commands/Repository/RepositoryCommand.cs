@@ -15,6 +15,11 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         protected IQuestRepository _repository;
 
         /// <summary>
+        /// Points, whether command has been executed.
+        /// </summary>
+        protected bool _hasExecuted;
+
+        /// <summary>
         /// Initialize repository reference.
         /// </summary>
         /// <param name="repository"></param>
@@ -25,6 +30,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
                 throw new ArgumentNullException(nameof(repository));
             }
             _repository = repository;
+            _hasExecuted = false;
         }
     }
 }

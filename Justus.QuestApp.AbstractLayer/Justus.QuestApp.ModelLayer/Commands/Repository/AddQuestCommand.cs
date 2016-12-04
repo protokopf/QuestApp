@@ -10,7 +10,6 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     public class AddQuestCommand : RepositoryCommand
     {
         private Quest _toAdd;
-        private bool _hasExecuted;
 
         /// <summary>
         /// Initialize command with repository and quest to add.

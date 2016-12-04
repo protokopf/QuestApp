@@ -14,10 +14,8 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// </summary>
     public class AddQuestToParentCommand : RepositoryCommand
     {
-        private Quest _parent;
-        private Quest _toAdd;
-        private Quest _oldParent;
-        private List<Quest> _all;
+        protected Quest _parent;
+        protected Quest _toAdd;
 
         /// <summary>
         /// Receives reference to repository, parent and new child.
@@ -86,14 +84,24 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             return false;
         }
 
-        private void BreakWithParent(Quest parent, Quest quest)
+        /// <summary>
+        /// Breaks connection between parent and child.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="quest"></param>
+        protected void BreakWithParent(Quest parent, Quest child)
         {
-            parent.Children.Remove(quest);
-            quest.Parent = null;
-            quest.ParentId = 0;
+            parent.Children.Remove(child);
+            child.Parent = null;
+            child.ParentId = 0;
         }
 
-        private void ConnectWithParent(Quest parent, Quest child)
+        /// <summary>
+        /// Establishes connection between parent and child.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="child"></param>
+        protected void ConnectWithParent(Quest parent, Quest child)
         {
             child.Parent = parent;
             child.ParentId = parent.ParentId;

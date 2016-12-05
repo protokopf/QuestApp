@@ -48,6 +48,7 @@
     <Compile Include="Factories\SqliteQuestCreator.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\TaskWrapper.cs" />
+    <Compile Include="Model\QuestTimeLeftCounter.cs" />
     <Compile Include="Model\RecursiveQuestActionManager.cs" />
     <Compile Include="Model\RecursiveQuestProgressCounter.cs" />
     <Compile Include="Model\RecursiveQuestRepository.cs" />

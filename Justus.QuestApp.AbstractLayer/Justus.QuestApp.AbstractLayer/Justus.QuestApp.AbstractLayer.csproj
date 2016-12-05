@@ -50,6 +50,7 @@
     <Compile Include="Helpers\ITaskWrapper.cs" />
     <Compile Include="Model\IQuestRepository.cs" />
     <Compile Include="Model\IQuestProgressCounter.cs" />
+    <Compile Include="Model\IQuestTimeLeftCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\IQuestValidator.cs" />
   </ItemGroup>

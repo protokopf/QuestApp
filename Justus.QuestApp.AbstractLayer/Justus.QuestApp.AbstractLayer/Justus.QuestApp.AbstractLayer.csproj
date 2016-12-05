@@ -38,13 +38,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\ICommandManager.cs" />
     <Compile Include="Data\IDataAccessInterface.cs" />
     <Compile Include="Entities\ProgressValue.cs" />
     <Compile Include="Entities\Response.cs" />
     <Compile Include="Entities\IdentifiedEntity.cs" />
     <Compile Include="Entities\Quest\Quest.cs" />
     <Compile Include="Entities\Quest\QuestState.cs" />
-    <Compile Include="Model\AbstractQuestFacade.cs" />
     <Compile Include="Factories\IQuestCreator.cs" />
     <Compile Include="Model\IQuestActionManager.cs" />
     <Compile Include="Helpers\ITaskWrapper.cs" />

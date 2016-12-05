@@ -38,6 +38,7 @@
     <Folder Include="Entities\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Management\CommandCyclingManager.cs" />
     <Compile Include="Commands\Repository\AddQuestCommand.cs" />
     <Compile Include="Commands\Repository\AddQuestToParentCommand.cs" />
     <Compile Include="Commands\Repository\DeleteQuestCommand.cs" />
@@ -46,6 +47,7 @@
     <Compile Include="Commands\Repository\UpdateQuestCommand.cs" />
     <Compile Include="Factories\SqliteQuestCreator.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
+    <Compile Include="Helpers\TaskWrapper.cs" />
     <Compile Include="Model\RecursiveQuestActionManager.cs" />
     <Compile Include="Model\RecursiveQuestProgressCounter.cs" />
     <Compile Include="Model\RecursiveQuestRepository.cs" />

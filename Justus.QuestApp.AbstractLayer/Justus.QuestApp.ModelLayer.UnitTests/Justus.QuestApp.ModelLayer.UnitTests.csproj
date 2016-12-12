@@ -54,6 +54,7 @@
     <Compile Include="CommandsTest\RepositoryTest\RebindQuestCommandTest.cs" />
     <Compile Include="CommandsTest\RepositoryTest\UpdateQuestTest.cs" />
     <Compile Include="FactoriesTest\SqliteQuestCreatorTest.cs" />
+    <Compile Include="HelpersTest\ServiceLocatorTest.cs" />
     <Compile Include="HelpersTest\TaskWrapperTest.cs" />
     <Compile Include="Helpers\QuestHelper.cs" />
     <Compile Include="ModelTest\QuestTimeLeftCounterTest.cs" />

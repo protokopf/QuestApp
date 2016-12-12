@@ -15,9 +15,14 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="initializer"></param>
-        public static void Register<T>(Func<T> initializer)
+        public static bool Register<T>(Func<T> initializer)
         {
-            Services[typeof(T)] = new Lazy<object>(() => initializer());
+            if(!Services.ContainsKey(typeof(T)))
+            {
+                Services[typeof(T)] = new Lazy<object>(() => initializer());
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -25,9 +30,17 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T Resove<T>()
+        public static T Resolve<T>()
         {
             return (T) Resolve(typeof(T));
+        }
+
+        /// <summary>
+        /// Releases all services.
+        /// </summary>
+        public static void ReleaseAll()
+        {
+            Services.Clear();
         }
 
         /// <summary>
@@ -35,14 +48,14 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static object Resolve(Type type)
+        private static object Resolve(Type type)
         {
             Lazy<object> service = null;
             if (Services.TryGetValue(type, out service))
             {
                 return service.Value;
             }
-            throw new Exception("Service not found!");
+            throw new InvalidOperationException("Service not found!");
         }
     }
 }

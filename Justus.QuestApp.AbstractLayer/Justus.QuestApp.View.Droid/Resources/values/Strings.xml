@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ApplicationName">Justus.QuestApp.View.Droid</string>
+    <string name="ProgressDialogTitle">Please, wait...</string>
+    <string name="ErrorTitle">Oops...</string>
+</resources>

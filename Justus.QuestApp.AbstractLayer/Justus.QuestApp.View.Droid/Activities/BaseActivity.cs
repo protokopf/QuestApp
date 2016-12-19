@@ -90,7 +90,5 @@ namespace Justus.QuestApp.View.Droid.Activities
                 _progress.Hide();
             }
         }
-
-
     }
 }

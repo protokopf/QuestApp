@@ -57,17 +57,103 @@ namespace Justus.QuestApp.View.Droid
 			}
 		}
 		
-		public partial class String
+		public partial class Id
+		{
+			
+			// aapt resource value: 0x7f050003
+			public const int childItemLayout = 2131034115;
+			
+			// aapt resource value: 0x7f050001
+			public const int currentQuestTitle = 2131034113;
+			
+			// aapt resource value: 0x7f05000c
+			public const int groupItemTable = 2131034124;
+			
+			// aapt resource value: 0x7f050007
+			public const int layoutForButtons = 2131034119;
+			
+			// aapt resource value: 0x7f050000
+			public const int mainLayout = 2131034112;
+			
+			// aapt resource value: 0x7f05000b
+			public const int questAddChild = 2131034123;
+			
+			// aapt resource value: 0x7f050005
+			public const int questChildrenButton = 2131034117;
+			
+			// aapt resource value: 0x7f050004
+			public const int questDescription = 2131034116;
+			
+			// aapt resource value: 0x7f050008
+			public const int questDone = 2131034120;
+			
+			// aapt resource value: 0x7f05000a
+			public const int questEdit = 2131034122;
+			
+			// aapt resource value: 0x7f050009
+			public const int questFailed = 2131034121;
+			
+			// aapt resource value: 0x7f05000f
+			public const int questProgress = 2131034127;
+			
+			// aapt resource value: 0x7f050010
+			public const int questStatus = 2131034128;
+			
+			// aapt resource value: 0x7f05000e
+			public const int questTimeLeft = 2131034126;
+			
+			// aapt resource value: 0x7f05000d
+			public const int questTitle = 2131034125;
+			
+			// aapt resource value: 0x7f050006
+			public const int scrollForButtons = 2131034118;
+			
+			// aapt resource value: 0x7f050002
+			public const int subquestsList = 2131034114;
+			
+			static Id()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Id()
+			{
+			}
+		}
+		
+		public partial class Layout
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int ApplicationName = 2130903040;
-			
-			// aapt resource value: 0x7f030002
-			public const int ErrorTitle = 2130903042;
+			public const int ActiveQuestsLayout = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int ProgressDialogTitle = 2130903041;
+			public const int QuestChildItemLayout = 2130903041;
+			
+			// aapt resource value: 0x7f030002
+			public const int QuestGroupItemLayout = 2130903042;
+			
+			static Layout()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Layout()
+			{
+			}
+		}
+		
+		public partial class String
+		{
+			
+			// aapt resource value: 0x7f040000
+			public const int ApplicationName = 2130968576;
+			
+			// aapt resource value: 0x7f040002
+			public const int ErrorTitle = 2130968578;
+			
+			// aapt resource value: 0x7f040001
+			public const int ProgressDialogTitle = 2130968577;
 			
 			static String()
 			{

@@ -30,5 +30,7 @@ namespace Justus.QuestApp.View.Droid
         {
             base.OnCreate();
         }
+
+
     }
 }

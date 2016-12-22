@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\ActiveQuestsActivity.cs" />
+    <Compile Include="Adapters\ExpandableListOfQuestsAdapter.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,9 +84,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Adapters\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Justus.QuestApp.ModelLayer\Justus.QuestApp.ModelLayer.csproj">
       <Project>{72c61b17-7e0a-4c31-9ab4-2a5e0935166e}</Project>

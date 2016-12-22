@@ -10,7 +10,7 @@ namespace Justus.QuestApp.ModelLayer.Helpers
     /// <summary>
     /// Wraps action in task.
     /// </summary>
-    public class TaskWrapper : ITaskWrapper
+    public class AutoStartTaskWrapper : ITaskWrapper
     {
         #region ITaskWrapper implementation
 
@@ -21,17 +21,17 @@ namespace Justus.QuestApp.ModelLayer.Helpers
             {
                 throw new ArgumentNullException(nameof(actionToWrap));
             }
-            return new Task(actionToWrap);
+            return Task.Run(actionToWrap);
         }
 
         ///<inheritdoc/>
         public Task<TResult> Wrap<TResult>(Func<TResult> functionWithResult)
         {
-            if(functionWithResult == null)
+            if (functionWithResult == null)
             {
                 throw new ArgumentNullException(nameof(functionWithResult));
             }
-            return new Task<TResult>(functionWithResult);
+            return Task.Run<TResult>(functionWithResult);
         } 
 
         #endregion

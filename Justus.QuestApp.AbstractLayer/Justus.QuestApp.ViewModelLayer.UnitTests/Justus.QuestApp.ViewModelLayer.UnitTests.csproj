@@ -34,6 +34,10 @@
       <HintPath>..\packages\nunit.framework.2.63.0\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,12 +49,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModelsTest\BaseQuestsViewModelTest.cs" />
     <Compile Include="ViewModelsTest\BaseViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Justus.QuestApp.AbstractLayer\Justus.QuestApp.AbstractLayer.csproj">
+      <Project>{9D27BB00-D325-4644-B1D2-B13196C4D8AC}</Project>
+      <Name>Justus.QuestApp.AbstractLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Justus.QuestApp.ModelLayer\Justus.QuestApp.ModelLayer.csproj">
+      <Project>{72C61B17-7E0A-4C31-9AB4-2A5E0935166E}</Project>
+      <Name>Justus.QuestApp.ModelLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Justus.QuestApp.ViewModelLayer\Justus.QuestApp.ViewModelLayer.csproj">
       <Project>{0B2A3D17-4CAA-4435-9277-7029BF568E48}</Project>
       <Name>Justus.QuestApp.ViewModelLayer</Name>

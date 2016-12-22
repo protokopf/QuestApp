@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
 {
     [TestFixture]
-    class TaskWrapperTest
+    class AutoStartTaskWrapperTest
     {
         [Test]
         public void WrapNullTest()
         {
             //Arrange
-            ITaskWrapper wrapper = new TaskWrapper();
+            ITaskWrapper wrapper = new AutoStartTaskWrapper();
             Action action = null;
 
             //Act
@@ -31,7 +31,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
         public void WrapWithResultTest()
         {
             //Arrange
-            ITaskWrapper wrapper = new TaskWrapper();
+            ITaskWrapper wrapper = new AutoStartTaskWrapper();
             Func<int> func = null;
 
             //Act
@@ -46,17 +46,16 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
         public void WrapActionTest()
         {
             //Arrange
-            ITaskWrapper wrapper = new TaskWrapper();
+            ITaskWrapper wrapper = new AutoStartTaskWrapper();
             int result = 0;
 
             //Act
             Task task = wrapper.Wrap(() => result = 2 + 2);
 
+            Task.WaitAll();
+
             //Assert
             Assert.IsNotNull(task);
-
-            task.Start();
-            task.Wait();
 
             Assert.AreEqual(4, result);
         }
@@ -65,16 +64,15 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
         public void WrapFuncTest()
         {
             //Arrange
-            ITaskWrapper wrapper = new TaskWrapper();
+            ITaskWrapper wrapper = new AutoStartTaskWrapper();
 
             //Act
             Task<int> task = wrapper.Wrap(() => { return 2 + 2; });
 
+            Task.WaitAll();
+
             //Assert
             Assert.IsNotNull(task);
-
-            task.Start();
-            task.Wait();
 
             int result = task.Result;
 

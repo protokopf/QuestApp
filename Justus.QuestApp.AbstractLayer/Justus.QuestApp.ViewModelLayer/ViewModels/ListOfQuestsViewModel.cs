@@ -52,6 +52,17 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         public Quest CurrentQuest { get; set; }
 
         /// <summary>
+        /// Returns children of current quest. If quest is null - returns all top level quests from repository.
+        /// </summary>
+        public List<Quest> CurrentChildren
+        {
+            get
+            {
+                return CurrentQuest == null ? _questRepository.GetAll() : CurrentQuest.Children;
+            }
+        }
+
+        /// <summary>
         /// Get 'generation' name of current ParentQuest. It looks like 'topParentTitle/secondParentTitle/ParentQuestTitle'
         /// </summary>
         public string QuestsListTitle

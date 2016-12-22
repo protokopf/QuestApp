@@ -1,4 +1,5 @@
 ﻿using Justus.QuestApp.AbstractLayer.Commands;
+using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Helpers;
@@ -139,5 +140,49 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             Assert.IsNotNull(questsListTitle);
             Assert.AreEqual("child", questsListTitle);
         }
+
+        [Test]
+        public void CurrentChildrenWhenCurrentQuestNullTest()
+        {
+            //Arrange
+            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(null);
+
+            ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
+
+            ServiceLocator.Register(() => { return repository; });
+            ServiceLocator.Register(() => { return comManager; });
+
+            ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
+
+            //Act
+            List<Quest> quests = vm.CurrentChildren;
+
+            //Assert
+            repository.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void CurrentChildrenWhenCurrentQuestNotNullTest()
+        {
+            //Arrange
+            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            repository.Expect(rep => rep.GetAll()).Repeat.Never().Return(null);
+
+            ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
+
+            ServiceLocator.Register(() => { return repository; });
+            ServiceLocator.Register(() => { return comManager; });
+
+            ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
+            vm.CurrentQuest = new FakeQuest() { Children = new List<Quest>() };
+
+            //Act
+            List<Quest> quests = vm.CurrentChildren;
+
+            //Assert
+            repository.VerifyAllExpectations();
+        }
+
     }
 }

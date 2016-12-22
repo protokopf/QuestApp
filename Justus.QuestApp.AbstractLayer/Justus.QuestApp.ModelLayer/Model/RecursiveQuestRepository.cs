@@ -37,7 +37,6 @@ namespace Justus.QuestApp.ModelLayer.Model
         private readonly List<Quest> _toUpdate;
         private readonly List<Quest> _toInsert;
 
-        private bool _shouldRefresh;
         private bool _shouldDeleteAll;
 
         private int _currentId;
@@ -64,7 +63,8 @@ namespace Justus.QuestApp.ModelLayer.Model
             _toUpdate = new List<Quest>();
             _toInsert = new List<Quest>();
 
-            _shouldRefresh = true;
+            _questList = new List<Quest>();
+            _currentId = 1;
         }
 
         #region IQuestRepository implementation
@@ -77,8 +77,6 @@ namespace Justus.QuestApp.ModelLayer.Model
                 throw new ArgumentNullException(nameof(quest));
             }
 
-            CheckFreshness();
-
             SetId(quest);
 
             _toInsert.Add(quest);
@@ -87,17 +85,19 @@ namespace Justus.QuestApp.ModelLayer.Model
             {
                 RecursiveInsert(quest.Children);
             }
+
+            _questList.Add(quest);
         }
 
         ///<inheritdoc/>
         public void InsertAll(List<Quest> quests)
         {
-            CheckFreshness();
             if (quests == null)
             {
                 throw new ArgumentNullException(nameof(quests));
             }
             RecursiveInsert(quests);
+            _questList.AddRange(quests);
         }
 
         ///<inheritdoc/>
@@ -109,7 +109,6 @@ namespace Justus.QuestApp.ModelLayer.Model
         ///<inheritdoc/>
         public void Update(Quest quest)
         {
-            CheckFreshness();
             if (quest == null)
             {
                 throw new ArgumentNullException(nameof(quest));
@@ -120,7 +119,6 @@ namespace Justus.QuestApp.ModelLayer.Model
         ///<inheritdoc/>
         public void UpdateAll(List<Quest> quests)
         {
-            CheckFreshness();
             if (quests == null)
             {
                 throw new ArgumentNullException(nameof(quests));
@@ -137,14 +135,12 @@ namespace Justus.QuestApp.ModelLayer.Model
         ///<inheritdoc/>
         public Quest Get(int id)
         {
-            CheckFreshness();
             return _questList.Find(quest => quest.Id == id);
         }
 
         ///<inheritdoc/>
         public List<Quest> GetAll()
         {
-            CheckFreshness();
             return _questList;
         }
 
@@ -155,7 +151,6 @@ namespace Justus.QuestApp.ModelLayer.Model
             {
                 throw new ArgumentNullException(nameof(quest));
             }
-            CheckFreshness();
             _toDelete.Add(quest.Id);
         }
 
@@ -172,7 +167,7 @@ namespace Justus.QuestApp.ModelLayer.Model
         }
 
         ///<inheritdoc/>
-        public void Save()
+        public void PushQuests()
         {
             int totalCount = _toDelete.Count + _toUpdate.Count + _toInsert.Count;
             if (totalCount > 0 || _shouldDeleteAll)
@@ -208,42 +203,33 @@ namespace Justus.QuestApp.ModelLayer.Model
                     _toDelete.Clear();
                 }
             }
+            _questList.Clear();
         }
 
         ///<inheritdoc/>
-        public void Refresh()
+        public void PullQuests()
         {
-            _shouldRefresh = true;
-            _shouldDeleteAll = false;
+            _dataStorage.Open(_connectionString);
+            _questList = _dataStorage.GetAll();
+            InitializeId(_questList);
+            _dataStorage.Close();
+            if (_questList == null)
+            {
+                _questList = new List<Quest>();
+            }
+            CycleBinding(_questList);
+            _questList.RemoveAll(quest => quest.Parent != null);
         }
 
         ///<inheritdoc/>
         public void Dispose()
         {
-            Save();
+            PushQuests();
         }
 
         #endregion
 
         #region Private methods
-
-        private void CheckFreshness()
-        {
-            if (_shouldRefresh)
-            {
-                _dataStorage.Open(_connectionString);
-                _questList = _dataStorage.GetAll();
-                InitializeId(_questList);
-                _dataStorage.Close();
-                if (_questList == null)
-                {
-                    _questList = new List<Quest>();
-                }
-                CycleBinding(_questList);
-                _questList.RemoveAll(quest => quest.Parent != null);
-                _shouldRefresh = false;
-            }
-        }
 
         private void RecursiveInsert(List<Quest> children)
         {

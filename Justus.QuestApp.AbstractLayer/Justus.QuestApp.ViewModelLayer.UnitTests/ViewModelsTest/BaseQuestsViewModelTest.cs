@@ -30,7 +30,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ITaskWrapper wrapper = new AutoStartTaskWrapper();
 
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(rep => rep.Save()).Repeat.Once();
+            repository.Expect(rep => rep.PullQuests()).Repeat.Once();
 
             ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
 

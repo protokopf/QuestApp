@@ -78,13 +78,13 @@ namespace Justus.QuestApp.AbstractLayer.Model
         bool RevertDelete(Quest quest);
 
         /// <summary>
-        /// Saves all made changes.
+        /// Saves all made changes and releases quests from memory.
         /// </summary>
-        void Save();
+        void PushQuests();
 
         /// <summary>
-        /// Refreshes repository state.
+        /// Pull all quests to memory.
         /// </summary>
-        void Refresh();
+        void PullQuests();
     }
 }

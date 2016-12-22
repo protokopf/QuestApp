@@ -52,7 +52,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
             //Act
             Task task = wrapper.Wrap(() => result = 2 + 2);
 
-            Task.WaitAll();
+            task.Wait();
 
             //Assert
             Assert.IsNotNull(task);
@@ -69,7 +69,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
             //Act
             Task<int> task = wrapper.Wrap(() => { return 2 + 2; });
 
-            Task.WaitAll();
+            task.Wait();
 
             //Assert
             Assert.IsNotNull(task);

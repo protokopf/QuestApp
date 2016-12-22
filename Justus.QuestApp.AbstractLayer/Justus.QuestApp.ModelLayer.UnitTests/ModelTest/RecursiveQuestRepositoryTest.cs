@@ -61,7 +61,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.Insert(quest);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -84,7 +84,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.Insert(quest);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -131,7 +131,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.InsertAll(quests);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -154,14 +154,13 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             //Act
             repository.Insert(quest);
             bool revertResult = repository.RevertInsert(quest);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
             //Assert
             Assert.IsTrue(revertResult);
-            Assert.IsNotNull(storedItems);
-            Assert.IsEmpty(storedItems);
+            Assert.IsNull(storedItems);
         }
 
         [Test]
@@ -176,7 +175,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.Insert(quest);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -200,8 +199,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             quest.Title = "New one";
 
             //Act
+            repository.PullQuests();
             repository.Insert(quest);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -229,7 +229,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.Insert(quest);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -253,7 +253,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             updatedItem.Title = "New title";
 
             repository.Update(updatedItem);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -282,7 +282,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             toUpdate[1].Title = "New title2";
 
             repository.UpdateAll(toUpdate);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -336,7 +336,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             repository.Update(updatedItem);
             bool revertResult = repository.RevertUpdate(updatedItem);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -362,7 +362,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             int updatedId = updatedItem.Id;
 
             repository.Update(updatedItem);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -386,6 +386,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
 
             //Act
+            repository.PullQuests();
             Quest found = repository.Get(1);
 
             //Assert
@@ -433,6 +434,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
 
             //Act
+            repository.PullQuests();
             List<Quest> founds = repository.GetAll();
 
             //Assert
@@ -463,6 +465,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
 
             //Act
+            repository.PullQuests();
             List<Quest> founds = repository.GetAll();
             repository.GetAll();
 
@@ -491,7 +494,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.Delete(fakeStorage.QuestStorage.Find(x => x.Id == 7));
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> fromLower = fakeStorage.QuestStorage;
 
@@ -514,7 +517,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.DeleteAll();
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> fromLower = fakeStorage.QuestStorage;
 
@@ -542,7 +545,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             //Act
             repository.Delete(fakeStorage.QuestStorage.Find(x => x.Id == 7));
             repository.RevertDelete(fakeStorage.QuestStorage.Find(x => x.Id == 7));
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> fromLower = fakeStorage.QuestStorage;
 
@@ -555,7 +558,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         }
 
         [Test]
-        public void InsertRemoveSaveQuestTest()
+        public void InsertRemovePushQuestsQuestTest()
         {
             //Arrange
             FakeQuestStorage fakeStorage = new FakeQuestStorage();
@@ -568,7 +571,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             //Act
             repository.Insert(quest);
             repository.Delete(quest);
-            repository.Save();
+            repository.PushQuests();
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 
@@ -578,21 +581,56 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         }
 
         [Test]
-        public void RefreshTest()
+        public void PullQuestsTest()
         {
             //Arrange
             FakeQuestStorage fakeStorage = MockRepository.GeneratePartialMock<FakeQuestStorage>();
-            fakeStorage.Expect(s => s.GetAll()).Repeat.Twice();
+            fakeStorage.Expect(s => s.GetAll()).Repeat.Once();
 
             IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
 
             //Act
-            repository.GetAll();
-            repository.Refresh();
+            repository.PullQuests();
             repository.GetAll();
 
             //Assert
             fakeStorage.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void PushQuestsReleasesAllQuestsTest()
+        {
+            //Arrange
+            FakeQuestStorage fakeStorage = new FakeQuestStorage();
+
+            IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
+
+            int questsCount = 5;
+
+            List<Quest> quests = new List<Quest>();
+
+            for (int i = 0; i < questsCount; ++i)
+            {
+                quests.Add(QuestHelper.CreateCompositeQuestFromAbove(2, 3));
+            }
+            int expectedStoredQuests = (QuestHelper.CountExpectedSubQuests(2, 3) + 1) * questsCount;
+
+            //Act
+            repository.InsertAll(quests);
+            int countBeforePushQuests = repository.GetAll().Count;
+            repository.PushQuests();
+            int countAfterPushQuests = repository.GetAll().Count;
+
+            List<Quest> storedItems = fakeStorage.QuestStorage;
+
+            //Assert
+            Assert.IsNotNull(storedItems);
+            Assert.IsNotEmpty(storedItems);
+            Assert.AreEqual(expectedStoredQuests, storedItems.Count);
+
+     
+            Assert.AreEqual(5, countBeforePushQuests);
+            Assert.AreEqual(0, countAfterPushQuests);
         }
     }
 }

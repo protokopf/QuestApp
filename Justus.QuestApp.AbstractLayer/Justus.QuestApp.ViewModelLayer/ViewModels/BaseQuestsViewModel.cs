@@ -31,7 +31,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
 
         public async void SaveChanges()
         {
-            await _taskWrapper.Wrap(() => _questRepository.Save());
+            await _taskWrapper.Wrap(() => _questRepository.PullQuests());
         } 
 
         public async void RefreshQuests()

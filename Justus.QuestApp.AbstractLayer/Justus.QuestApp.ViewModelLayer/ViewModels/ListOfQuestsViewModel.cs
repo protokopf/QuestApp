@@ -33,17 +33,21 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <summary>
         /// Push all quests in async way.
         /// </summary>
-        public Task PushQuests()
+        public async Task PushQuests()
         {
-            return Task.Run(() => _questRepository.PushQuests());
+            IsBusy = true;
+            await Task.Run(() => _questRepository.PushQuests());
+            IsBusy = false;
         } 
 
         /// <summary>
         /// Pull all changes in async way.
         /// </summary>
-        public Task PullQuests()
+        public async Task PullQuests()
         {
-            return Task.Run(() => _questRepository.PullQuests());
+            IsBusy = true;
+            await Task.Run(() => _questRepository.PullQuests());
+            IsBusy = false;
         }
 
         /// <summary>

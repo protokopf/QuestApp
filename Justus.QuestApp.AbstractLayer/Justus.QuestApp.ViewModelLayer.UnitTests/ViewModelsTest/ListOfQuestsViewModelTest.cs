@@ -39,12 +39,15 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register<ICommandManager>(() => { return comManager; });
 
             ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
+            int countCallBack = 0;
+            vm.IsBusyChanged += (sender, args) => { countCallBack++; };
 
             //Act
             Task t = vm.PullQuests();
             t.Wait();
 
             //Assert
+            Assert.AreEqual(2, countCallBack);
             repository.VerifyAllExpectations();
             comManager.VerifyAllExpectations();
         }
@@ -63,12 +66,16 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register<ICommandManager>(() => { return comManager; });
 
             ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
+            int countCallBack = 0;
+            vm.IsBusyChanged += (sender, args) => { countCallBack++; };
 
             //Act
             Task t = vm.PushQuests();
             t.Wait();
 
             //Assert
+            Assert.AreEqual(2, countCallBack);
+
             repository.VerifyAllExpectations();
         }
 

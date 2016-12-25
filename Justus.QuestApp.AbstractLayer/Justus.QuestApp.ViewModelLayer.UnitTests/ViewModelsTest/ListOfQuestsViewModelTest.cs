@@ -29,7 +29,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void PullQuestsTest()
         {
             //Arrange
-
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
             repository.Expect(rep => rep.PullQuests()).Repeat.Once();
 
@@ -56,7 +55,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void PushQuestsTest()
         {
             //Arrange
-
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
             repository.Expect(rep => rep.PushQuests()).Repeat.Once();
 
@@ -83,7 +81,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void QuestsListTitleWhenCurrentQuestIsNullTest()
         {
             //Arrange
-
             ITaskWrapper wrapper = MockRepository.GenerateStrictMock<ITaskWrapper>();
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
             ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
@@ -97,8 +94,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             string questsListTitle = vm.QuestsListTitle;
 
             //Assert
-            Assert.IsNotNull(questsListTitle);
-            Assert.AreEqual("defaultQuestListTitle", questsListTitle);
+            Assert.IsNull(questsListTitle);
         }
 
         [Test]
@@ -190,6 +186,5 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             //Assert
             repository.VerifyAllExpectations();
         }
-
     }
 }

@@ -16,8 +16,6 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// </summary>
     public class ListOfQuestsViewModel : BaseViewModel
     {
-        private static string DefaultQuestListTitle = "defaultQuestListTitle";
-
         protected IQuestRepository _questRepository;
         protected ICommandManager _commandManager;
 
@@ -73,7 +71,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             get
             {
-                return CurrentQuest == null ? DefaultQuestListTitle : CurrentQuest.Title;
+                return CurrentQuest?.Title;
             }
         }
 

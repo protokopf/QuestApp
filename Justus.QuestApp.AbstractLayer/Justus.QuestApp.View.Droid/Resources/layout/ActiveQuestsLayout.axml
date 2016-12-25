@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:p1="http://schemas.android.com/apk/res/android"
-    p1:id="@+id/mainLayout"
-    p1:orientation="vertical"
-    p1:layout_width="match_parent"
-    p1:layout_height="match_parent">
-    <TextView
-        p1:id="@+id/currentQuestTitle"
-        p1:text="Quest title"
-        p1:textAppearance="?android:attr/textAppearanceLarge"
-        p1:layout_width="match_parent"
-        p1:layout_height="wrap_content"
-        p1:gravity="center" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activeQuestListLayout"
+    android:orientation="vertical"
+    style="@style/MatchParent">
+    <include
+        layout="@layout/questListHeader" />
     <ExpandableListView
-        p1:id="@+id/subquestsList"
-        p1:layout_width="match_parent"
-        p1:layout_height="match_parent" />
+        android:id="@+id/subquestsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

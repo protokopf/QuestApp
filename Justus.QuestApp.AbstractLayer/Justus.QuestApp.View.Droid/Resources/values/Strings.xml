@@ -3,4 +3,7 @@
     <string name="ApplicationName">Justus.QuestApp.View.Droid</string>
     <string name="ProgressDialogTitle">Please, wait...</string>
     <string name="ErrorTitle">Oops...</string>
+    <string name="QuestListTitle">DefaultTitle</string>
+    <string name="QuestListAdd">add</string>
+    <string name="QuestListBack">back</string>
 </resources>

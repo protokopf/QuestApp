@@ -37,6 +37,14 @@ namespace Justus.QuestApp.View.Droid.Adapters
         /// <param name="viewModel"></param>
         protected ExpandableListOfQuestsAdapter(Activity activity, TViewModel viewModel)
         {
+            if(activity == null)
+            {
+                throw new ArgumentNullException(nameof(activity));
+            }
+            if(viewModel == null)
+            {
+                throw new ArgumentNullException(nameof(viewModel));
+            }
             _activity = activity;
             _viewModel = viewModel;
         }

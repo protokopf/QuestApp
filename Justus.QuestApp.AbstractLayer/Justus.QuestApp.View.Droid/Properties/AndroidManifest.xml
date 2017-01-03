@@ -1,11 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
-          package="Justus.QuestApp.View.Droid.Justus.QuestApp.View.Droid" 
-          android:versionCode="1" 
-          android:versionName="1.0">
-	<uses-sdk />
-	<application 
-    android:label="Justus.QuestApp.View.Droid">
-    
-  </application>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="Justus.QuestApp.View.Droid.Justus.QuestApp.View.Droid" android:versionCode="1" android:versionName="1.0" android:installLocation="auto">
+	<uses-sdk android:minSdkVersion="10" />
+	<application android:label="@string/ApplicationName" android:theme="@style/MyMaterialTheme" android:icon="@drawable/Icon"></application>
 </manifest>

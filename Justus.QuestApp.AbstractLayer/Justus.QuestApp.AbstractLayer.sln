@@ -14,6 +14,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Justus.QuestApp.DataLayer.UnitTests", "Justus.QuestApp.DataLayer.UnitTests\Justus.QuestApp.DataLayer.UnitTests.csproj", "{C980A536-098D-4C37-BF48-129B89703A36}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Justus.QuestApp.ModelLayer", "Justus.QuestApp.ModelLayer\Justus.QuestApp.ModelLayer.csproj", "{72C61B17-7E0A-4C31-9AB4-2A5E0935166E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9D27BB00-D325-4644-B1D2-B13196C4D8AC} = {9D27BB00-D325-4644-B1D2-B13196C4D8AC}
+		{B75CF226-5D52-4A6D-A6FD-2E755D80AA57} = {B75CF226-5D52-4A6D-A6FD-2E755D80AA57}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Justus.QuestApp.ModelLayer.UnitTests", "Justus.QuestApp.ModelLayer.UnitTests\Justus.QuestApp.ModelLayer.UnitTests.csproj", "{8E6D973A-E1AE-46F6-B1BB-A8F10072C0A0}"
 EndProject

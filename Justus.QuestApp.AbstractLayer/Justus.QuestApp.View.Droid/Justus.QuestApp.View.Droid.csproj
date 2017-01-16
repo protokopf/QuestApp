@@ -114,16 +114,17 @@
   <ItemGroup>
     <Compile Include="Activities\BaseTabbedActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
-    <Compile Include="Adapters\StubQuestListAdapter.cs" />
+    <Compile Include="Adapters\QuestListAdapter.cs" />
     <Compile Include="Adapters\FragmentViewPagerAdapter.cs" />
     <Compile Include="Entities\StubQuestItemViewHolder.cs" />
-    <Compile Include="Entities\StubViewHolder.cs" />
+    <Compile Include="Fragments\ActiveQuestsFragment.cs" />
     <Compile Include="Fragments\BaseFragment.cs" />
-    <Compile Include="Fragments\StubQuestListFragment.cs" />
     <Compile Include="MyApplication.cs" />
     <Compile Include="Fragments\NotImplementedFragment.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StubServices\StubCommandManager.cs" />
+    <Compile Include="StubServices\StubQuestRepositoryService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -206,6 +207,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values-v21\Themes.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Vector.Drawable.24.2.1\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.24.2.1\build\Xamarin.Android.Support.Vector.Drawable.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

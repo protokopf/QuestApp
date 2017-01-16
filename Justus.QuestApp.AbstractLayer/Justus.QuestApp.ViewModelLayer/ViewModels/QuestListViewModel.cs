@@ -17,6 +17,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// </summary>
     public class QuestListViewModel : BaseViewModel
     {
+        private readonly List<Quest> _emptyList; 
         protected IQuestRepository QuestRepository;
         protected ICommandManager CommandManager;
 
@@ -27,6 +28,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             QuestRepository = ServiceLocator.Resolve<IQuestRepository>();
             CommandManager = ServiceLocator.Resolve<ICommandManager>();
+            _emptyList = new List<Quest>();
         }
 
         /// <summary>
@@ -62,13 +64,9 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             get
             {
                 List<Quest> children = CurrentQuest == null ? QuestRepository.GetAll() : CurrentQuest.Children;
-                if (children == null)
+                if (children == null || children.Count == 0)
                 {
-                    return new List<Quest>();
-                }
-                if (children.Count == 0)
-                {
-                    return children;
+                    return _emptyList;
                 }
                 return FilterQuests(children);
             }

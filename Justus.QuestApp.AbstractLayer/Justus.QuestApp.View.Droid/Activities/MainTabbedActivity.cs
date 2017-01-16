@@ -24,8 +24,8 @@ namespace Justus.QuestApp.View.Droid.Activities
     [Activity(Label = "@string/MainActivityLabel", MainLauncher = true)]
     public class MainTabbedActivity : BaseTabbedActivity
     {
-        private FragmentViewPagerAdapter mFragmentAdapter;
-        private CoordinatorLayout mCoordinatorLayout;
+        private FragmentViewPagerAdapter _fragmentAdapter;
+        private CoordinatorLayout _coordinatorLayout;
 
         #region BaseTabbedActivity overriding
 
@@ -74,10 +74,10 @@ namespace Justus.QuestApp.View.Droid.Activities
             switch (id)
             {
                 case Resource.Id.menuFirstOption:
-                    Snackbar.Make(mCoordinatorLayout, "First menu item clicked!",Snackbar.LengthShort).Show();
+                    Snackbar.Make(_coordinatorLayout, "First menu item clicked!",Snackbar.LengthShort).Show();
                     break;
                 case Resource.Id.menuSecondOption:
-                    Snackbar.Make(mCoordinatorLayout, "Second menu item clicked!", Snackbar.LengthShort).Show();
+                    Snackbar.Make(_coordinatorLayout, "Second menu item clicked!", Snackbar.LengthShort).Show();
                     break;
             }
             return base.OnOptionsItemSelected(item);
@@ -86,18 +86,18 @@ namespace Justus.QuestApp.View.Droid.Activities
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            mCoordinatorLayout = FindViewById<CoordinatorLayout>(Resource.Id.mainActivityCoordinatorLayout);
+            _coordinatorLayout = FindViewById<CoordinatorLayout>(Resource.Id.mainActivityCoordinatorLayout);
         }
 
         private void SetupViewPager(ViewPager viewPager)
         {
-            mFragmentAdapter = new FragmentViewPagerAdapter(SupportFragmentManager);
+            _fragmentAdapter = new FragmentViewPagerAdapter(SupportFragmentManager);
 
-            mFragmentAdapter.AddFragment(new StubQuestListFragment(),  Resources.GetString(Resource.String.ActiveQuestsLabel));
-            mFragmentAdapter.AddFragment(new NotImplementedFragment(), Resources.GetString(Resource.String.IdleQuestsLabel));
-            mFragmentAdapter.AddFragment(new NotImplementedFragment(), Resources.GetString(Resource.String.FinishedQuestsLabel));
+            _fragmentAdapter.AddFragment(new ActiveQuestsFragment(),  Resources.GetString(Resource.String.ActiveQuestsLabel));
+            _fragmentAdapter.AddFragment(new NotImplementedFragment(), Resources.GetString(Resource.String.IdleQuestsLabel));
+            _fragmentAdapter.AddFragment(new NotImplementedFragment(), Resources.GetString(Resource.String.FinishedQuestsLabel));
 
-            viewPager.Adapter = mFragmentAdapter;
+            viewPager.Adapter = _fragmentAdapter;
         }
     }
 }

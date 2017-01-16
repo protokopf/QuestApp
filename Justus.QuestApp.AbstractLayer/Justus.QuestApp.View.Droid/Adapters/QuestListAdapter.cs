@@ -11,24 +11,33 @@ using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.Entities;
+using Justus.QuestApp.ViewModelLayer.ViewModels;
 using Fragment = Android.Support.V4.App.Fragment;
 
 namespace Justus.QuestApp.View.Droid.Adapters
 {
-    public class StubQuestListAdapter : BaseAdapter<Quest>
+    public class QuestListAdapter : BaseAdapter<Quest>
     {
-        private Fragment mFragment;
-        private List<Quest> mQuests; 
+        private readonly Fragment _fragment;
+        private readonly QuestListViewModel _listViewModel;
 
-        public StubQuestListAdapter(Fragment fragment, List<Quest> quests)
+        public QuestListAdapter(Fragment fragment, QuestListViewModel listViewModel)
         {
-            mFragment = fragment;
-            mQuests = quests;
+            if (fragment == null)
+            {
+                throw new ArgumentNullException(nameof(fragment));
+            }
+            if (listViewModel == null)
+            {
+                throw new ArgumentNullException(nameof(listViewModel));
+            }
+            _fragment = fragment;
+            _listViewModel = listViewModel;
         }
 
-        public override Quest this[int position] => mQuests[position];
+        public override Quest this[int position] => _listViewModel.CurrentChildren[position];
 
-        public override int Count => mQuests.Count;
+        public override int Count => _listViewModel.CurrentChildren.Count;
 
         public override long GetItemId(int position)
         {
@@ -40,7 +49,7 @@ namespace Justus.QuestApp.View.Droid.Adapters
             StubQuestItemViewHolder viewHolder;
             if (convertView == null)
             {
-                convertView = mFragment.Activity.LayoutInflater.Inflate(
+                convertView = _fragment.Activity.LayoutInflater.Inflate(
                     Resource.Layout.QuestListItemHeader, null, false);
                 viewHolder = new StubQuestItemViewHolder(convertView);
                 convertView.SetTag(Resource.Id.questListItemHeader, viewHolder);
@@ -51,8 +60,9 @@ namespace Justus.QuestApp.View.Droid.Adapters
             }
             if (viewHolder != null)
             {
-                viewHolder.Title.Text = mQuests[position].Title;
-                viewHolder.TimeLeft.Text = FormLeftTime(mQuests[position].Deadline);
+                List<Quest> quests = _listViewModel.CurrentChildren;
+                viewHolder.Title.Text = quests[position].Title;
+                viewHolder.TimeLeft.Text = FormLeftTime(quests[position].Deadline);
                 viewHolder.Progress.Progress = 25;
             }
 

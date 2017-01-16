@@ -20,12 +20,12 @@ namespace Justus.QuestApp.View.Droid.Adapters
     /// <summary>
     /// Adapter for tabbed activity.
     /// </summary>
-    public class ViewPagerAdapter : FragmentPagerAdapter
+    public class FragmentViewPagerAdapter : FragmentPagerAdapter
     {
         private readonly List<Fragment> _fragments = new List<Fragment>(); 
         private readonly List<string> _fragmentsTitles = new List<string>();
 
-        public ViewPagerAdapter(FragmentManager manager) : base(manager)
+        public FragmentViewPagerAdapter(FragmentManager manager) : base(manager)
         {
             
         }

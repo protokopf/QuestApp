@@ -16,7 +16,7 @@
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v7.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -112,35 +112,42 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\StubActivity.cs" />
-    <Compile Include="Adapters\ExpandableListOfQuestsAdapter.cs" />
-    <Compile Include="Adapters\ViewPagerAdapter.cs" />
-    <Compile Include="Application.cs" />
-    <Compile Include="Fragments\StubFragment.cs" />
+    <Compile Include="Activities\BaseTabbedActivity.cs" />
+    <Compile Include="Activities\MainTabbedActivity.cs" />
+    <Compile Include="Adapters\StubQuestListAdapter.cs" />
+    <Compile Include="Adapters\FragmentViewPagerAdapter.cs" />
+    <Compile Include="Entities\StubQuestItemViewHolder.cs" />
+    <Compile Include="Entities\StubViewHolder.cs" />
+    <Compile Include="Fragments\BaseFragment.cs" />
+    <Compile Include="Fragments\StubQuestListFragment.cs" />
+    <Compile Include="MyApplication.cs" />
+    <Compile Include="Fragments\NotImplementedFragment.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Activities\BaseActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
-    <AndroidResource Include="Resources\layout\ActiveQuestsLayout.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\QuestGroupItemLayout.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\QuestChildItemLayout.axml">
+    <AndroidResource Include="Resources\layout\QuestListItemBody.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\QuestListHeader.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\StubFragmentLayout.axml">
+    <AndroidResource Include="Resources\layout\NotImplementedFragmentLayout.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\TabbedActivityLayout.axml">
+    <AndroidResource Include="Resources\layout\MainActivityLayout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\QuestListItemHeader.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\QuestListFragmentLayout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\menu\MainActivityMenu.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
@@ -163,6 +170,10 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Justus.QuestApp.AbstractLayer\Justus.QuestApp.AbstractLayer.csproj">
+      <Project>{9D27BB00-D325-4644-B1D2-B13196C4D8AC}</Project>
+      <Name>Justus.QuestApp.AbstractLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Justus.QuestApp.ModelLayer\Justus.QuestApp.ModelLayer.csproj">
       <Project>{72c61b17-7e0a-4c31-9ab4-2a5e0935166e}</Project>
       <Name>Justus.QuestApp.ModelLayer</Name>
@@ -178,9 +189,13 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values\ButtonStyles.xml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <AndroidResource Include="Resources\values\Colors.xml" />
+    <AndroidResource Include="Resources\drawable\addButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Colors.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Dimens.xml" />

@@ -8,24 +8,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Justus.QuestApp.AbstractLayer.Data;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
     /// <summary>
     /// Base type for view models, that works with quest items.
     /// </summary>
-    public class ListOfQuestsViewModel : BaseViewModel
+    public class QuestListViewModel : BaseViewModel
     {
-        protected IQuestRepository _questRepository;
-        protected ICommandManager _commandManager;
+        protected IQuestRepository QuestRepository;
+        protected ICommandManager CommandManager;
 
         /// <summary>
         /// Default constructor. Resolves references to quest repository and command manager.
         /// </summary>
-        public ListOfQuestsViewModel()
+        public QuestListViewModel()
         {
-            _questRepository = ServiceLocator.Resolve<IQuestRepository>();
-            _commandManager = ServiceLocator.Resolve<ICommandManager>();
+            QuestRepository = ServiceLocator.Resolve<IQuestRepository>();
+            CommandManager = ServiceLocator.Resolve<ICommandManager>();
         }
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         public async Task PushQuests()
         {
             IsBusy = true;
-            await Task.Run(() => _questRepository.PushQuests());
+            await Task.Run(() => QuestRepository.PushQuests());
             IsBusy = false;
         } 
 
@@ -44,7 +45,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         public async Task PullQuests()
         {
             IsBusy = true;
-            await Task.Run(() => _questRepository.PullQuests());
+            await Task.Run(() => QuestRepository.PullQuests());
             IsBusy = false;
         }
 
@@ -60,20 +61,32 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             get
             {
-                return CurrentQuest == null ? _questRepository.GetAll() : CurrentQuest.Children;
+                List<Quest> children = CurrentQuest == null ? QuestRepository.GetAll() : CurrentQuest.Children;
+                if (children == null)
+                {
+                    return new List<Quest>();
+                }
+                if (children.Count == 0)
+                {
+                    return children;
+                }
+                return FilterQuests(children);
             }
         }
 
         /// <summary>
-        /// Get 'generation' name of current ParentQuest. It looks like 'topParentTitle/secondParentTitle/ParentQuestTitle'
+        /// Get name of current parent quest.
         /// </summary>
-        public string QuestsListTitle
+        public string QuestsListTitle => CurrentQuest?.Title;
+
+        #region Protected methods
+
+        protected virtual List<Quest> FilterQuests(List<Quest> quests)
         {
-            get
-            {
-                return CurrentQuest?.Title;
-            }
+            return quests;
         }
+
+        #endregion
 
         #region Private methods
 

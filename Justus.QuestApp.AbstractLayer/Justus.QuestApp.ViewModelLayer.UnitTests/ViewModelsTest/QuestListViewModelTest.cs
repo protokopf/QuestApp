@@ -6,7 +6,7 @@ using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.ViewModelLayer.UnitTests.Stubs;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 using NUnit.Framework;
-using Rhino.Mocks;
+using Rhino.Mocks; 
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 {
     [TestFixture]
-    class ListOfQuestsViewModelTest
+    class QuestListViewModelTest
     {
         [TearDown]
         public void TearDown()
@@ -37,12 +37,12 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register<IQuestRepository>(() => { return repository; });
             ServiceLocator.Register<ICommandManager>(() => { return comManager; });
 
-            ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
+            QuestListViewModel viewModel = new QuestListViewModel();
             int countCallBack = 0;
-            vm.IsBusyChanged += (sender, args) => { countCallBack++; };
+            viewModel.IsBusyChanged += (sender, args) => { countCallBack++; };
 
             //Act
-            Task t = vm.PullQuests();
+            Task t = viewModel.PullQuests();
             t.Wait();
 
             //Assert
@@ -63,12 +63,12 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register<IQuestRepository>(() => { return repository; });
             ServiceLocator.Register<ICommandManager>(() => { return comManager; });
 
-            ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
+            QuestListViewModel viewModel = new QuestListViewModel();
             int countCallBack = 0;
-            vm.IsBusyChanged += (sender, args) => { countCallBack++; };
+            viewModel.IsBusyChanged += (sender, args) => { countCallBack++; };
 
             //Act
-            Task t = vm.PushQuests();
+            Task t = viewModel.PushQuests();
             t.Wait();
 
             //Assert
@@ -88,10 +88,10 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => { return repository; });
             ServiceLocator.Register(() => { return comManager; });
 
-            ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
+            QuestListViewModel viewModel = new QuestListViewModel();
 
             //Act
-            string questsListTitle = vm.QuestsListTitle;
+            string questsListTitle = viewModel.QuestsListTitle;
 
             //Assert
             Assert.IsNull(questsListTitle);
@@ -109,11 +109,11 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => { return repository; });
             ServiceLocator.Register(() => { return comManager; });
 
-            ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
-            vm.CurrentQuest = new FakeQuest() { Title = "fakeTitleOfFakeQuest" };
+            QuestListViewModel viewModel = new QuestListViewModel();
+            viewModel.CurrentQuest = new FakeQuest() { Title = "fakeTitleOfFakeQuest" };
 
             //Act
-            string questsListTitle = vm.QuestsListTitle;
+            string questsListTitle = viewModel.QuestsListTitle;
 
             //Assert
             Assert.IsNotNull(questsListTitle);
@@ -131,12 +131,12 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => { return repository; });
             ServiceLocator.Register(() => { return comManager; });
 
-            ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
-            vm.CurrentQuest = new FakeQuest() { Title = "child" };
-            vm.CurrentQuest.Parent = new FakeQuest() { Title = "parent" };
+            QuestListViewModel viewModel = new QuestListViewModel();
+            viewModel.CurrentQuest = new FakeQuest() { Title = "child" };
+            viewModel.CurrentQuest.Parent = new FakeQuest() { Title = "parent" };
 
             //Act
-            string questsListTitle = vm.QuestsListTitle;
+            string questsListTitle = viewModel.QuestsListTitle;
 
 
             //Assert
@@ -156,10 +156,10 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => { return repository; });
             ServiceLocator.Register(() => { return comManager; });
 
-            ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
+            QuestListViewModel viewModel = new QuestListViewModel();
 
             //Act
-            List<Quest> quests = vm.CurrentChildren;
+            List<Quest> quests = viewModel.CurrentChildren;
 
             //Assert
             repository.VerifyAllExpectations();
@@ -177,11 +177,11 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => { return repository; });
             ServiceLocator.Register(() => { return comManager; });
 
-            ListOfQuestsViewModel vm = new ListOfQuestsViewModel();
-            vm.CurrentQuest = new FakeQuest() { Children = new List<Quest>() };
+            QuestListViewModel viewModel = new QuestListViewModel();
+            viewModel.CurrentQuest = new FakeQuest() { Children = new List<Quest>() };
 
             //Act
-            List<Quest> quests = vm.CurrentChildren;
+            List<Quest> quests = viewModel.CurrentChildren;
 
             //Assert
             repository.VerifyAllExpectations();

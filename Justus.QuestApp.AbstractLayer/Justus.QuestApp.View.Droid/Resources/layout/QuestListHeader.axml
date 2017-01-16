@@ -4,7 +4,6 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-  
     <Button
         android:id="@+id/questsListBack"
         android:text="@string/QuestListBack"
@@ -16,10 +15,4 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         style="@style/WrapContent.QuestListTitle"
         android:layout_weight="8" />
-    <Button
-        android:id="@+id/questsListAdd"
-        android:text="@string/QuestListAdd"
-        style="@style/WrapContent.Button"
-        android:layout_weight="1" />
-  
 </LinearLayout>

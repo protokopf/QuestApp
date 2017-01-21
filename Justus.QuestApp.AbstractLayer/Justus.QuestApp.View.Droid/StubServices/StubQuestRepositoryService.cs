@@ -18,11 +18,17 @@ namespace Justus.QuestApp.View.Droid.StubServices
 {
     class StubQuestRepositoryService : IQuestRepository
     {
-        private int mCount = 0;
+        private int _depth = 0;
+        private int _child = 0;
+        private int _currentId = 0;
+        private int _topCount = 0;
+        private List<Quest> _quests = null; 
 
-        public StubQuestRepositoryService(int count)
+        public StubQuestRepositoryService(int topCount, int depth, int child)
         {
-            mCount = count;
+            _topCount = topCount;
+            _depth = depth;
+            _child = child;
         }
 
         public void Dispose()
@@ -67,7 +73,7 @@ namespace Justus.QuestApp.View.Droid.StubServices
 
         public List<Quest> GetAll()
         {
-            return GetQuests(mCount);
+            return _quests ?? (_quests = GetQuests(_topCount));
         }
 
         public void Delete(Quest quest)
@@ -100,15 +106,38 @@ namespace Justus.QuestApp.View.Droid.StubServices
             List<Quest> quests = new List<Quest>();
             for (int i = 0; i < count; ++i)
             {
-                Quest q = new StubQuest
-                {
-                    Title = "Title " + i,
-                    Deadline = DateTime.Now + new TimeSpan(i, 0, 0)
-                };
-                q.CurrentState = i%2 == 0 ? QuestState.Progress : QuestState.Idle;
-                quests.Add(q);
+                quests.Add(CreateCompositeQuestFromAbove(_depth, _child));
             }
             return quests;
+        }
+
+        private Quest CreateQuest(int id = 0)
+        {
+            return new StubQuest()
+            {
+                Id = id,
+                Title = "Title " + id,
+                Description = "Description " + id,
+                CurrentState = QuestState.Progress,
+                Children = new List<Quest>(),
+                Deadline = DateTime.Now + new TimeSpan(0,id,0)
+            };
+        }
+
+        private Quest CreateCompositeQuestFromAbove(int compositionLevel, int childNumber)
+        {
+            Quest quest = CreateQuest(++_currentId);
+            if (compositionLevel == 0 || childNumber == 0)
+            {
+                return quest;
+            }
+            for (int i = 0; i < childNumber; ++i)
+            {
+                Quest child = CreateCompositeQuestFromAbove(compositionLevel - 1, childNumber);
+                child.Parent = quest;
+                quest.Children.Add(child);
+            }
+            return quest;
         }
     }
 

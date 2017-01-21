@@ -42,13 +42,13 @@ namespace Justus.QuestApp.View.Droid
 
         private void InitializeModelServices()
         {
-            ServiceLocator.Register<IQuestRepository>(() => new StubQuestRepositoryService(15));
+            ServiceLocator.Register<IQuestRepository>(() => new StubQuestRepositoryService(3,2,3));
             ServiceLocator.Register<ICommandManager>(() => new StubCommandManager());
         }
 
         private void InitializeViewModelServices()
         {
-            ServiceLocator.Register<ActiveQuestListViewModel>(() => new ActiveQuestListViewModel());
+            ServiceLocator.Register(() => new ActiveQuestListViewModel());
         }
 
     }

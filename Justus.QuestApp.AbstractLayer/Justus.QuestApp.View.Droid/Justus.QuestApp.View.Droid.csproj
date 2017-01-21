@@ -114,9 +114,11 @@
   <ItemGroup>
     <Compile Include="Activities\BaseTabbedActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
-    <Compile Include="Adapters\QuestListAdapter.cs" />
+    <Compile Include="Adapters\BaseQuestListAdapter.cs" />
+    <Compile Include="Adapters\ActiveQuestListAdapter.cs" />
     <Compile Include="Adapters\FragmentViewPagerAdapter.cs" />
-    <Compile Include="Entities\StubQuestItemViewHolder.cs" />
+    <Compile Include="Animation\ExpandAnimation.cs" />
+    <Compile Include="Entities\ActiveQuestItemViewHolder.cs" />
     <Compile Include="Fragments\ActiveQuestsFragment.cs" />
     <Compile Include="Fragments\BaseFragment.cs" />
     <Compile Include="MyApplication.cs" />

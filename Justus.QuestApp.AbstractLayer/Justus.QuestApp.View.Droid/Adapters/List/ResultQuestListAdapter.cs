@@ -19,7 +19,7 @@ using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Adapters.List
 {
-    public class ResultQuestListAdapter : BaseQuestListAdapter<ResultsQuestListVIewModel>
+    public class ResultQuestListAdapter : BaseQuestListAdapter<ResultsQuestListVIewModel, ResultQuestItemViewHolder>
     {
         private readonly ResultQuestsFragment _fragment;
         private readonly Dictionary<Android.Views.View, ResultQuestItemViewHolder> _holders;
@@ -40,38 +40,29 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
             _failedStatus = _fragment.Activity.Resources.GetString(Resource.String.FailedStatus);
         }
 
-        protected override Android.Views.View ConstructViewFromQuest(int position, Android.Views.View view, ViewGroup parent, Quest quest)
+        #region BaseQuestListAdapter overriding
+
+        ///<inheritdoc/>
+        protected override Android.Views.View InflateView()
         {
-            ResultQuestItemViewHolder holder = null;
-            if (view == null)
-            {
-                view = _fragment.Activity.LayoutInflater.Inflate(Resource.Layout.ResultQuestListItemHeader, null,false);
-                holder = new ResultQuestItemViewHolder(view, position);
-                _holders.Add(view, holder);
-            }
-            else
-            {
-                holder = _holders[view];
-            }
-            FillViewHolder(holder, quest, position);
-            return view;
+            return _fragment.Activity.LayoutInflater.Inflate(Resource.Layout.ResultQuestListItemHeader, null, false);
         }
 
-        public ResultQuestItemViewHolder GetHolderByView(Android.Views.View view)
+        ///<inheritdoc/>
+        protected override ResultQuestItemViewHolder CreateViewHolder(Android.Views.View view, int position)
         {
-            ResultQuestItemViewHolder holder = null;
-            _holders.TryGetValue(view, out holder);
-            return holder;
+            return new ResultQuestItemViewHolder(view, position);
         }
 
-        private void FillViewHolder(ResultQuestItemViewHolder holder, Quest quest, int position)
+        ///<inheritdoc/>
+        protected override void FillViewHolder(ResultQuestItemViewHolder holder, Quest questData, int position)
         {
             holder.ItemPosition = position;
-            holder.StartButton.Visibility = quest.Parent == null ? ViewStates.Visible : ViewStates.Gone;
-            holder.Title.Text = quest.Title;
-            holder.Description.Text = quest.Description;
-            holder.ChildrenButton.Enabled = quest.Children != null;
-            switch (quest.CurrentState)
+            holder.StartButton.Visibility = questData.Parent == null ? ViewStates.Visible : ViewStates.Gone;
+            holder.Title.Text = questData.Title;
+            holder.Description.Text = questData.Description;
+            holder.ChildrenButton.Enabled = questData.Children != null;
+            switch (questData.CurrentState)
             {
                 case QuestState.Done:
                     holder.Status.Text = _doneStatus;
@@ -87,5 +78,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
                     break;
             }
         }
+
+        #endregion
     }
 }

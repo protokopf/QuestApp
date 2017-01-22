@@ -9,7 +9,7 @@ using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Adapters.List
 {
-    public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestListViewModel>
+    public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
     {
         private readonly ActiveQuestsFragment _fragment;
         private readonly Dictionary<Android.Views.View, ActiveQuestItemViewHolder> _holdersDictionary;
@@ -32,63 +32,53 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         #region BaseQuestListAdapter overriding
 
         ///<inheritdoc/>
-        protected override Android.Views.View ConstructViewFromQuest(int position, Android.Views.View view, ViewGroup parent, Quest quest)
+        protected override Android.Views.View InflateView()
         {
-            ActiveQuestItemViewHolder viewHolder = null;
-            if (view == null)
-            {
-                view = _fragment.Activity.LayoutInflater.Inflate(Resource.Layout.ActiveQuestListItemHeader, null, false);
-                viewHolder = new ActiveQuestItemViewHolder(view, position);
-                _holdersDictionary.Add(view, viewHolder);
-            }
-            else
-            {
-                viewHolder = _holdersDictionary[view];
-            }
+           return _fragment.Activity.LayoutInflater.Inflate(Resource.Layout.ActiveQuestListItemHeader, null, false);
+        }
 
-            FillHolder(viewHolder, quest, position);
-            return view;
+        ///<inheritdoc/>
+        protected override ActiveQuestItemViewHolder CreateViewHolder(Android.Views.View view, int position)
+        {
+            return new ActiveQuestItemViewHolder(view, position);
+        }
+
+        ///<inheritdoc/>
+        protected override void FillViewHolder(ActiveQuestItemViewHolder holder, Quest questData, int position)
+        {
+            holder.Title.Text = questData.Title;
+            holder.Description.Text = questData.Description;
+            holder.TimeLeft.Text = FormLeftTime(questData.Deadline);
+            holder.Progress.Progress = ListViewModel.CountProgress(questData);
+            holder.ChildrenButton.Enabled = questData.Children != null;
+            holder.ItemPosition = position;
+
+            switch (questData.CurrentState)
+            {
+                case QuestState.Done:
+                    holder.Title.SetTextColor(Color.Green);
+                    break;
+                case QuestState.Failed:
+                    holder.Title.SetTextColor(Color.Red);
+                    break;
+                case QuestState.Idle:
+                    holder.Title.SetTextColor(Color.Gray);
+                    break;
+                default:
+                    holder.Title.SetTextColor(Color.Orange);
+                    break;
+            }
         }
 
         #endregion
 
-        public ActiveQuestItemViewHolder GetHolderByView(Android.Views.View view)
-        {
-            ActiveQuestItemViewHolder holder = null;
-            _holdersDictionary.TryGetValue(view, out holder);
-            return holder;
-        }
-
-        private void FillHolder(ActiveQuestItemViewHolder viewHolder, Quest quest, int position)
-        {           
-            viewHolder.Title.Text = quest.Title;
-            viewHolder.Description.Text = quest.Description;
-            viewHolder.TimeLeft.Text = FormLeftTime(quest.Deadline);
-            viewHolder.Progress.Progress = ListViewModel.CountProgress(quest);
-            viewHolder.ChildrenButton.Enabled = quest.Children != null;
-            viewHolder.ItemPosition = position;
-
-            switch (quest.CurrentState)
-            {
-                case QuestState.Done:
-                    viewHolder.Title.SetTextColor(Color.Green);
-                    break;
-                case QuestState.Failed:
-                    viewHolder.Title.SetTextColor(Color.Red);
-                    break;
-                case QuestState.Idle:
-                    viewHolder.Title.SetTextColor(Color.Gray);
-                    break;
-                default:
-                    viewHolder.Title.SetTextColor(Color.Orange);
-                    break;
-            }
-        }
 
         private string FormLeftTime(DateTime deadLine)
         {
             TimeSpan s = deadLine - DateTime.Now;
             return $"{s.Hours}:{s.Minutes}:{s.Seconds}";
         }
+
+
     }
 }

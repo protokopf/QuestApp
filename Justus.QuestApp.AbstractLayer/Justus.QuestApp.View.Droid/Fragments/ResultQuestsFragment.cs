@@ -9,38 +9,36 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.Adapters.List;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Fragments
 {
-    public class ResultQuestsFragment : BaseFragment<ResultsQuestListVIewModel>
+    public class ResultQuestsFragment : BaseQuestListFragment<ResultsQuestListVIewModel, ResultQuestItemViewHolder>
     {
         private TextView _headerTextView;
         private Button _backButton;
-        private ListView _resultsQuestListView;
-
-        private ResultQuestListAdapter _adapter;
         private string _headerDefault = String.Empty;
 
         public override void OnResume()
         {
             base.OnResume();
-            _adapter.NotifyDataSetChanged();
+            QuestListAdapter.NotifyDataSetChanged();
         }
 
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
-            _resultsQuestListView = view.FindViewById<ListView>(Resource.Id.questListId);
+            QuestListView = view.FindViewById<ListView>(Resource.Id.questListId);
 
             _headerTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);
             _backButton = view.FindViewById<Button>(Resource.Id.questsListBack);
 
-            _resultsQuestListView.Adapter = _adapter = new ResultQuestListAdapter(this, ViewModel);
-            _resultsQuestListView.ItemClick += ItemClickHandler;
-            _resultsQuestListView.ChildViewAdded += QuestAddedHandler;
+            QuestListView.Adapter = QuestListAdapter = new ResultQuestListAdapter(this, ViewModel);
+            QuestListView.ItemClick += ItemClickHandler;
+            QuestListView.ChildViewAdded += QuestAddedHandler;
 
             _backButton.Click += BackButtonOnClick;
             _backButton.Enabled = ViewModel.CurrentQuest != null;
@@ -52,7 +50,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void QuestAddedHandler(object sender, ViewGroup.ChildViewAddedEventArgs e)
         {
-            ResultQuestItemViewHolder holder = _adapter.GetHolderByView(e.Child);
+            ResultQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(e.Child);
             holder.StartButton.Click += (s, args) => { StartHandler(holder.ItemPosition); };
             holder.DeleteButton.Click += (s, args) => { DeleteHandler(holder.ItemPosition); };
             holder.ChildrenButton.Click += (s, args) => { ChildrenHandler(holder.ItemPosition); };
@@ -62,7 +60,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void ItemClickHandler(object sender, AdapterView.ItemClickEventArgs e)
         {
-            ResultQuestItemViewHolder holder = _adapter.GetHolderByView(e.View);
+            ResultQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(e.View);
             holder.Details.Visibility = holder.Details.Visibility == ViewStates.Visible ? ViewStates.Gone : ViewStates.Visible;
 
         }
@@ -72,7 +70,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ViewModel.CurrentQuest = ViewModel.CurrentQuest.Parent;
             _headerTextView.Text = ViewModel.QuestsListTitle ?? _headerDefault;
             _backButton.Enabled = ViewModel.CurrentQuest != null;
-            _adapter.NotifyDataSetChanged();
+            QuestListAdapter.NotifyDataSetChanged();
         }
 
         private void StartHandler(int position)
@@ -90,12 +88,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ViewModel.CurrentQuest = ViewModel.CurrentChildren[position];
             _headerTextView.Text = ViewModel.QuestsListTitle;
             _backButton.Enabled = ViewModel.CurrentQuest != null;
-            for (int i = 0; i < _adapter.Count; ++i)
+            for (int i = 0; i < QuestListAdapter.Count; ++i)
             {
-                ResultQuestItemViewHolder holder = _adapter.GetHolderByView(_resultsQuestListView.GetChildAt(i));
+                ResultQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(QuestListView.GetChildAt(i));
                 holder.Details.Visibility = ViewStates.Gone;
             }
-            _adapter.NotifyDataSetChanged();
+            QuestListAdapter.NotifyDataSetChanged();
         }
 
         #endregion

@@ -14,13 +14,16 @@ using Android.Widget;
 
 namespace Justus.QuestApp.View.Droid.ViewHolders
 {
-    public class ResultQuestItemViewHolder : RecyclerView.ViewHolder
+    /// <summary>
+    /// View holder for result quest item.
+    /// </summary>
+    public class ResultQuestItemViewHolder : PositionedViewHolder
     {
         public ResultQuestItemViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
         {
         }
 
-        public ResultQuestItemViewHolder(Android.Views.View itemView, int position) : base(itemView)
+        public ResultQuestItemViewHolder(Android.Views.View itemView, int position) : base(itemView, position)
         {
             Title = itemView.FindViewById<TextView>(Resource.Id.resultQuestTitle);
             Status = itemView.FindViewById<TextView>(Resource.Id.resultQuestStatus);
@@ -31,8 +34,6 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
             StartButton = Details.FindViewById<Button>(Resource.Id.resultQuestStart);
             DeleteButton = Details.FindViewById<Button>(Resource.Id.resultQuestDelete);
             ChildrenButton = Details.FindViewById<Button>(Resource.Id.resultQuestChildrenButton);
-
-            ItemPosition = position;
         }
 
         public TextView Title { get; set; }
@@ -47,7 +48,5 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
         public Button StartButton { get; set; }
 
         public Button DeleteButton { get; set; }
-
-        public int ItemPosition { get; set; }
     }
 }

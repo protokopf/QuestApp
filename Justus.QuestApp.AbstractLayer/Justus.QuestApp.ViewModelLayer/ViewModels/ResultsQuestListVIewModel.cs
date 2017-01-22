@@ -8,26 +8,27 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
     /// <summary>
-    /// View model for active quests from list.
+    /// View model for list of done and failed quests.
     /// </summary>
-    public class ActiveQuestListViewModel : QuestListViewModel
+    public class ResultsQuestListVIewModel : QuestListViewModel
     {
         #region QuestListViewModel overriding
 
         ///<inheritdoc/>
         protected override List<Quest> FilterQuests(List<Quest> quests)
         {
-            return quests.Where(FilterEachQuest).ToList();
+            return
+                quests.Where(FilterItem)
+                    .ToList();
         }
 
         #endregion
 
-        private bool FilterEachQuest(Quest quest)
+        private bool FilterItem(Quest quest)
         {
-            QuestState state = quest.CurrentState;
             if (quest.Parent == null)
             {
-                return state == QuestState.Progress;
+                return quest.CurrentState == QuestState.Done || quest.CurrentState == QuestState.Failed;
             }
             return true;
         }

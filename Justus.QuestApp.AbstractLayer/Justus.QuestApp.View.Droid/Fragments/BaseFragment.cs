@@ -70,10 +70,11 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void InitiliazeProgressDialog()
         {
-            ProgressDialogRef = new ProgressDialog(Context, Resource.Style.MyMaterialTheme);
+            ProgressDialogRef = new ProgressDialog(Activity);
             ProgressDialogRef.SetProgressStyle(ProgressDialogStyle.Spinner);
             ProgressDialogRef.SetCancelable(false);
             ProgressDialogRef.SetTitle(Resource.String.ProgressDialogTitle);
+            ProgressDialogRef.Window.SetGravity(GravityFlags.CenterVertical | GravityFlags.CenterHorizontal);
         }
 
         private void OnIsBusyChanged(object sender, EventArgs e)

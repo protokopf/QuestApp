@@ -22,7 +22,8 @@ namespace Justus.QuestApp.View.Droid.StubServices
         private int _child = 0;
         private int _currentId = 0;
         private int _topCount = 0;
-        private List<Quest> _quests = null; 
+        private List<Quest> _quests = null;
+        private Random _random = new Random();
 
         public StubQuestRepositoryService(int topCount, int depth, int child)
         {
@@ -113,12 +114,15 @@ namespace Justus.QuestApp.View.Droid.StubServices
 
         private Quest CreateQuest(int id = 0)
         {
+            string title;
+            QuestState state = GetState(out title);
+
             return new StubQuest()
             {
                 Id = id,
-                Title = "Title " + id,
+                Title = title + id,
                 Description = "Description " + id,
-                CurrentState = QuestState.Progress,
+                CurrentState = state,
                 Children = new List<Quest>(),
                 Deadline = DateTime.Now + new TimeSpan(0,id,0)
             };
@@ -138,6 +142,36 @@ namespace Justus.QuestApp.View.Droid.StubServices
                 quest.Children.Add(child);
             }
             return quest;
+        }
+
+        private QuestState GetState(out string title)
+        {
+            int rand = _random.Next(0, 4);
+            QuestState state = QuestState.Idle;
+            switch (rand)
+            {
+                case 0:
+                    state = QuestState.Failed;
+                    title = "Title failed ";
+                    break;
+                case 1:
+                    state = QuestState.Done;
+                    title = "Title done ";
+                    break;
+                case 2:
+                    state = QuestState.Progress;
+                    title = "Title progress ";
+                    break;
+                case 3:
+                    state = QuestState.Idle;
+                    title = "Title idled ";
+                    break;
+                default:
+                    state = QuestState.Idle;
+                    title = "Title idled ";
+                    break;
+            }
+            return state;
         }
     }
 

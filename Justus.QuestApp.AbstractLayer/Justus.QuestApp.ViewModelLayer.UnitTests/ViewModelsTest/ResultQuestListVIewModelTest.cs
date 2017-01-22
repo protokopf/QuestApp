@@ -15,25 +15,25 @@ using Rhino.Mocks;
 namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 {
     [TestFixture]
-    class ActiveQuestListViewModelTest
+    class ResultQuestListVIewModelTest
     {
         [TearDown]
-        public void TearDown()
+        public void ReleaseLocator()
         {
             ServiceLocator.ReleaseAll();
         }
 
         [Test]
-        public void FilterQuest()
+        public void FilterOnTopLevelQuests()
         {
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
 
-            List<Quest> fromRepository = new List<Quest>()
+            List<Quest> fromRepository = new List<Quest>
             {
-                new FakeQuest {CurrentState = QuestState.Done},
-                new FakeQuest {CurrentState = QuestState.Failed},
-                new FakeQuest {CurrentState = QuestState.Idle},
-                new FakeQuest {CurrentState = QuestState.Progress}
+                new FakeQuest {CurrentState = QuestState.Done , Parent = null},
+                new FakeQuest {CurrentState = QuestState.Failed , Parent = null},
+                new FakeQuest {CurrentState = QuestState.Idle , Parent = null},
+                new FakeQuest {CurrentState = QuestState.Progress , Parent = null}
             };
 
             repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
@@ -44,15 +44,16 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => comManager);
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
 
-            QuestListViewModel viewModel = new ActiveQuestListViewModel();
+            QuestListViewModel viewModel = new ResultsQuestListVIewModel();
 
             //Act
             List<Quest> quests = viewModel.CurrentChildren;
 
             //Assert
             Assert.IsNotNull(quests);
-            Assert.AreEqual(1, quests.Count);
-            Assert.AreEqual(QuestState.Progress, quests[0].CurrentState);
+            Assert.AreEqual(2, quests.Count);
+            Assert.IsTrue(quests.Any(q => q.CurrentState == QuestState.Done));
+            Assert.IsTrue(quests.Any(q => q.CurrentState == QuestState.Failed));
 
             Assert.AreEqual(4, fromRepository.Count);
             Assert.IsTrue(fromRepository.Any(quest => quest.CurrentState == QuestState.Done));
@@ -86,7 +87,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => comManager);
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
 
-            QuestListViewModel viewModel = new ActiveQuestListViewModel();
+            QuestListViewModel viewModel = new ResultsQuestListVIewModel();
 
             //Act
             List<Quest> quests = viewModel.CurrentChildren;
@@ -107,7 +108,5 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 
             repository.VerifyAllExpectations();
         }
-
-
     }
 }

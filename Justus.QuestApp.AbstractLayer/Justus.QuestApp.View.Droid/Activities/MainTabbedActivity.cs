@@ -94,8 +94,8 @@ namespace Justus.QuestApp.View.Droid.Activities
             _fragmentAdapter = new FragmentViewPagerAdapter(SupportFragmentManager);
 
             _fragmentAdapter.AddFragment(new ActiveQuestsFragment(),  Resources.GetString(Resource.String.ActiveQuestsLabel));
+            _fragmentAdapter.AddFragment(new ResultQuestsFragment(), Resources.GetString(Resource.String.ResultQuestsLabel));
             _fragmentAdapter.AddFragment(new NotImplementedFragment(), Resources.GetString(Resource.String.IdleQuestsLabel));
-            _fragmentAdapter.AddFragment(new NotImplementedFragment(), Resources.GetString(Resource.String.FinishedQuestsLabel));
 
             viewPager.Adapter = _fragmentAdapter;
         }

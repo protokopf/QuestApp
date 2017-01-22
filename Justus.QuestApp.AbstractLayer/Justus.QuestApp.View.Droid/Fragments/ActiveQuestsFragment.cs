@@ -10,7 +10,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.View.Droid.Adapters;
-using Justus.QuestApp.View.Droid.Entities;
+using Justus.QuestApp.View.Droid.Adapters.List;
+using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Fragments
@@ -24,16 +25,17 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private TextView _headerTextView;
         private Button _backButton;
         private ActiveQuestListAdapter _adapter;
-        private string HeaderDefault = String.Empty;
+        private string _headerDefault = String.Empty;
+
+        #region Fragment overriding
 
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
 
-
             _listView = view.FindViewById<ListView>(Resource.Id.questListId);
             _headerTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);
-            HeaderDefault = _headerTextView.Text;
+            _headerDefault = _headerTextView.Text;
             _backButton = view.FindViewById<Button>(Resource.Id.questsListBack);
 
             _backButton.Enabled = ViewModel.CurrentQuest != null;
@@ -46,8 +48,21 @@ namespace Justus.QuestApp.View.Droid.Fragments
             return view;
         }
 
+        public override void OnPause()
+        {
+            base.OnPause();
+            PullQuests();
+            
+        }
 
+        public override void OnResume()
+        {
+            base.OnResume();
+            PushQuests();
+            _adapter.NotifyDataSetChanged();
+        }
 
+        #endregion
 
         #region Handlers
 
@@ -62,14 +77,14 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void ItemClickHandler(object sender, AdapterView.ItemClickEventArgs args)
         {
-            LinearLayout layout = args.View.FindViewById<LinearLayout>(Resource.Id.childItemLayout);
-            layout.Visibility = layout.Visibility == ViewStates.Visible ? ViewStates.Gone : ViewStates.Visible;
+            ActiveQuestItemViewHolder holder = _adapter.GetHolderByView(args.View);
+            holder.Details.Visibility = holder.Details.Visibility == ViewStates.Visible ? ViewStates.Gone : ViewStates.Visible;
         }
 
         private void BackButtonHandler(object sender, EventArgs e)
         {
             ViewModel.CurrentQuest = ViewModel.CurrentQuest.Parent;
-            _headerTextView.Text = ViewModel.QuestsListTitle ?? HeaderDefault;
+            _headerTextView.Text = ViewModel.QuestsListTitle ?? _headerDefault;
             _backButton.Enabled = ViewModel.CurrentQuest != null;
             _adapter.NotifyDataSetChanged();
         }
@@ -92,11 +107,26 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void ChildrenClickHandler(int viewPosition)
         {
             ViewModel.CurrentQuest = ViewModel.CurrentChildren[viewPosition];
-            _headerTextView.Text = ViewModel.QuestsListTitle ?? HeaderDefault;
+            _headerTextView.Text = ViewModel.QuestsListTitle ?? _headerDefault;
             _backButton.Enabled = ViewModel.CurrentQuest != null;
+            for (int i = 0; i < _listView.Count; ++i)
+            {
+                ActiveQuestItemViewHolder holder = _adapter.GetHolderByView(_listView.GetChildAt(i));
+                holder.Details.Visibility = ViewStates.Gone;
+            }
             _adapter.NotifyDataSetChanged();
         } 
 
         #endregion
+
+        private async void PullQuests()
+        {
+            await ViewModel.PullQuests();
+        }
+
+        private async void PushQuests()
+        {
+            await ViewModel.PushQuests();
+        }
     }
 }

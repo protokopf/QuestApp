@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Data;
+using Justus.QuestApp.AbstractLayer.Entities;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
@@ -20,6 +21,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         private readonly List<Quest> _emptyList; 
         protected IQuestRepository QuestRepository;
         protected ICommandManager CommandManager;
+        protected IQuestProgressCounter ProgressCounter;
 
         /// <summary>
         /// Default constructor. Resolves references to quest repository and command manager.
@@ -28,6 +30,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             QuestRepository = ServiceLocator.Resolve<IQuestRepository>();
             CommandManager = ServiceLocator.Resolve<ICommandManager>();
+            ProgressCounter = ServiceLocator.Resolve<IQuestProgressCounter>();
             _emptyList = new List<Quest>();
         }
 
@@ -76,6 +79,13 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Get name of current parent quest.
         /// </summary>
         public string QuestsListTitle => CurrentQuest?.Title;
+
+        public int CountProgress(Quest quest)
+        {
+            ProgressValue value = ProgressCounter.CountProgress(quest);
+            int result = (int) (((double) value.Current/(double) value.Total)*100);
+            return result;
+        }
 
         #region Protected methods
 

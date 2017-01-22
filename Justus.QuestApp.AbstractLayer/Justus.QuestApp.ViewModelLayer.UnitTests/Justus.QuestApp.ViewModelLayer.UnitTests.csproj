@@ -53,6 +53,7 @@
     <Compile Include="ViewModelsTest\ActiveQuestListViewModelTest.cs" />
     <Compile Include="ViewModelsTest\QuestListViewModelTest.cs" />
     <Compile Include="ViewModelsTest\BaseViewModelTest.cs" />
+    <Compile Include="ViewModelsTest\ResultQuestListVIewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

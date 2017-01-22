@@ -114,25 +114,28 @@
   <ItemGroup>
     <Compile Include="Activities\BaseTabbedActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
-    <Compile Include="Adapters\BaseQuestListAdapter.cs" />
-    <Compile Include="Adapters\ActiveQuestListAdapter.cs" />
+    <Compile Include="Adapters\List\BaseQuestListAdapter.cs" />
+    <Compile Include="Adapters\List\ActiveQuestListAdapter.cs" />
     <Compile Include="Adapters\FragmentViewPagerAdapter.cs" />
+    <Compile Include="Adapters\List\ResultQuestListAdapter.cs" />
     <Compile Include="Animation\ExpandAnimation.cs" />
-    <Compile Include="Entities\ActiveQuestItemViewHolder.cs" />
+    <Compile Include="ViewHolders\ActiveQuestItemViewHolder.cs" />
     <Compile Include="Fragments\ActiveQuestsFragment.cs" />
     <Compile Include="Fragments\BaseFragment.cs" />
+    <Compile Include="Fragments\ResultQuestsFragment.cs" />
     <Compile Include="MyApplication.cs" />
     <Compile Include="Fragments\NotImplementedFragment.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StubServices\StubCommandManager.cs" />
     <Compile Include="StubServices\StubQuestRepositoryService.cs" />
+    <Compile Include="ViewHolders\ResultQuestItemViewHolder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
-    <AndroidResource Include="Resources\layout\QuestListItemBody.axml">
+    <AndroidResource Include="Resources\layout\ActiveQuestListItemBody.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\QuestListHeader.axml">
@@ -144,13 +147,19 @@
     <AndroidResource Include="Resources\layout\MainActivityLayout.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\QuestListItemHeader.axml">
+    <AndroidResource Include="Resources\layout\ActiveQuestListItemHeader.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\QuestListFragmentLayout.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\menu\MainActivityMenu.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\ResultQuestListItemHeader.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\ResultQuestListItemBody.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

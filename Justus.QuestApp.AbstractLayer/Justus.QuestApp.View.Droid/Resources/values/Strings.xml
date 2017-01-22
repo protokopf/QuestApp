@@ -4,8 +4,9 @@
    <!--TabHostActivity-->
   <string name="MainActivityLabel">Quest Application</string>
   <string name="ActiveQuestsLabel">Active</string>
-  <string name="FinishedQuestsLabel">Finished</string>
+  <string name="ResultQuestsLabel">Results</string>
   <string name="IdleQuestsLabel">Available</string>
+  
       <!---Menu labels-->
       <string name="MenuFirstOption">First item</string>
       <string name="MenuSecondOption">Second item</string>
@@ -15,11 +16,17 @@
   <string name="DoneButtonText">Done</string>   
   <string name="FailButtonText">Fail</string>
   <string name="EditButtonText">Edit</string>
+  <string name="StartButtonText">Restart</string>
+  <string name="DeleteButtonText">Delete</string>
   <string name="DefaultDesctiprion">Description..</string>
+  
+  <string name="FailedStatus">Failed</string>
+  <string name="DoneStatus">Done</string>
   
   <!---QuestGroupItemLayoutStrings-->
   <string name="QuestDefaultTitle">Title</string>
   <string name="QuestDefaultTimeLeft">hh:mm:ss</string>
+  <string name="QuestDefaultStatus">Status</string>
 
   <!---QuestListHeaderStrings-->
   <string name="QuestListTitle">DefaultTitle</string>

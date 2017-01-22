@@ -1,26 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
+using Android.Graphics;
 using Android.Views;
-using Android.Widget;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.View.Droid.Entities;
 using Justus.QuestApp.View.Droid.Fragments;
+using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
-using Fragment = Android.Support.V4.App.Fragment;
 
-namespace Justus.QuestApp.View.Droid.Adapters
+namespace Justus.QuestApp.View.Droid.Adapters.List
 {
     public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestListViewModel>
     {
         private readonly ActiveQuestsFragment _fragment;
-        private readonly Dictionary<Android.Views.View, ActiveQuestItemViewHolder> _holdersDictionary; 
+        private readonly Dictionary<Android.Views.View, ActiveQuestItemViewHolder> _holdersDictionary;
 
         /// <summary>
         /// Get references to fragment and viewModel
@@ -31,7 +23,7 @@ namespace Justus.QuestApp.View.Droid.Adapters
         {
             if (fragment == null)
             {
-                throw new NullReferenceException("ActiveQuestListAdapter.ctor fragment is null!");
+                throw new NullReferenceException(nameof(fragment));
             }
             _fragment = fragment;
             _holdersDictionary = new Dictionary<Android.Views.View, ActiveQuestItemViewHolder>();
@@ -45,8 +37,9 @@ namespace Justus.QuestApp.View.Droid.Adapters
             ActiveQuestItemViewHolder viewHolder = null;
             if (view == null)
             {
-                view = _fragment.Activity.LayoutInflater.Inflate(Resource.Layout.QuestListItemHeader, null, false);
+                view = _fragment.Activity.LayoutInflater.Inflate(Resource.Layout.ActiveQuestListItemHeader, null, false);
                 viewHolder = new ActiveQuestItemViewHolder(view, position);
+                _holdersDictionary.Add(view, viewHolder);
             }
             else
             {
@@ -54,20 +47,10 @@ namespace Justus.QuestApp.View.Droid.Adapters
             }
 
             FillHolder(viewHolder, quest, position);
-
-            if (!_holdersDictionary.ContainsKey(view))
-            {
-                _holdersDictionary.Add(view,viewHolder);
-            }
-
             return view;
         }
 
         #endregion
-
-        /// <summary>
-        /// Releases all resources.
-        /// </summary>
 
         public ActiveQuestItemViewHolder GetHolderByView(Android.Views.View view)
         {
@@ -77,12 +60,29 @@ namespace Justus.QuestApp.View.Droid.Adapters
         }
 
         private void FillHolder(ActiveQuestItemViewHolder viewHolder, Quest quest, int position)
-        {
+        {           
             viewHolder.Title.Text = quest.Title;
+            viewHolder.Description.Text = quest.Description;
             viewHolder.TimeLeft.Text = FormLeftTime(quest.Deadline);
-            viewHolder.Progress.Progress = 25;
+            viewHolder.Progress.Progress = ListViewModel.CountProgress(quest);
             viewHolder.ChildrenButton.Enabled = quest.Children != null;
             viewHolder.ItemPosition = position;
+
+            switch (quest.CurrentState)
+            {
+                case QuestState.Done:
+                    viewHolder.Title.SetTextColor(Color.Green);
+                    break;
+                case QuestState.Failed:
+                    viewHolder.Title.SetTextColor(Color.Red);
+                    break;
+                case QuestState.Idle:
+                    viewHolder.Title.SetTextColor(Color.Gray);
+                    break;
+                default:
+                    viewHolder.Title.SetTextColor(Color.Orange);
+                    break;
+            }
         }
 
         private string FormLeftTime(DateTime deadLine)

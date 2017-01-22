@@ -1,21 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.View.Droid.Entities;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
-using Fragment = Android.Support.V4.App.Fragment;
-using Justus.QuestApp.View.Droid.Fragments;
 
-namespace Justus.QuestApp.View.Droid.Adapters
+namespace Justus.QuestApp.View.Droid.Adapters.List
 {
     /// <summary>
     /// Base type for quest list adapters
@@ -23,12 +12,11 @@ namespace Justus.QuestApp.View.Droid.Adapters
     public abstract class BaseQuestListAdapter <TViewModel> : BaseAdapter<Quest>
         where TViewModel : QuestListViewModel
     {
-        private readonly TViewModel _listViewModel;
+        protected readonly TViewModel ListViewModel;
 
         /// <summary>
         /// Get references to fragment and listViewModel
         /// </summary>
-        /// <param name="fragment"></param>
         /// <param name="listViewModel"></param>
         protected BaseQuestListAdapter(TViewModel listViewModel)
         {
@@ -36,16 +24,16 @@ namespace Justus.QuestApp.View.Droid.Adapters
             {
                 throw new ArgumentNullException(nameof(listViewModel));
             }
-            _listViewModel = listViewModel;
+            ListViewModel = listViewModel;
         }
 
         #region BaseAdapter<Quest> overriding
 
         ///<inheritdoc/>
-        public override Quest this[int position] => _listViewModel.CurrentChildren[position];
+        public override Quest this[int position] => ListViewModel.CurrentChildren[position];
 
         ///<inheritdoc/>
-        public override int Count => _listViewModel.CurrentChildren.Count;
+        public override int Count => ListViewModel.CurrentChildren.Count;
 
         ///<inheritdoc/>
         public override long GetItemId(int position)
@@ -56,7 +44,7 @@ namespace Justus.QuestApp.View.Droid.Adapters
         ///<inheritdoc/>
         public override Android.Views.View GetView(int position, Android.Views.View convertView, ViewGroup parent)
         {
-            Quest questData = _listViewModel.CurrentChildren[position];
+            Quest questData = ListViewModel.CurrentChildren[position];
             return ConstructViewFromQuest(position, convertView, parent, questData);
         }
 

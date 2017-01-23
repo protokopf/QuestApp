@@ -22,7 +22,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
     public class ResultQuestListAdapter : BaseQuestListAdapter<ResultsQuestListVIewModel, ResultQuestItemViewHolder>
     {
         private readonly ResultQuestsFragment _fragment;
-        private readonly Dictionary<Android.Views.View, ResultQuestItemViewHolder> _holders;
 
         private readonly string _failedStatus;
         private readonly string _doneStatus;
@@ -34,7 +33,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
                 throw new ArgumentNullException(nameof(fragment));
             }
             _fragment = fragment;
-            _holders = new Dictionary<Android.Views.View, ResultQuestItemViewHolder>();
 
             _doneStatus = _fragment.Activity.Resources.GetString(Resource.String.DoneStatus);
             _failedStatus = _fragment.Activity.Resources.GetString(Resource.String.FailedStatus);

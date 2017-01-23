@@ -12,7 +12,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
     public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
     {
         private readonly ActiveQuestsFragment _fragment;
-        private readonly Dictionary<Android.Views.View, ActiveQuestItemViewHolder> _holdersDictionary;
 
         /// <summary>
         /// Get references to fragment and viewModel
@@ -26,7 +25,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
                 throw new NullReferenceException(nameof(fragment));
             }
             _fragment = fragment;
-            _holdersDictionary = new Dictionary<Android.Views.View, ActiveQuestItemViewHolder>();
         }
 
         #region BaseQuestListAdapter overriding

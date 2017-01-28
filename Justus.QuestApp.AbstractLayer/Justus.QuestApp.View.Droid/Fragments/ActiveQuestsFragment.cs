@@ -7,6 +7,7 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.Design.Widget;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.View.Droid.Adapters;
@@ -22,17 +23,17 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// </summary>
     public class ActiveQuestsFragment : BaseTraverseQuestsFragment<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
     {
+        private Android.Views.View _view;
 
         #region Fragment overriding
 
-
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
+            _view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
 
-            QuestListView = view.FindViewById<ListView>(Resource.Id.questListId);
-            TitleTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);          
-            BackButton = view.FindViewById<Button>(Resource.Id.questsListBack);
+            QuestListView = _view.FindViewById<ListView>(Resource.Id.questListId);
+            TitleTextView = _view.FindViewById<TextView>(Resource.Id.questsListTitle);          
+            BackButton = _view.FindViewById<Button>(Resource.Id.questsListBack);
 
             TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
 
@@ -43,7 +44,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             QuestListView.ItemClick += ItemClickHandler;
             QuestListView.ChildViewAdded += QuestAddedHandler;
 
-            return view;
+            return _view;
         }
 
         public override void OnPause()
@@ -85,7 +86,15 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void DoneClickHandler(int viewPosition)
         {
-            Toast.MakeText(this.Context, $"Done of {viewPosition} clicked!", ToastLength.Short).Show();
+            //Toast.MakeText(this.Context, $"Done of {viewPosition} clicked!", ToastLength.Short).Show();
+            ViewModel.DoneQuest(ViewModel.CurrentChildren[viewPosition]);
+            QuestListAdapter.NotifyDataSetChanged();
+            Snackbar.Make(_view, "Quest done!", Snackbar.LengthIndefinite).SetAction("UNDO", Undo);
+        }
+
+        private void Undo(Android.Views.View view)
+        {
+            ViewModel.UndoLastCommand();
         }
 
         private void FailClickHandler(int viewPosition)

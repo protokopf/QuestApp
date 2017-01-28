@@ -23,12 +23,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
     public class ResultQuestsFragment : BaseTraverseQuestsFragment<ResultsQuestListViewModel, ResultQuestItemViewHolder>
     {
 
-        public override void OnResume()
-        {
-            base.OnResume();
-            QuestListView.Adapter = QuestListView.Adapter;
-        }
-
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);

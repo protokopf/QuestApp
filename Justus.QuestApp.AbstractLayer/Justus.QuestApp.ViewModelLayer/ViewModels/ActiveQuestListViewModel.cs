@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.ModelLayer.Commands.State;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
@@ -21,6 +22,12 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         }
 
         #endregion
+
+        public void DoneQuest(Quest quest)
+        {
+            LastCommand = new DoneUpdateCommand(quest, QuestRepository);
+            LastCommand.Execute();
+        }
 
         private bool FilterEachQuest(Quest quest)
         {

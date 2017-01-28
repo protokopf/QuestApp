@@ -54,7 +54,7 @@ namespace Justus.QuestApp.View.Droid.StubServices
 
         public void Update(Quest quest)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void UpdateAll(List<Quest> quests)
@@ -64,7 +64,7 @@ namespace Justus.QuestApp.View.Droid.StubServices
 
         public bool RevertUpdate(Quest quest)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public Quest Get(int id)

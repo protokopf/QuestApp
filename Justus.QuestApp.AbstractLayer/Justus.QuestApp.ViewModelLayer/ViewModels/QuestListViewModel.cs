@@ -20,8 +20,8 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     {
         private readonly List<Quest> _emptyList; 
         protected IQuestRepository QuestRepository;
-        protected ICommandManager CommandManager;
         protected IQuestProgressCounter ProgressCounter;
+        protected Command LastCommand;
 
         /// <summary>
         /// Default constructor. Resolves references to quest repository and command manager.
@@ -29,29 +29,8 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         public QuestListViewModel()
         {
             QuestRepository = ServiceLocator.Resolve<IQuestRepository>();
-            CommandManager = ServiceLocator.Resolve<ICommandManager>();
             ProgressCounter = ServiceLocator.Resolve<IQuestProgressCounter>();
             _emptyList = new List<Quest>();
-        }
-
-        /// <summary>
-        /// Push all quests in async way.
-        /// </summary>
-        public async Task PushQuests()
-        {
-            IsBusy = true;
-            await Task.Run(() => QuestRepository.PushQuests());
-            IsBusy = false;
-        } 
-
-        /// <summary>
-        /// Pull all changes in async way.
-        /// </summary>
-        public async Task PullQuests()
-        {
-            IsBusy = true;
-            await Task.Run(() => QuestRepository.PullQuests());
-            IsBusy = false;
         }
 
         /// <summary>
@@ -80,11 +59,48 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// </summary>
         public string QuestsListTitle => CurrentQuest?.Title;
 
+        /// <summary>
+        /// Count progress of quest.
+        /// </summary>
+        /// <param name="quest"></param>
+        /// <returns></returns>
         public int CountProgress(Quest quest)
         {
             ProgressValue value = ProgressCounter.CountProgress(quest);
             int result = (int) (((double) value.Current/(double) value.Total)*100);
             return result;
+        }
+
+        /// <summary>
+        /// Undo last made command.
+        /// </summary>
+        public void UndoLastCommand()
+        {
+            if (LastCommand != null)
+            {
+                LastCommand.Undo();
+                LastCommand = null;
+            }
+        }
+
+        /// <summary>
+        /// Push all quests in async way.
+        /// </summary>
+        public async Task PushQuests()
+        {
+            IsBusy = true;
+            await Task.Run(() => QuestRepository.PushQuests());
+            IsBusy = false;
+        }
+
+        /// <summary>
+        /// Pull all changes in async way.
+        /// </summary>
+        public async Task PullQuests()
+        {
+            IsBusy = true;
+            await Task.Run(() => QuestRepository.PullQuests());
+            IsBusy = false;
         }
 
         #region Protected methods
@@ -97,35 +113,6 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         #endregion
 
         #region Private methods
-
-        /// <summary>
-        /// Build full quest name like 'topParent/secondParent/currentQuest'
-        /// </summary>
-        /// <param name="quest"></param>
-        /// <returns></returns>
-        private string BuildFullQuestListTitle(Quest quest)
-        {
-            Stack<string> titles = new Stack<string>();
-
-            while (quest != null)
-            {
-                titles.Push(quest.Title);
-                quest = quest.Parent;
-            }
-
-            StringBuilder builder = new StringBuilder();
-
-            while(titles.Count != 0)
-            {
-                builder.Append(titles.Pop());
-                builder.Append('/');
-            }
-
-            builder.Remove(builder.Length - 1, 1);
-
-            return builder.ToString();
-        }
-
         #endregion
     }
 }

@@ -14,6 +14,7 @@ using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.View.Droid.Activities;
 using Justus.QuestApp.AbstractLayer.Data;
 using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.ModelLayer.Commands.Management;
 using Justus.QuestApp.ModelLayer.Model;
 using Justus.QuestApp.View.Droid.StubServices;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
@@ -44,7 +45,6 @@ namespace Justus.QuestApp.View.Droid
         private void InitializeModelServices()
         {
             ServiceLocator.Register<IQuestRepository>(() => new StubQuestRepositoryService(10,2,3));
-            ServiceLocator.Register<ICommandManager>(() => new StubCommandManager());
             ServiceLocator.Register<IQuestProgressCounter>(() => new RecursiveQuestProgressCounter());
         }
 

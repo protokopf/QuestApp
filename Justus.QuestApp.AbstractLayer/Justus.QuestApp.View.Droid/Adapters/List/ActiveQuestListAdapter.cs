@@ -49,7 +49,10 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
             holder.ChildrenButton.Enabled = questData.Children != null;
             holder.ItemPosition = position;
 
-            bool shouldShowDoneFail = (questData.Children != null && questData.Children.Count == 0);
+            bool shouldShowDoneFail = (
+                questData.Children != null && 
+                questData.Children.Count == 0 && 
+                questData.CurrentState == QuestState.Progress);
 
             holder.DoneButton.Visibility = shouldShowDoneFail
                 ? ViewStates.Visible

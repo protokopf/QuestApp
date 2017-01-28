@@ -2659,14 +2659,14 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f07007b
 			public const int availableQuestChildrenButton = 2131165307;
 			
-			// aapt resource value: 0x7f07007e
-			public const int availableQuestDelete = 2131165310;
+			// aapt resource value: 0x7f07007f
+			public const int availableQuestDelete = 2131165311;
 			
 			// aapt resource value: 0x7f07007a
 			public const int availableQuestDescription = 2131165306;
 			
-			// aapt resource value: 0x7f07007f
-			public const int availableQuestEdit = 2131165311;
+			// aapt resource value: 0x7f07007e
+			public const int availableQuestEdit = 2131165310;
 			
 			// aapt resource value: 0x7f070079
 			public const int availableQuestItemDetails = 2131165305;
@@ -3483,38 +3483,38 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f080039
 			public const int ActiveQuestsLabel = 2131230777;
 			
-			// aapt resource value: 0x7f08004d
-			public const int ApplicationTitle = 2131230797;
+			// aapt resource value: 0x7f08004e
+			public const int ApplicationTitle = 2131230798;
 			
-			// aapt resource value: 0x7f080044
-			public const int CancelButtonText = 2131230788;
+			// aapt resource value: 0x7f080045
+			public const int CancelButtonText = 2131230789;
 			
 			// aapt resource value: 0x7f08003e
 			public const int ChildrenButtonText = 2131230782;
 			
-			// aapt resource value: 0x7f080045
-			public const int DefaultDesctiprion = 2131230789;
+			// aapt resource value: 0x7f080046
+			public const int DefaultDesctiprion = 2131230790;
 			
-			// aapt resource value: 0x7f080043
-			public const int DeleteButtonText = 2131230787;
+			// aapt resource value: 0x7f080044
+			public const int DeleteButtonText = 2131230788;
 			
 			// aapt resource value: 0x7f08003f
 			public const int DoneButtonText = 2131230783;
 			
-			// aapt resource value: 0x7f080047
-			public const int DoneStatus = 2131230791;
+			// aapt resource value: 0x7f080048
+			public const int DoneStatus = 2131230792;
 			
 			// aapt resource value: 0x7f080041
 			public const int EditButtonText = 2131230785;
 			
-			// aapt resource value: 0x7f08004f
-			public const int ErrorTitle = 2131230799;
+			// aapt resource value: 0x7f080050
+			public const int ErrorTitle = 2131230800;
 			
 			// aapt resource value: 0x7f080040
 			public const int FailButtonText = 2131230784;
 			
-			// aapt resource value: 0x7f080046
-			public const int FailedStatus = 2131230790;
+			// aapt resource value: 0x7f080047
+			public const int FailedStatus = 2131230791;
 			
 			// aapt resource value: 0x7f08003b
 			public const int IdleQuestsLabel = 2131230779;
@@ -3528,29 +3528,32 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f08003d
 			public const int MenuSecondOption = 2131230781;
 			
-			// aapt resource value: 0x7f08004e
-			public const int ProgressDialogTitle = 2131230798;
-			
-			// aapt resource value: 0x7f08004a
-			public const int QuestDefaultStatus = 2131230794;
-			
-			// aapt resource value: 0x7f080049
-			public const int QuestDefaultTimeLeft = 2131230793;
-			
-			// aapt resource value: 0x7f080048
-			public const int QuestDefaultTitle = 2131230792;
-			
-			// aapt resource value: 0x7f08004c
-			public const int QuestListBack = 2131230796;
+			// aapt resource value: 0x7f08004f
+			public const int ProgressDialogTitle = 2131230799;
 			
 			// aapt resource value: 0x7f08004b
-			public const int QuestListTitle = 2131230795;
+			public const int QuestDefaultStatus = 2131230795;
+			
+			// aapt resource value: 0x7f08004a
+			public const int QuestDefaultTimeLeft = 2131230794;
+			
+			// aapt resource value: 0x7f080049
+			public const int QuestDefaultTitle = 2131230793;
+			
+			// aapt resource value: 0x7f08004d
+			public const int QuestListBack = 2131230797;
+			
+			// aapt resource value: 0x7f08004c
+			public const int QuestListTitle = 2131230796;
+			
+			// aapt resource value: 0x7f080042
+			public const int RestartButtonText = 2131230786;
 			
 			// aapt resource value: 0x7f08003a
 			public const int ResultQuestsLabel = 2131230778;
 			
-			// aapt resource value: 0x7f080042
-			public const int StartButtonText = 2131230786;
+			// aapt resource value: 0x7f080043
+			public const int StartButtonText = 2131230787;
 			
 			// aapt resource value: 0x7f080014
 			public const int abc_action_bar_home_description = 2131230740;

@@ -78,7 +78,5 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
                 holder.ExpandDetails.Visibility = ViewStates.Gone;
             }
         }
-
-
     }
 }

@@ -152,23 +152,23 @@ namespace Justus.QuestApp.View.Droid.StubServices
             {
                 case 0:
                     state = QuestState.Failed;
-                    title = "Title failed ";
+                    title = "bom failed ";
                     break;
                 case 1:
                     state = QuestState.Done;
-                    title = "Title done ";
+                    title = "bom done ";
                     break;
                 case 2:
                     state = QuestState.Progress;
-                    title = "Title progress ";
+                    title = "bom progress ";
                     break;
                 case 3:
                     state = QuestState.Idle;
-                    title = "Title idled ";
+                    title = "bom idled ";
                     break;
                 default:
                     state = QuestState.Idle;
-                    title = "Title idled ";
+                    title = "bom idled ";
                     break;
             }
             return state;

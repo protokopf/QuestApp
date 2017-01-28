@@ -13,11 +13,10 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
     /// <summary>
     /// Base type for quest list adapters
     /// </summary>
-    public abstract class BaseQuestListAdapter <TViewModel, TViewHolder> : BaseAdapter<Quest>
-        where TViewModel : QuestListViewModel
+    public abstract class BaseQuestListAdapter <TViewHolder> : BaseAdapter<Quest>
         where TViewHolder : PositionedViewHolder
     {
-        protected readonly TViewModel ListViewModel;
+        protected readonly QuestListViewModel ListViewModel;
         protected readonly Dictionary<Android.Views.View, TViewHolder> HoldersDictionary;
         protected readonly Activity ActivityRef;
 
@@ -26,7 +25,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         /// </summary>
         /// <param name="activity"></param>
         /// <param name="listViewModel"></param>
-        protected BaseQuestListAdapter(Activity activity, TViewModel listViewModel)
+        protected BaseQuestListAdapter(Activity activity, QuestListViewModel listViewModel)
         {
             if (activity == null)
             {

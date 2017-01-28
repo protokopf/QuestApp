@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.ModelLayer.Commands.Abstracts;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Repository
 {
@@ -43,22 +44,22 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         ///<inheritdoc/>
         public override void Execute()
         {
-            if(!_hasExecuted)
+            if(!HasExecuted)
             {              
                 ConnectWithParent(_parent, _toAdd);
-                _repository.Insert(_toAdd);               
-                _hasExecuted = true;
+                Repository.Insert(_toAdd);               
+                HasExecuted = true;
             }
         }
 
         ///<inheritdoc/>
         public override void Undo()
         {
-            if(_hasExecuted)
+            if(HasExecuted)
             {
                 BreakWithParent(_parent,_toAdd);
-                _repository.RevertInsert(_toAdd);
-                _hasExecuted = false;
+                Repository.RevertInsert(_toAdd);
+                HasExecuted = false;
             }
         }
 

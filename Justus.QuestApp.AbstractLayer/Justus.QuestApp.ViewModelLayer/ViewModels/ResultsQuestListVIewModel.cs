@@ -10,7 +10,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// <summary>
     /// View model for list of done and failed quests.
     /// </summary>
-    public class ResultsQuestListVIewModel : QuestListViewModel
+    public class ResultsQuestListViewModel : QuestListViewModel
     {
         #region QuestListViewModel overriding
 

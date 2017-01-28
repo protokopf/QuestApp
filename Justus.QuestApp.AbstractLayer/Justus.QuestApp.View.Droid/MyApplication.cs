@@ -51,7 +51,7 @@ namespace Justus.QuestApp.View.Droid
         private void InitializeViewModelServices()
         {
             ServiceLocator.Register(() => new ActiveQuestListViewModel());
-            ServiceLocator.Register(() => new ResultsQuestListVIewModel());
+            ServiceLocator.Register(() => new ResultsQuestListViewModel());
             ServiceLocator.Register(() => new AvailableQuestListViewModel());
         }
 

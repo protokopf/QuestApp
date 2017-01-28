@@ -36,24 +36,24 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         ///<inheritdoc/>
         public override void Execute()
         {
-            if(!_hasExecuted)
+            if(!HasExecuted)
             {
                 BreakWithParent(_oldParent, _toAdd);
                 ConnectWithParent(_parent, _toAdd);
-                _repository.Update(_toAdd);
-                _hasExecuted = true;
+                Repository.Update(_toAdd);
+                HasExecuted = true;
             }
         }
 
         ///<inheritdoc/>
         public override void Undo()
         {
-            if(_hasExecuted)
+            if(HasExecuted)
             {
                 BreakWithParent(_parent, _toAdd);
                 ConnectWithParent(_oldParent, _toAdd);
-                _repository.RevertUpdate(_toAdd);
-                _hasExecuted = false;
+                Repository.RevertUpdate(_toAdd);
+                HasExecuted = false;
             }
         }
 

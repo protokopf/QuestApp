@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.ModelLayer.Commands.Abstracts;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Repository
 {
@@ -30,7 +31,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             {
                 throw new ArgumentNullException(nameof(questToDelete));
             }
-            _repository = repository;
+            Repository = repository;
             _toDelete = questToDelete;
         }
 
@@ -39,7 +40,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         ///<inheritdoc/>
         public override void Execute()
         {
-            if (!_hasExecuted)
+            if (!HasExecuted)
             {
                 _parentOfDeleted = _toDelete.Parent;
                 if(_parentOfDeleted != null)
@@ -49,28 +50,28 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
                 else
                 {
                     //If quest does not have parent -> it is top level quest.
-                    _repository.GetAll().Remove(_toDelete);
+                    Repository.GetAll().Remove(_toDelete);
                 }
-                _repository.Delete(_toDelete);
-                _hasExecuted = true;
+                Repository.Delete(_toDelete);
+                HasExecuted = true;
             }        
         }
 
         ///<inheritdoc/>
         public override void Undo()
         {
-            if (_hasExecuted)
+            if (HasExecuted)
             {
-                _repository.RevertDelete(_toDelete);
+                Repository.RevertDelete(_toDelete);
                 if(_parentOfDeleted != null)
                 {
                     _parentOfDeleted.Children.Add(_toDelete);
                 }
                 else
                 {
-                    _repository.GetAll().Add(_toDelete);
+                    Repository.GetAll().Add(_toDelete);
                 }
-                _hasExecuted = false;
+                HasExecuted = false;
             }
         }
 

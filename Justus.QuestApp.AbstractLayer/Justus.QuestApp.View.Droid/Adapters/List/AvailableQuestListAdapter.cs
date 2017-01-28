@@ -18,9 +18,9 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
     /// <summary>
     /// Adapter for available quest list view.
     /// </summary>
-    public class AvailableQuestListAdapter : BaseQuestListAdapter<AvailableQuestListViewModel, AvailableQuestItemViewHolder>
+    public class AvailableQuestListAdapter : BaseQuestListAdapter<AvailableQuestItemViewHolder>
     {
-        public AvailableQuestListAdapter(Activity activity, AvailableQuestListViewModel listViewModel) : base(activity,listViewModel)
+        public AvailableQuestListAdapter(Activity activity, QuestListViewModel listViewModel) : base(activity,listViewModel)
         {
         }
 

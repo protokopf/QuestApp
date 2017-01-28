@@ -32,7 +32,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             TitleTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);
             BackButton = view.FindViewById<Button>(Resource.Id.questsListBack);
 
-            TitleTextDefault = Activity.GetString(Resource.String.QuestDefaultTitle);
+            TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
 
             BackButton.Enabled = ViewModel.CurrentQuest != null;
             BackButton.Click += BackButtonOnClick;

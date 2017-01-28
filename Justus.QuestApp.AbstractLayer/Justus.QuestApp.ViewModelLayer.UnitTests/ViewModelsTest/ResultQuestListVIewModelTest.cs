@@ -44,7 +44,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => comManager);
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
 
-            QuestListViewModel viewModel = new ResultsQuestListVIewModel();
+            QuestListViewModel viewModel = new ResultsQuestListViewModel();
 
             //Act
             List<Quest> quests = viewModel.CurrentChildren;
@@ -87,7 +87,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => comManager);
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
 
-            QuestListViewModel viewModel = new ResultsQuestListVIewModel();
+            QuestListViewModel viewModel = new ResultsQuestListViewModel();
 
             //Act
             List<Quest> quests = viewModel.CurrentChildren;

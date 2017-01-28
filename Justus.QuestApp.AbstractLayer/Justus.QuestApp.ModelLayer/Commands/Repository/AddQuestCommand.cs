@@ -1,6 +1,7 @@
 ﻿using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
 using System;
+using Justus.QuestApp.ModelLayer.Commands.Abstracts;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Repository
 {
@@ -23,7 +24,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
                 throw new ArgumentNullException(nameof(questToAdd));
             }
             _toAdd = questToAdd;
-            _hasExecuted = false;
+            HasExecuted = false;
         }
 
         #region AbstractRepositoryCommand overriding
@@ -31,22 +32,22 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         ///<inheritdoc/>
         public override void Execute()
         {
-            if(!_hasExecuted)
+            if(!HasExecuted)
             {
-                _repository.Insert(_toAdd);
-                _repository.GetAll().Add(_toAdd);
-                _hasExecuted = true;
+                Repository.Insert(_toAdd);
+                Repository.GetAll().Add(_toAdd);
+                HasExecuted = true;
             }
         }
 
         ///<inheritdoc/>
         public override void Undo()
         {
-            if(_hasExecuted)
+            if(HasExecuted)
             {
-                _repository.RevertInsert(_toAdd);
-                _repository.GetAll().Remove(_toAdd);
-                _hasExecuted = false;
+                Repository.RevertInsert(_toAdd);
+                Repository.GetAll().Remove(_toAdd);
+                HasExecuted = false;
             }
         } 
 

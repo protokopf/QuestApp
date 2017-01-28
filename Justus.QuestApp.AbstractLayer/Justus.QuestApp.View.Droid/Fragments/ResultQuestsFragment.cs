@@ -20,7 +20,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// <summary>
     /// Fragment for displaying result quests.
     /// </summary>
-    public class ResultQuestsFragment : BaseTraverseQuestsFragment<ResultsQuestListVIewModel, ResultQuestItemViewHolder>
+    public class ResultQuestsFragment : BaseTraverseQuestsFragment<ResultsQuestListViewModel, ResultQuestItemViewHolder>
     {
 
         public override void OnResume()
@@ -44,7 +44,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             BackButton.Click += BackButtonOnClick;
             BackButton.Enabled = ViewModel.CurrentQuest != null;
 
-            TitleTextDefault = Activity.GetString(Resource.String.QuestDefaultTitle);
+            TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
 
             return view;
         }

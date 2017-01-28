@@ -1,8 +1,8 @@
-﻿using Justus.QuestApp.AbstractLayer.Commands;
+﻿using System;
+using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Model;
-using System;
 
-namespace Justus.QuestApp.ModelLayer.Commands.Repository
+namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
 {
     /// <summary>
     /// Abstract command for repositories commands.
@@ -12,12 +12,12 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         /// <summary>
         /// Reference to repository.
         /// </summary>
-        protected IQuestRepository _repository;
+        protected IQuestRepository Repository;
 
         /// <summary>
         /// Points, whether command has been executed.
         /// </summary>
-        protected bool _hasExecuted;
+        protected bool HasExecuted;
 
         /// <summary>
         /// Initialize repository reference.
@@ -29,8 +29,8 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             {
                 throw new ArgumentNullException(nameof(repository));
             }
-            _repository = repository;
-            _hasExecuted = false;
+            Repository = repository;
+            HasExecuted = false;
         }
     }
 }

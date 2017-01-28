@@ -14,14 +14,14 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
     /// <summary>
     /// Adapter for active quests.
     /// </summary>
-    public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
+    public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestItemViewHolder>
     {
         /// <summary>
         /// Get references to activity and viewModel
         /// </summary>
         /// <param name="activity"></param>
         /// <param name="listViewModel"></param>
-        public ActiveQuestListAdapter(Activity activity, ActiveQuestListViewModel listViewModel) : base(activity,listViewModel)
+        public ActiveQuestListAdapter(Activity activity, QuestListViewModel listViewModel) : base(activity,listViewModel)
         {
         }
 
@@ -49,6 +49,15 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
             holder.ChildrenButton.Enabled = questData.Children != null;
             holder.ItemPosition = position;
 
+            bool shouldShowDoneFail = (questData.Children != null && questData.Children.Count == 0);
+
+            holder.DoneButton.Visibility = shouldShowDoneFail
+                ? ViewStates.Visible
+                : ViewStates.Gone;
+            holder.FailButton.Visibility = shouldShowDoneFail
+                ? ViewStates.Visible
+                : ViewStates.Gone;
+
             switch (questData.CurrentState)
             {
                 case QuestState.Done:
@@ -67,7 +76,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         }
 
         #endregion
-
 
         private string FormLeftTime(DateTime deadLine)
         {

@@ -19,12 +19,12 @@ using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Adapters.List
 {
-    public class ResultQuestListAdapter : BaseQuestListAdapter<ResultsQuestListVIewModel, ResultQuestItemViewHolder>
+    public class ResultQuestListAdapter : BaseQuestListAdapter<ResultQuestItemViewHolder>
     {
         private readonly string _failedStatus;
         private readonly string _doneStatus;
 
-        public ResultQuestListAdapter(Activity activity, ResultsQuestListVIewModel listViewModel) : base(activity,listViewModel)
+        public ResultQuestListAdapter(Activity activity, QuestListViewModel listViewModel) : base(activity,listViewModel)
         {
             _doneStatus = ActivityRef.Resources.GetString(Resource.String.DoneStatus);
             _failedStatus = ActivityRef.Resources.GetString(Resource.String.FailedStatus);

@@ -134,19 +134,15 @@ namespace Justus.QuestApp.ModelLayer.Model
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        //private static int GreatesCommonDevider(int a, int b)
-        //{
-        //    return b == 0 ? a : GreatesCommonDevider(b, a % b);
-        //}
-
         private static int GreatesCommonDevider(int a, int b)
         {
-            while (b != 0)
+            while (true)
             {
-                b = a%b;
+                if (b == 0) return a;
+                var a1 = a;
                 a = b;
+                b = a1%b;
             }
-            return a;
         }
 
         #endregion

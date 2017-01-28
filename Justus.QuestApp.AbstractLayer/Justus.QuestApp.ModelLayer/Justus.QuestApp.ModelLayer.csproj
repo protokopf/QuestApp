@@ -35,9 +35,11 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <Folder Include="Commands\QuestState\" />
     <Folder Include="Entities\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CompositeCommand.cs" />
     <Compile Include="Commands\Management\CommandCyclingManager.cs" />
     <Compile Include="Commands\Repository\AddQuestCommand.cs" />
     <Compile Include="Commands\Repository\AddQuestToParentCommand.cs" />

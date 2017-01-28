@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Android.App;
+using Android.Content;
 using Android.Graphics;
 using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
@@ -9,30 +11,26 @@ using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Adapters.List
 {
+    /// <summary>
+    /// Adapter for active quests.
+    /// </summary>
     public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
     {
-        private readonly ActiveQuestsFragment _fragment;
-
         /// <summary>
-        /// Get references to fragment and viewModel
+        /// Get references to activity and viewModel
         /// </summary>
-        /// <param name="fragment"></param>
+        /// <param name="activity"></param>
         /// <param name="listViewModel"></param>
-        public ActiveQuestListAdapter(ActiveQuestsFragment fragment, ActiveQuestListViewModel listViewModel) : base(listViewModel)
+        public ActiveQuestListAdapter(Activity activity, ActiveQuestListViewModel listViewModel) : base(activity,listViewModel)
         {
-            if (fragment == null)
-            {
-                throw new NullReferenceException(nameof(fragment));
-            }
-            _fragment = fragment;
         }
 
         #region BaseQuestListAdapter overriding
 
         ///<inheritdoc/>
-        protected override Android.Views.View InflateView()
+        protected override int GetViewId()
         {
-           return _fragment.Activity.LayoutInflater.Inflate(Resource.Layout.ActiveQuestListItemHeader, null, false);
+           return Resource.Layout.ActiveQuestListItemHeader;
         }
 
         ///<inheritdoc/>

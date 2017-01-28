@@ -1,20 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
-using Android.Widget;
 using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 using AlertDialog = Android.Support.V7.App.AlertDialog;
 using Fragment = Android.Support.V4.App.Fragment;
 
-namespace Justus.QuestApp.View.Droid.Fragments
+namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
 {
     /// <summary>
     /// Base type for all fragments.

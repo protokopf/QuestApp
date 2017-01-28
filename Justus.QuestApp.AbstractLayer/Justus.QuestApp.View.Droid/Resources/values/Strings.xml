@@ -18,6 +18,7 @@
   <string name="EditButtonText">Edit</string>
   <string name="StartButtonText">Restart</string>
   <string name="DeleteButtonText">Delete</string>
+  <string name="CancelButtonText">Cancel</string>
   <string name="DefaultDesctiprion">Description..</string>
   
   <string name="FailedStatus">Failed</string>

@@ -114,15 +114,19 @@
   <ItemGroup>
     <Compile Include="Activities\BaseTabbedActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
+    <Compile Include="Adapters\List\AvailableQuestListAdapter.cs" />
     <Compile Include="Adapters\List\BaseQuestListAdapter.cs" />
     <Compile Include="Adapters\List\ActiveQuestListAdapter.cs" />
     <Compile Include="Adapters\FragmentViewPagerAdapter.cs" />
     <Compile Include="Adapters\List\ResultQuestListAdapter.cs" />
     <Compile Include="Animation\ExpandAnimation.cs" />
-    <Compile Include="Fragments\BaseQuestListFragment.cs" />
+    <Compile Include="Fragments\Abstracts\BaseTraverseQuestsFragment.cs" />
+    <Compile Include="Fragments\AvailableQuestsFragment.cs" />
+    <Compile Include="Fragments\Abstracts\BaseQuestsFragment.cs" />
+    <Compile Include="ViewHolders\Abstracts\ExpandingPositionedVIewHolder.cs" />
     <Compile Include="ViewHolders\ActiveQuestItemViewHolder.cs" />
     <Compile Include="Fragments\ActiveQuestsFragment.cs" />
-    <Compile Include="Fragments\BaseFragment.cs" />
+    <Compile Include="Fragments\Abstracts\BaseFragment.cs" />
     <Compile Include="Fragments\ResultQuestsFragment.cs" />
     <Compile Include="MyApplication.cs" />
     <Compile Include="Fragments\NotImplementedFragment.cs" />
@@ -130,7 +134,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StubServices\StubCommandManager.cs" />
     <Compile Include="StubServices\StubQuestRepositoryService.cs" />
-    <Compile Include="ViewHolders\PositionedViewHolder.cs" />
+    <Compile Include="ViewHolders\AvailableQuestItemViewHolder.cs" />
+    <Compile Include="ViewHolders\Abstracts\PositionedViewHolder.cs" />
     <Compile Include="ViewHolders\ResultQuestItemViewHolder.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +167,12 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\ResultQuestListItemBody.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\AvailableQuestListItemBody.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\AvailableQuestListItemHeader.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
@@ -220,9 +231,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values-v21\Themes.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Crutches\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Vector.Drawable.24.2.1\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.24.2.1\build\Xamarin.Android.Support.Vector.Drawable.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

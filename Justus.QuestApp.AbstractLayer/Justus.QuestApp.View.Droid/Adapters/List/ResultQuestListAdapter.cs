@@ -21,29 +21,21 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
 {
     public class ResultQuestListAdapter : BaseQuestListAdapter<ResultsQuestListVIewModel, ResultQuestItemViewHolder>
     {
-        private readonly ResultQuestsFragment _fragment;
-
         private readonly string _failedStatus;
         private readonly string _doneStatus;
 
-        public ResultQuestListAdapter(ResultQuestsFragment fragment, ResultsQuestListVIewModel listViewModel) : base(listViewModel)
+        public ResultQuestListAdapter(Activity activity, ResultsQuestListVIewModel listViewModel) : base(activity,listViewModel)
         {
-            if (fragment == null)
-            {
-                throw new ArgumentNullException(nameof(fragment));
-            }
-            _fragment = fragment;
-
-            _doneStatus = _fragment.Activity.Resources.GetString(Resource.String.DoneStatus);
-            _failedStatus = _fragment.Activity.Resources.GetString(Resource.String.FailedStatus);
+            _doneStatus = ActivityRef.Resources.GetString(Resource.String.DoneStatus);
+            _failedStatus = ActivityRef.Resources.GetString(Resource.String.FailedStatus);
         }
 
         #region BaseQuestListAdapter overriding
 
         ///<inheritdoc/>
-        protected override Android.Views.View InflateView()
+        protected override int  GetViewId()
         {
-            return _fragment.Activity.LayoutInflater.Inflate(Resource.Layout.ResultQuestListItemHeader, null, false);
+            return Resource.Layout.ResultQuestListItemHeader;
         }
 
         ///<inheritdoc/>

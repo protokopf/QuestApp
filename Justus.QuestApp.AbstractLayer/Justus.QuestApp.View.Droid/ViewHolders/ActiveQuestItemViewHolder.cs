@@ -2,14 +2,16 @@ using System;
 using Android.Graphics;
 using Android.Runtime;
 using Android.Support.V7.Widget;
+using Android.Telecom;
 using Android.Widget;
+using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
 
 namespace Justus.QuestApp.View.Droid.ViewHolders
 {
     /// <summary>
     /// View holder for active quest item.
     /// </summary>
-    public class ActiveQuestItemViewHolder : PositionedViewHolder
+    public class ActiveQuestItemViewHolder : ExpandingPositionedViewHolder
     {
         public ActiveQuestItemViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
         {
@@ -21,27 +23,37 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
             TimeLeft = view.FindViewById<TextView>(Resource.Id.questTimeLeft);
             Progress = view.FindViewById<ProgressBar>(Resource.Id.questProgress);
             Progress.ProgressDrawable.SetColorFilter(Color.Green, PorterDuff.Mode.SrcIn);
-            Details = view.FindViewById<LinearLayout>(Resource.Id.childItemLayout);
 
-            Description = Details.FindViewById<TextView>(Resource.Id.questDescription);
+            Description = ExpandDetails.FindViewById<TextView>(Resource.Id.questDescription);
 
-            DoneButton = Details.FindViewById<Button>(Resource.Id.questDone);
-            FailButton = Details.FindViewById<Button>(Resource.Id.questFailed);
-            EditButton = Details.FindViewById<Button>(Resource.Id.questEdit);
-            ChildrenButton = Details.FindViewById<Button>(Resource.Id.questChildrenButton);
+            DoneButton = ExpandDetails.FindViewById<Button>(Resource.Id.questDone);
+            FailButton = ExpandDetails.FindViewById<Button>(Resource.Id.questFailed);
+            ChildrenButton = ExpandDetails.FindViewById<Button>(Resource.Id.questChildrenButton);
+            DeleteButton = ExpandDetails.FindViewById<Button>(Resource.Id.questDelete);
+            CancelButton = ExpandDetails.FindViewById<Button>(Resource.Id.questCancel);
         }
 
         public TextView Title { get; set; }
         public TextView TimeLeft { get; set; }
         public ProgressBar Progress { get; set; }
-
-        public LinearLayout Details { get; set; }
-
+    
         public TextView Description { get; set; }
 
         public Button DoneButton { get; set; }
         public Button FailButton { get; set; }
-        public Button EditButton { get; set; }
+        public Button DeleteButton { get; set; }
+
+        public Button CancelButton { get; set; }
         public Button ChildrenButton { get; set; }
+
+        #region ExpandingPositionedViewHolder overridng
+
+        ///<inheritdoc/>
+        protected override int GetExpandDetailsId()
+        {
+            return Resource.Id.childItemLayout;
+        }
+
+        #endregion
     }
 }

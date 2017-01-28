@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Android.App;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.ViewHolders;
+using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Adapters.List
@@ -16,18 +18,25 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         where TViewHolder : PositionedViewHolder
     {
         protected readonly TViewModel ListViewModel;
-        protected readonly Dictionary<Android.Views.View, TViewHolder> HoldersDictionary; 
+        protected readonly Dictionary<Android.Views.View, TViewHolder> HoldersDictionary;
+        protected readonly Activity ActivityRef;
 
         /// <summary>
         /// Get references to fragment and listViewModel
         /// </summary>
+        /// <param name="activity"></param>
         /// <param name="listViewModel"></param>
-        protected BaseQuestListAdapter(TViewModel listViewModel)
+        protected BaseQuestListAdapter(Activity activity, TViewModel listViewModel)
         {
+            if (activity == null)
+            {
+                throw new ArgumentNullException(nameof(activity));
+            }
             if (listViewModel == null)
             {
                 throw new ArgumentNullException(nameof(listViewModel));
             }
+            ActivityRef = activity;
             ListViewModel = listViewModel;
             HoldersDictionary = new Dictionary<Android.Views.View, TViewHolder>();
         }
@@ -53,7 +62,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
             TViewHolder viewHolder = null;
             if (convertView == null)
             {
-                convertView = InflateView();
+                convertView = ActivityRef.LayoutInflater.Inflate(GetViewId(),null,false);
                 viewHolder = CreateViewHolder(convertView, position);
                 HoldersDictionary.Add(convertView, viewHolder);
             }
@@ -83,7 +92,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         /// Inflate view.
         /// </summary>
         /// <returns></returns>
-        protected abstract Android.Views.View InflateView();
+        protected abstract int GetViewId();
 
         /// <summary>
         /// Creates view holder for view.

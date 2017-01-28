@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.View.Droid.Adapters;
 using Justus.QuestApp.View.Droid.Adapters.List;
+using Justus.QuestApp.View.Droid.Fragments.Abstracts;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -19,11 +20,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// <summary>
     /// Fragment, that contains list of active quests.
     /// </summary>
-    public class ActiveQuestsFragment : BaseQuestListFragment<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
+    public class ActiveQuestsFragment : BaseTraverseQuestsFragment<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
     {
-        private TextView _headerTextView;
-        private Button _backButton;
-        private string _headerDefault = String.Empty;
 
         #region Fragment overriding
 
@@ -33,14 +31,14 @@ namespace Justus.QuestApp.View.Droid.Fragments
             Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
 
             QuestListView = view.FindViewById<ListView>(Resource.Id.questListId);
-            _headerTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);
-            _headerDefault = _headerTextView.Text;
-            _backButton = view.FindViewById<Button>(Resource.Id.questsListBack);
+            TitleTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);
+            TitleTextDefault = TitleTextView.Text;
+            BackButton = view.FindViewById<Button>(Resource.Id.questsListBack);
 
-            _backButton.Enabled = ViewModel.CurrentQuest != null;
-            _backButton.Click += BackButtonHandler;
+            BackButton.Enabled = ViewModel.CurrentQuest != null;
+            BackButton.Click += BackButtonHandler;
 
-            QuestListView.Adapter = QuestListAdapter = new ActiveQuestListAdapter(this, ViewModel);
+            QuestListView.Adapter = QuestListAdapter = new ActiveQuestListAdapter(this.Activity, ViewModel);
             QuestListView.ItemClick += ItemClickHandler;
             QuestListView.ChildViewAdded += QuestAddedHandler;
 
@@ -67,28 +65,21 @@ namespace Justus.QuestApp.View.Droid.Fragments
         {
             ActiveQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(args.Child);
             holder.DoneButton.Click += (o, eventArgs) => { DoneClickHandler(holder.ItemPosition); };
-            holder.EditButton.Click += (o, eventArgs) => { EditClickHandler(holder.ItemPosition); };
             holder.FailButton.Click += (o, eventArgs) => { FailClickHandler(holder.ItemPosition); };
+            holder.DeleteButton.Click += (o, eventArgs) => { DeleteClickHandler(holder.ItemPosition); };
             holder.ChildrenButton.Click += (o, eventArgs) => { ChildrenClickHandler(holder.ItemPosition); };
+            holder.CancelButton.Click += (o, eventArgs) => { CancelClickHandler(holder.ItemPosition); };
         }
 
         private void ItemClickHandler(object sender, AdapterView.ItemClickEventArgs args)
         {
             ActiveQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(args.View);
-            holder.Details.Visibility = holder.Details.Visibility == ViewStates.Visible ? ViewStates.Gone : ViewStates.Visible;
+            holder.ExpandDetails.Visibility = holder.ExpandDetails.Visibility == ViewStates.Visible ? ViewStates.Gone : ViewStates.Visible;
         }
 
         private void BackButtonHandler(object sender, EventArgs e)
         {
-            for (int i = 0; i < QuestListView.Count; ++i)
-            {
-                ActiveQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(QuestListView.GetChildAt(i));
-                holder.Details.Visibility = ViewStates.Gone;
-            }
-            ViewModel.CurrentQuest = ViewModel.CurrentQuest.Parent;
-            _headerTextView.Text = ViewModel.QuestsListTitle ?? _headerDefault;
-            _backButton.Enabled = ViewModel.CurrentQuest != null;
-            QuestListView.Adapter = QuestListAdapter; ;
+            this.TraverseToParent();
         }
 
         private void DoneClickHandler(int viewPosition)
@@ -101,23 +92,20 @@ namespace Justus.QuestApp.View.Droid.Fragments
             Toast.MakeText(this.Context, $"Fail of {viewPosition} clicked!", ToastLength.Short).Show();
         }
 
-        private void EditClickHandler(int viewPosition)
-        {
-            Toast.MakeText(this.Context, $"Edit of {viewPosition} clicked!", ToastLength.Short).Show();
-        }
-
         private void ChildrenClickHandler(int viewPosition)
         {
-            for (int i = 0; i < QuestListView.Count; ++i)
-            {
-                ActiveQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(QuestListView.GetChildAt(i));
-                holder.Details.Visibility = ViewStates.Gone;
-            }
-            ViewModel.CurrentQuest = ViewModel.CurrentChildren[viewPosition];
-            _headerTextView.Text = ViewModel.QuestsListTitle ?? _headerDefault;
-            _backButton.Enabled = ViewModel.CurrentQuest != null;
-            QuestListView.Adapter = QuestListAdapter;
-        } 
+            this.TraverseToChild(viewPosition);
+        }
+
+        private void DeleteClickHandler(int viewPosition)
+        {
+            Toast.MakeText(this.Context, $"Delete of {viewPosition} clicked!", ToastLength.Short).Show();
+        }
+
+        private void CancelClickHandler(int viewPosition)
+        {
+            Toast.MakeText(this.Context, $"Cancel of {viewPosition} clicked!", ToastLength.Short).Show();
+        }
 
         #endregion
 

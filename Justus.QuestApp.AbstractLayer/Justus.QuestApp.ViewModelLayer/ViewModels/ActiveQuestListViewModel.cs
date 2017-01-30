@@ -35,6 +35,18 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             LastCommand.Execute();
         }
 
+        public void CancelQuest(Quest quest)
+        {
+            LastCommand = new ThisStateUpdateCommand(quest, QuestState.Idle, QuestRepository);
+            LastCommand.Execute();
+        }
+
+        public void StartQuest(Quest quest)
+        {
+            LastCommand = new ThisStateUpdateCommand(quest, QuestState.Progress, QuestRepository);
+            LastCommand.Execute();
+        }
+
         private bool FilterEachQuest(Quest quest)
         {
             QuestState state = quest.CurrentState;

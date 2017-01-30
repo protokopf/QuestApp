@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\ICommandManager.cs" />
+    <Compile Include="Commands\Factories\IStateCommandsFactory.cs" />
     <Compile Include="Data\IConnectionStringProvider.cs" />
     <Compile Include="Data\IDataAccessInterface.cs" />
     <Compile Include="Entities\ProgressValue.cs" />

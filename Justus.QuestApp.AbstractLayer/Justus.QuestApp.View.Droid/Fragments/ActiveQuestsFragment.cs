@@ -115,7 +115,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void CancelClickHandler(int viewPosition)
         {
-            Toast.MakeText(this.Context, $"Cancel of {viewPosition} clicked!", ToastLength.Short).Show();
+            ViewModel.CancelQuest(ViewModel.CurrentChildren[viewPosition]);
+            QuestListAdapter.NotifyDataSetChanged();
         }
 
         #endregion

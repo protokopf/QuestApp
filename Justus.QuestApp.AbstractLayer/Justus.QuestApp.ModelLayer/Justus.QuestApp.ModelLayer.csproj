@@ -39,8 +39,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CompositeCommand.cs" />
+    <Compile Include="Commands\Factories\UpdatingStateCommandsFactory.cs" />
     <Compile Include="Commands\Management\CommandCyclingManager.cs" />
     <Compile Include="Commands\Abstracts\BaseStateUpdateCommand.cs" />
+    <Compile Include="Commands\State\DownHierarchyStateUpdateCommand.cs" />
     <Compile Include="Commands\State\ThisStateUpdateCommand.cs" />
     <Compile Include="Commands\State\UpHierarchyStateUpdateCommand.cs" />
     <Compile Include="Commands\Repository\AddQuestCommand.cs" />

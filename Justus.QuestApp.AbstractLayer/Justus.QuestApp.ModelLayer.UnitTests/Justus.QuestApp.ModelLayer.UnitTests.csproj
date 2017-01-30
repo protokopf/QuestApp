@@ -49,7 +49,8 @@
   <ItemGroup>
     <Compile Include="CommandsTest\CompositeCommandTest.cs" />
     <Compile Include="CommandsTest\ManagementTest\CommandCyclingManagerTest.cs" />
-    <Compile Include="CommandsTest\QuestStateTest\DoneUpdateCommandTest.cs" />
+    <Compile Include="CommandsTest\QuestStateTest\ThisStateUpdateCommandTest.cs" />
+    <Compile Include="CommandsTest\QuestStateTest\UpHierarchyStateUpdateCommandTest.cs" />
     <Compile Include="CommandsTest\RepositoryTest\AddQuestCommandTest.cs" />
     <Compile Include="CommandsTest\RepositoryTest\AddQuestToParentCommandTest.cs" />
     <Compile Include="CommandsTest\RepositoryTest\DeleteQuestCommandTest.cs" />

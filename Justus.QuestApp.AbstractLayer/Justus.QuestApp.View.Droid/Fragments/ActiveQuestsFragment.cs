@@ -89,7 +89,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             //Toast.MakeText(this.Context, $"Done of {viewPosition} clicked!", ToastLength.Short).Show();
             ViewModel.DoneQuest(ViewModel.CurrentChildren[viewPosition]);
             QuestListAdapter.NotifyDataSetChanged();
-            Snackbar.Make(_view, "Quest done!", Snackbar.LengthIndefinite).SetAction("UNDO", Undo);
+            //Snackbar.Make(_view, "Quest done!", Snackbar.LengthIndefinite).SetAction("UNDO", Undo);
         }
 
         private void Undo(Android.Views.View view)
@@ -99,7 +99,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void FailClickHandler(int viewPosition)
         {
-            Toast.MakeText(this.Context, $"Fail of {viewPosition} clicked!", ToastLength.Short).Show();
+            ViewModel.FailQuest(ViewModel.CurrentChildren[viewPosition]);
+            QuestListAdapter.NotifyDataSetChanged();
         }
 
         private void ChildrenClickHandler(int viewPosition)

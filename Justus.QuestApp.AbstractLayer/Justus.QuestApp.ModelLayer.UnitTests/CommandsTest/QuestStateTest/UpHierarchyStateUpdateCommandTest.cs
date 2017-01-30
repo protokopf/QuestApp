@@ -14,7 +14,7 @@ using Rhino.Mocks;
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
 {
     [TestFixture]
-    class DoneUpdateCommandTest
+    class UpHierarchyStateUpdateCommandTest
     {
         [Test]
         public void ExecuteStandaloneQuestTest()
@@ -25,7 +25,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
 
             Quest parent = QuestHelper.CreateQuest(QuestState.Progress);
 
-            Command command = new DoneUpdateCommand(parent, repository);
+            Command command = new UpHierarchyStateUpdateCommand(parent, QuestState.Done,  repository);
 
             //Act
             command.Execute();
@@ -46,7 +46,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
 
             Quest parent = QuestHelper.CreateQuest(QuestState.Progress);
 
-            Command command = new DoneUpdateCommand(parent, repository);
+            Command command = new UpHierarchyStateUpdateCommand(parent,QuestState.Done,  repository);
 
             //Act
             command.Execute();
@@ -75,7 +75,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
                 current = current.Children[0];
             }
 
-            Command command = new DoneUpdateCommand(current, repository);
+            Command command = new UpHierarchyStateUpdateCommand(current, QuestState.Done, repository);
 
             //Act
             command.Execute();
@@ -106,7 +106,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
                 current = current.Children[0];
             }
 
-            Command command = new DoneUpdateCommand(current, repository);
+            Command command = new UpHierarchyStateUpdateCommand(current, QuestState.Done, repository);
 
             //Act
             command.Execute();
@@ -138,7 +138,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
                 current = current.Children[0];
             }
 
-            Command command = new DoneUpdateCommand(current, repository);
+            Command command = new UpHierarchyStateUpdateCommand(current, QuestState.Done, repository);
 
             //Act
             command.Execute();
@@ -170,7 +170,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
                 current = current.Children[0];
             }
 
-            Command command = new DoneUpdateCommand(current, repository);
+            Command command = new UpHierarchyStateUpdateCommand(current, QuestState.Done, repository);
 
             //Act
             command.Execute();

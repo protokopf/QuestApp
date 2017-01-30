@@ -23,9 +23,15 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
 
         #endregion
 
+        public void FailQuest(Quest quest)
+        {
+            LastCommand = new UpHierarchyStateUpdateCommand(quest, QuestState.Failed, QuestRepository);
+            LastCommand.Execute();
+        }
+
         public void DoneQuest(Quest quest)
         {
-            LastCommand = new DoneUpdateCommand(quest, QuestRepository);
+            LastCommand = new UpHierarchyStateUpdateCommand(quest, QuestState.Done, QuestRepository);
             LastCommand.Execute();
         }
 

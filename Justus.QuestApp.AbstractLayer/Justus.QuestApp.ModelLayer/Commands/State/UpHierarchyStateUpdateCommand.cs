@@ -10,17 +10,20 @@ namespace Justus.QuestApp.ModelLayer.Commands.State
     /// <summary>
     /// Command which marks quest as done.
     /// </summary>
-    public class DoneUpdateCommand : BaseStateUpdateCommand
+    public class UpHierarchyStateUpdateCommand : BaseStateUpdateCommand
     {
-        private readonly Dictionary<Quest, QuestState> _changedQuests; 
+        private readonly Dictionary<Quest, QuestState> _changedQuests;
+        private readonly QuestState _state;
 
         /// <summary>
         /// Receives quest and repository.
         /// </summary>
         /// <param name="quest"></param>
+        /// <param name="state"></param>
         /// <param name="repository"></param>
-        public DoneUpdateCommand(Quest quest, IQuestRepository repository) : base(quest, repository)
+        public UpHierarchyStateUpdateCommand(Quest quest, QuestState state, IQuestRepository repository) : base(quest, repository)
         {
+            _state = state;
             _changedQuests = new Dictionary<Quest, QuestState>();
         }
 
@@ -31,7 +34,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.State
         {
             if (!HasExecuted)
             {
-                AssignStateAllParentHierarchyIfSiblingsHasSameState(QuestRef, QuestState.Done);
+                AssignStateAllParentHierarchyIfSiblingsHasSameState(QuestRef, _state);
                 HasExecuted = true;
             }
         }

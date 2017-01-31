@@ -37,7 +37,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
 
         public void CancelQuest(Quest quest)
         {
-            LastCommand = new ThisStateUpdateCommand(quest, QuestState.Idle, QuestRepository);
+            LastCommand = new DownHierarchyStateUpdateCommand(quest, QuestState.Idle, QuestRepository);
             LastCommand.Execute();
         }
 

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Data;
 using Justus.QuestApp.AbstractLayer.Entities;
 
@@ -21,6 +22,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         private readonly List<Quest> _emptyList; 
         protected IQuestRepository QuestRepository;
         protected IQuestProgressCounter ProgressCounter;
+        protected IStateCommandsFactory StateCommads;
         protected Command LastCommand;
 
         /// <summary>
@@ -30,6 +32,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             QuestRepository = ServiceLocator.Resolve<IQuestRepository>();
             ProgressCounter = ServiceLocator.Resolve<IQuestProgressCounter>();
+            StateCommads = ServiceLocator.Resolve<IStateCommandsFactory>();
             _emptyList = new List<Quest>();
         }
 

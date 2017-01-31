@@ -55,7 +55,7 @@ namespace Justus.QuestApp.ModelLayer.Helpers
             {
                 return service.Value;
             }
-            throw new InvalidOperationException("Service not found!");
+            throw new InvalidOperationException($"Service {type} not found!");
         }
     }
 }

@@ -25,25 +25,25 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
 
         public void FailQuest(Quest quest)
         {
-            LastCommand = new UpHierarchyStateUpdateCommand(quest, QuestState.Failed, QuestRepository);
+            LastCommand = StateCommads.FailQuest(quest);
             LastCommand.Execute();
         }
 
         public void DoneQuest(Quest quest)
         {
-            LastCommand = new UpHierarchyStateUpdateCommand(quest, QuestState.Done, QuestRepository);
+            LastCommand = StateCommads.DoneQuest(quest);
             LastCommand.Execute();
         }
 
         public void CancelQuest(Quest quest)
         {
-            LastCommand = new DownHierarchyStateUpdateCommand(quest, QuestState.Idle, QuestRepository);
+            LastCommand = StateCommads.CancelQuest(quest);
             LastCommand.Execute();
         }
 
         public void StartQuest(Quest quest)
         {
-            LastCommand = new ThisStateUpdateCommand(quest, QuestState.Progress, QuestRepository);
+            LastCommand = StateCommads.StartQuest(quest);
             LastCommand.Execute();
         }
 

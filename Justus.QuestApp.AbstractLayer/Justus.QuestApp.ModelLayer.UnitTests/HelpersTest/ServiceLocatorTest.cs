@@ -155,7 +155,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
 
             //Assert
             Assert.IsNotNull(ex);
-            Assert.AreEqual("Service not found!", ex.Message);
+            Assert.AreEqual($"Service {typeof(FakeImplementationTwo)} not found!", ex.Message);
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
 
             //Assert
             Assert.IsNotNull(ex);
-            Assert.AreEqual("Service not found!", ex.Message);
+            Assert.AreEqual($"Service {typeof(FakeImplementationOne)} not found!", ex.Message);
         }
     }
 }

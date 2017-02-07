@@ -3011,7 +3011,7 @@ namespace Justus.QuestApp.View.Droid
 			public const int resultQuestItemDetails = 2131165371;
 			
 			// aapt resource value: 0x7f0700be
-			public const int resultQuestStart = 2131165374;
+			public const int resultQuestRestart = 2131165374;
 			
 			// aapt resource value: 0x7f0700c1
 			public const int resultQuestStatus = 2131165377;

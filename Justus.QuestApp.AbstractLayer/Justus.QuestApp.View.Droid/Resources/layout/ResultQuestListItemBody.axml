@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <Button
-                android:id="@+id/resultQuestStart"
+                android:id="@+id/resultQuestRestart"
                 android:text="@string/RestartButtonText"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"

@@ -31,6 +31,13 @@ namespace Justus.QuestApp.View.Droid.Activities
         #region BaseTabbedActivity overriding
 
         ///<inheritdoc/>
+        protected override void OnDestroy()
+        {
+            ViewPager.PageSelected -= PageChanged;
+            base.OnDestroy();
+        }
+
+        ///<inheritdoc/>
         protected override Toolbar InitializeToolbar()
         {
             Toolbar toolBar = FindViewById<Toolbar>(Resource.Id.mainActivityToolbar);
@@ -99,15 +106,15 @@ namespace Justus.QuestApp.View.Droid.Activities
             _fragmentAdapter.AddFragment(new AvailableQuestsFragment(), Resources.GetString(Resource.String.IdleQuestsLabel));
 
             viewPager.Adapter = _fragmentAdapter;
-            viewPager.PageSelected += ViewPager_PageSelected;
+            viewPager.PageSelected += PageChanged;
         }
 
-        private void ViewPager_PageSelected(object sender, ViewPager.PageSelectedEventArgs e)
+        private void PageChanged(object sender, ViewPager.PageSelectedEventArgs e)
         {
-            IUpdateable updateable = _fragmentAdapter.GetItem(e.Position) as IUpdateable;
+            IStateResettable updateable = _fragmentAdapter.GetItem(e.Position) as IStateResettable;
             if(updateable != null)
             {
-                updateable.Update();
+                updateable.ResetState();
             }
 
         }

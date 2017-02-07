@@ -48,7 +48,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         protected override void FillViewHolder(ResultQuestItemViewHolder holder, Quest questData, int position)
         {
             holder.ItemPosition = position;
-            holder.StartButton.Visibility = questData.Parent == null ? ViewStates.Visible : ViewStates.Gone;
+            holder.RestartButton.Visibility = questData.Parent == null ? ViewStates.Visible : ViewStates.Gone;
             holder.Title.Text = questData.Title;
             holder.Description.Text = questData.Description;
             holder.ChildrenButton.Enabled = questData.Children != null;

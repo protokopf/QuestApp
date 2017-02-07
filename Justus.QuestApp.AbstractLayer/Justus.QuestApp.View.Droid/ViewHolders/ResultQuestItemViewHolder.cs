@@ -30,7 +30,7 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
             Status = itemView.FindViewById<TextView>(Resource.Id.resultQuestStatus);
 
             Description = ExpandDetails.FindViewById<TextView>(Resource.Id.resultQuestDescription);
-            StartButton = ExpandDetails.FindViewById<Button>(Resource.Id.resultQuestStart);
+            RestartButton = ExpandDetails.FindViewById<Button>(Resource.Id.resultQuestRestart);
             DeleteButton = ExpandDetails.FindViewById<Button>(Resource.Id.resultQuestDelete);
             ChildrenButton = ExpandDetails.FindViewById<Button>(Resource.Id.resultQuestChildrenButton);
         }
@@ -42,7 +42,7 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
 
         public Button ChildrenButton { get; set; }
 
-        public Button StartButton { get; set; }
+        public Button RestartButton { get; set; }
 
         public Button DeleteButton { get; set; }
 

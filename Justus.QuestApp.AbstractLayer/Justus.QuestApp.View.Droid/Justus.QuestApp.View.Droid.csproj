@@ -121,7 +121,7 @@
     <Compile Include="Adapters\List\ResultQuestListAdapter.cs" />
     <Compile Include="Animation\ExpandAnimation.cs" />
     <Compile Include="Fragments\Abstracts\BaseTraverseQuestsFragment.cs" />
-    <Compile Include="Fragments\Abstracts\IUpdateable.cs" />
+    <Compile Include="Fragments\Abstracts\IStateResettable.cs" />
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Fragments\Abstracts\BaseQuestsFragment.cs" />
     <Compile Include="ViewHoldersFillers\IViewHolderFiller.cs" />

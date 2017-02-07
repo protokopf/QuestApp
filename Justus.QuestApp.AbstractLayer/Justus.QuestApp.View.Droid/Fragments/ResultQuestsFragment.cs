@@ -45,7 +45,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void QuestAddedHandler(object sender, ViewGroup.ChildViewAddedEventArgs e)
         {
             ResultQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(e.Child);
-            holder.StartButton.Click += (s, args) => { StartHandler(holder.ItemPosition); };
+            holder.RestartButton.Click += (s, args) => { RestartHandler(holder.ItemPosition); };
             holder.DeleteButton.Click += (s, args) => { DeleteHandler(holder.ItemPosition); };
             holder.ChildrenButton.Click += (s, args) => { ChildrenHandler(holder.ItemPosition); };
         }
@@ -63,9 +63,9 @@ namespace Justus.QuestApp.View.Droid.Fragments
             TraverseToParent();
         }
 
-        private void StartHandler(int position)
+        private void RestartHandler(int position)
         {
-            ViewModel.StartQuest(ViewModel.CurrentChildren[position]);
+            ViewModel.RestartQuest(ViewModel.CurrentChildren[position]);
             QuestListAdapter.NotifyDataSetChanged();
         }
 

@@ -15,11 +15,11 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
     /// <summary>
     /// Interface for types, which can be updated.
     /// </summary>
-    public interface IUpdateable
+    public interface IStateResettable
     {
         /// <summary>
         /// Updates.
         /// </summary>
-        void Update();
+        void ResetState();
     }
 }

@@ -59,6 +59,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
             PushQuests();
         }
 
+        public override void ResetState()
+        {
+            base.ResetState();
+            TraverseToRoot();
+        }
+
         #endregion
 
         #region Handlers
@@ -136,6 +142,21 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private async void PushQuests()
         {
             await ViewModel.PushQuests();
+        }
+
+        private void TraverseToRoot()
+        {
+            if (ViewModel.CurrentQuest != null)
+            {
+                CollapsChildren();
+                while (ViewModel.CurrentQuest != null)
+                {
+                    ViewModel.CurrentQuest = ViewModel.CurrentQuest.Parent;
+                }
+                TitleTextView.Text = TitleTextDefault;
+                BackButton.Enabled = false;
+                QuestListView.Adapter = QuestListAdapter;
+            }
         }
     }
 }

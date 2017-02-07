@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Commands;
+using Justus.QuestApp.ModelLayer.Commands;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
@@ -24,9 +26,11 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
 
         #endregion
 
-        public void StartQuest(Quest quest)
+        public void RestartQuest(Quest quest)
         {
-            LastCommand = StateCommads.StartQuest(quest);
+            Command cancel = StateCommads.CancelQuest(quest);
+            Command start = StateCommads.StartQuest(quest);
+            LastCommand = new CompositeCommand(new[] { cancel, start });
             LastCommand.Execute();
         }
 

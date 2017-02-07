@@ -11,7 +11,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TViewHolder"></typeparam>
-    public abstract class BaseQuestsFragment<TViewModel, TViewHolder> : BaseFragment<TViewModel>
+    public abstract class BaseQuestsFragment<TViewModel, TViewHolder> : BaseFragment<TViewModel>, IUpdateable
         where TViewModel : QuestListViewModel
         where TViewHolder : PositionedViewHolder
     {
@@ -24,5 +24,15 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// Reference to list view.
         /// </summary>
         protected ListView QuestListView;
+
+        #region IUpdateable implmentation
+
+        ///<inheritdoc/>
+        public virtual void Update()
+        {
+            QuestListAdapter?.NotifyDataSetChanged();
+        } 
+
+        #endregion
     }
 }

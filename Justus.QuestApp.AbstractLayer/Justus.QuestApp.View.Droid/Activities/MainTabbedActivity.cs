@@ -14,6 +14,7 @@ using Android.Widget;
 using Justus.QuestApp.View.Droid.Adapters;
 using Justus.QuestApp.View.Droid.Fragments;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
+using Justus.QuestApp.View.Droid.Fragments.Abstracts;
 
 namespace Justus.QuestApp.View.Droid.Activities
 {
@@ -98,6 +99,17 @@ namespace Justus.QuestApp.View.Droid.Activities
             _fragmentAdapter.AddFragment(new AvailableQuestsFragment(), Resources.GetString(Resource.String.IdleQuestsLabel));
 
             viewPager.Adapter = _fragmentAdapter;
+            viewPager.PageSelected += ViewPager_PageSelected;
+        }
+
+        private void ViewPager_PageSelected(object sender, ViewPager.PageSelectedEventArgs e)
+        {
+            IUpdateable updateable = _fragmentAdapter.GetItem(e.Position) as IUpdateable;
+            if(updateable != null)
+            {
+                updateable.Update();
+            }
+
         }
     }
 }

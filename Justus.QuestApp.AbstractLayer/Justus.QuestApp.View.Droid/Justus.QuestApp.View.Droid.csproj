@@ -123,6 +123,7 @@
     <Compile Include="Fragments\Abstracts\BaseTraverseQuestsFragment.cs" />
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Fragments\Abstracts\BaseQuestsFragment.cs" />
+    <Compile Include="ViewHoldersFillers\IViewHolderFiller.cs" />
     <Compile Include="ViewHolders\Abstracts\ExpandingPositionedVIewHolder.cs" />
     <Compile Include="ViewHolders\ActiveQuestItemViewHolder.cs" />
     <Compile Include="Fragments\ActiveQuestsFragment.cs" />

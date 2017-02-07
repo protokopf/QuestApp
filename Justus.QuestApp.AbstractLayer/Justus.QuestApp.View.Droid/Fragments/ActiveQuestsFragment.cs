@@ -66,11 +66,20 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void QuestAddedHandler(object sender, ViewGroup.ChildViewAddedEventArgs args)
         {
             ActiveQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(args.Child);
+
+            holder.ChildrenButton.Click += (o, eventArgs) => { ChildrenClickHandler(holder.ItemPosition); };
+
+            holder.StartButton.Click += (o, eventArgs) => { StartClickHandler(holder.ItemPosition); };
             holder.DoneButton.Click += (o, eventArgs) => { DoneClickHandler(holder.ItemPosition); };
             holder.FailButton.Click += (o, eventArgs) => { FailClickHandler(holder.ItemPosition); };
             holder.DeleteButton.Click += (o, eventArgs) => { DeleteClickHandler(holder.ItemPosition); };
-            holder.ChildrenButton.Click += (o, eventArgs) => { ChildrenClickHandler(holder.ItemPosition); };
             holder.CancelButton.Click += (o, eventArgs) => { CancelClickHandler(holder.ItemPosition); };
+        }
+
+        private void StartClickHandler(int itemPosition)
+        {
+            ViewModel.StartQuest(ViewModel.CurrentChildren[itemPosition]);
+            QuestListAdapter.NotifyDataSetChanged();
         }
 
         private void ItemClickHandler(object sender, AdapterView.ItemClickEventArgs args)
@@ -86,10 +95,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void DoneClickHandler(int viewPosition)
         {
-            //Toast.MakeText(this.Context, $"Done of {viewPosition} clicked!", ToastLength.Short).Show();
             ViewModel.DoneQuest(ViewModel.CurrentChildren[viewPosition]);
             QuestListAdapter.NotifyDataSetChanged();
-            //Snackbar.Make(_view, "Quest done!", Snackbar.LengthIndefinite).SetAction("UNDO", Undo);
         }
 
         private void Undo(Android.Views.View view)

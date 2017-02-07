@@ -16,6 +16,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
     /// </summary>
     public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestItemViewHolder>
     {
+
         /// <summary>
         /// Get references to activity and viewModel
         /// </summary>
@@ -49,36 +50,68 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
             holder.ChildrenButton.Enabled = questData.Children != null;
             holder.ItemPosition = position;
 
-            bool shouldShowDoneFail = (
-                questData.Children != null && 
-                questData.Children.Count == 0 && 
-                questData.CurrentState == QuestState.Progress);
-
-            holder.DoneButton.Visibility = shouldShowDoneFail
-                ? ViewStates.Visible
-                : ViewStates.Gone;
-            holder.FailButton.Visibility = shouldShowDoneFail
-                ? ViewStates.Visible
-                : ViewStates.Gone;
-
             switch (questData.CurrentState)
             {
                 case QuestState.Done:
                     holder.Title.SetTextColor(Color.Green);
+                    HandleButtonsForDone(holder, questData);
                     break;
                 case QuestState.Failed:
                     holder.Title.SetTextColor(Color.Red);
+                    HandleButtonsForFailed(holder, questData);
                     break;
                 case QuestState.Idle:
                     holder.Title.SetTextColor(Color.Gray);
+                    HandleButtonsForIdle(holder, questData);
                     break;
-                default:
+                case QuestState.Progress:
                     holder.Title.SetTextColor(Color.Orange);
+                    HandleButtonsForProgress(holder, questData);
                     break;
             }
         }
 
         #endregion
+
+        #region Private methods
+
+        private void HandleButtonsForProgress(ActiveQuestItemViewHolder holder, Quest questData)
+        {
+            ViewStates doneFailState = questData.Children != null && questData.Children.Count != 0 ? ViewStates.Gone : ViewStates.Visible;
+
+            holder.StartButton.Visibility = ViewStates.Gone;
+            holder.CancelButton.Visibility = ViewStates.Visible;
+            holder.DeleteButton.Visibility = ViewStates.Visible;
+            holder.DoneButton.Visibility = doneFailState;
+            holder.FailButton.Visibility = doneFailState;
+        }
+
+        private void HandleButtonsForIdle(ActiveQuestItemViewHolder holder, Quest questData)
+        {
+            holder.StartButton.Visibility = ViewStates.Visible;
+            holder.CancelButton.Visibility = ViewStates.Gone;
+            holder.DeleteButton.Visibility = ViewStates.Visible;
+            holder.DoneButton.Visibility = ViewStates.Gone;
+            holder.FailButton.Visibility = ViewStates.Gone;
+        }
+
+        private void HandleButtonsForFailed(ActiveQuestItemViewHolder holder, Quest questData)
+        {
+            holder.StartButton.Visibility = ViewStates.Gone;
+            holder.CancelButton.Visibility = ViewStates.Visible;
+            holder.DeleteButton.Visibility = ViewStates.Visible;
+            holder.DoneButton.Visibility = ViewStates.Gone;
+            holder.FailButton.Visibility = ViewStates.Gone;
+        }
+
+        private void HandleButtonsForDone(ActiveQuestItemViewHolder holder, Quest questData)
+        {
+            holder.StartButton.Visibility = ViewStates.Gone;
+            holder.CancelButton.Visibility = ViewStates.Gone;
+            holder.DeleteButton.Visibility = ViewStates.Visible;
+            holder.DoneButton.Visibility = ViewStates.Gone;
+            holder.FailButton.Visibility = ViewStates.Gone;
+        }
 
         private string FormLeftTime(DateTime deadLine)
         {
@@ -86,6 +119,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
             return $"{s.Hours}:{s.Minutes}:{s.Seconds}";
         }
 
-
+        #endregion
     }
 }

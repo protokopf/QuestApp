@@ -42,5 +42,10 @@ namespace Justus.QuestApp.AbstractLayer.Entities.Quest
         /// Current quest state.
         /// </summary>
         public QuestState CurrentState { get; set; }
+
+        /// <summary>
+        /// Points, whether quest important or not.
+        /// </summary>
+        public bool IsImportant { get; set; }
     }
 }

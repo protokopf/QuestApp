@@ -46,7 +46,7 @@ namespace Justus.QuestApp.View.Droid
 
         private void InitializeModelServices()
         {
-            ServiceLocator.Register<IQuestRepository>(() => new StubQuestRepositoryService(10,2,3));
+            ServiceLocator.Register<IQuestRepository>(() => new StubQuestRepositoryService(10,1,3));
             ServiceLocator.Register<IQuestProgressCounter>(() => new RecursiveQuestProgressCounter());
             ServiceLocator.Register<IStateCommandsFactory>(() => new UpdatingStateCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
         }

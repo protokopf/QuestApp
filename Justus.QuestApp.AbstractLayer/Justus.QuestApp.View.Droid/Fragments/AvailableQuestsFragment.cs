@@ -60,7 +60,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void StartClickHandler(int itemPosition)
         {
-            Toast.MakeText(this.Context, $"Start of {itemPosition} clicked!", ToastLength.Short).Show();
+            ViewModel.StartQuest(QuestListAdapter[itemPosition]);
+            QuestListAdapter.NotifyDataSetChanged();
         }
 
         private void DeleteClickHandler(int itemPosition)

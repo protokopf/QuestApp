@@ -114,13 +114,12 @@ namespace Justus.QuestApp.View.Droid.StubServices
 
         private Quest CreateQuest(int id = 0)
         {
-            string title;
-            QuestState state = GetState(out title);
+            QuestState state = QuestState.Idle;
 
             return new StubQuest()
             {
                 Id = id,
-                Title = title + id,
+                Title = "Quest ¹ " + id,
                 Description = "Description " + id,
                 CurrentState = state,
                 Children = new List<Quest>(),
@@ -144,33 +143,9 @@ namespace Justus.QuestApp.View.Droid.StubServices
             return quest;
         }
 
-        private QuestState GetState(out string title)
+        private QuestState GetState()
         {
-            int rand = _random.Next(0, 4);
             QuestState state = QuestState.Idle;
-            switch (rand)
-            {
-                case 0:
-                    state = QuestState.Failed;
-                    title = "bom failed ";
-                    break;
-                case 1:
-                    state = QuestState.Done;
-                    title = "bom done ";
-                    break;
-                case 2:
-                    state = QuestState.Progress;
-                    title = "bom progress ";
-                    break;
-                case 3:
-                    state = QuestState.Idle;
-                    title = "bom idled ";
-                    break;
-                default:
-                    state = QuestState.Idle;
-                    title = "bom idled ";
-                    break;
-            }
             return state;
         }
     }

@@ -25,10 +25,11 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
             Progress.ProgressDrawable.SetColorFilter(Color.Green, PorterDuff.Mode.SrcIn);
 
             Description = ExpandDetails.FindViewById<TextView>(Resource.Id.questDescription);
+            ChildrenButton = ExpandDetails.FindViewById<Button>(Resource.Id.questChildrenButton);
 
             DoneButton = ExpandDetails.FindViewById<Button>(Resource.Id.questDone);
             FailButton = ExpandDetails.FindViewById<Button>(Resource.Id.questFailed);
-            ChildrenButton = ExpandDetails.FindViewById<Button>(Resource.Id.questChildrenButton);
+            StartButton = ExpandDetails.FindViewById<Button>(Resource.Id.questStart);
             DeleteButton = ExpandDetails.FindViewById<Button>(Resource.Id.questDelete);
             CancelButton = ExpandDetails.FindViewById<Button>(Resource.Id.questCancel);
         }
@@ -39,12 +40,17 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
     
         public TextView Description { get; set; }
 
+        public Button ChildrenButton { get; set; }
+
+        #region Action buttons
+
         public Button DoneButton { get; set; }
         public Button FailButton { get; set; }
         public Button DeleteButton { get; set; }
-
+        public Button StartButton { get; set; }
         public Button CancelButton { get; set; }
-        public Button ChildrenButton { get; set; }
+
+        #endregion
 
         #region ExpandingPositionedViewHolder overridng
 

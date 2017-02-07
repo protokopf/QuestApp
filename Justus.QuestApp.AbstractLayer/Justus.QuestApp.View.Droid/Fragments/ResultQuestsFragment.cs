@@ -22,7 +22,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// </summary>
     public class ResultQuestsFragment : BaseTraverseQuestsFragment<ResultsQuestListViewModel, ResultQuestItemViewHolder>
     {
-
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
@@ -66,7 +65,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void StartHandler(int position)
         {
-            Toast.MakeText(this.Context, $"Start of {position} clicked!", ToastLength.Short).Show();
+            ViewModel.StartQuest(ViewModel.CurrentChildren[position]);
+            QuestListAdapter.NotifyDataSetChanged();
         }
 
         private void DeleteHandler(int position)

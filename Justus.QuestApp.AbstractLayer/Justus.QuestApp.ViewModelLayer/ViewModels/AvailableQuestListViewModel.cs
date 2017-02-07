@@ -24,6 +24,12 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
 
         #endregion
 
+        public void StartQuest(Quest quest)
+        {
+            LastCommand = StateCommads.StartQuest(quest);
+            LastCommand.Execute();
+        }
+
         private bool FilterItem(Quest quest)
         {
             if (quest.Parent == null)

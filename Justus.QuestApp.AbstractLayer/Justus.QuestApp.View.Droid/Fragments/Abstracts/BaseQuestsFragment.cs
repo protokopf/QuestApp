@@ -11,7 +11,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TViewHolder"></typeparam>
-    public abstract class BaseQuestsFragment<TViewModel, TViewHolder> : BaseFragment<TViewModel>, IStateResettable
+    public abstract class BaseQuestsFragment<TViewModel, TViewHolder> : BaseFragment<TViewModel>, ISelectable
         where TViewModel : QuestListViewModel
         where TViewHolder : PositionedViewHolder
     {
@@ -25,10 +25,10 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// </summary>
         protected ListView QuestListView;
 
-        #region IStateResettable implmentation
+        #region ISelectable implmentation
 
         ///<inheritdoc/>
-        public virtual void ResetState()
+        public virtual void OnSelect()
         {
             QuestListAdapter?.NotifyDataSetChanged();
         } 

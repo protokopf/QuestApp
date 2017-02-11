@@ -31,6 +31,37 @@ namespace Justus.QuestApp.View.Droid.Activities
         #region BaseTabbedActivity overriding
 
         ///<inheritdoc/>
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.MainActivityMenu, menu);
+            return true;
+        }
+
+        ///<inheritdoc/>
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            int id = item.ItemId;
+            switch (id)
+            {
+                case Resource.Id.menuFirstOption:
+                    Snackbar.Make(_coordinatorLayout, "First menu item clicked!", Snackbar.LengthShort).Show();
+                    break;
+                case Resource.Id.menuSecondOption:
+                    Snackbar.Make(_coordinatorLayout, "Second menu item clicked!", Snackbar.LengthShort).Show();
+                    break;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
+
+        ///<inheritdoc/>
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            _coordinatorLayout = FindViewById<CoordinatorLayout>(Resource.Id.mainActivityCoordinatorLayout);
+            ViewPager.PageSelected += PageChanged;
+        }
+
+        ///<inheritdoc/>
         protected override void OnDestroy()
         {
             ViewPager.PageSelected -= PageChanged;
@@ -68,34 +99,10 @@ namespace Justus.QuestApp.View.Droid.Activities
         {
             SetContentView(Resource.Layout.MainActivityLayout);
         }
+
         #endregion
 
-        public override bool OnCreateOptionsMenu(IMenu menu)
-        {
-            MenuInflater.Inflate(Resource.Menu.MainActivityMenu, menu);
-            return true;
-        }
-
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            int id = item.ItemId;
-            switch (id)
-            {
-                case Resource.Id.menuFirstOption:
-                    Snackbar.Make(_coordinatorLayout, "First menu item clicked!",Snackbar.LengthShort).Show();
-                    break;
-                case Resource.Id.menuSecondOption:
-                    Snackbar.Make(_coordinatorLayout, "Second menu item clicked!", Snackbar.LengthShort).Show();
-                    break;
-            }
-            return base.OnOptionsItemSelected(item);
-        }
-
-        protected override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-            _coordinatorLayout = FindViewById<CoordinatorLayout>(Resource.Id.mainActivityCoordinatorLayout);
-        }
+        #region Private methods
 
         private void SetupViewPager(ViewPager viewPager)
         {
@@ -106,17 +113,18 @@ namespace Justus.QuestApp.View.Droid.Activities
             _fragmentAdapter.AddFragment(new AvailableQuestsFragment(), Resources.GetString(Resource.String.IdleQuestsLabel));
 
             viewPager.Adapter = _fragmentAdapter;
-            viewPager.PageSelected += PageChanged;
         }
 
         private void PageChanged(object sender, ViewPager.PageSelectedEventArgs e)
         {
-            IStateResettable updateable = _fragmentAdapter.GetItem(e.Position) as IStateResettable;
+            ISelectable updateable = _fragmentAdapter.GetItem(e.Position) as ISelectable;
             if(updateable != null)
             {
-                updateable.ResetState();
+                updateable.OnSelect();
             }
 
         }
+
+        #endregion
     }
 }

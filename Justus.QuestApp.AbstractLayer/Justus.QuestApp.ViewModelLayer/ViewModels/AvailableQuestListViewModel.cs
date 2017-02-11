@@ -24,11 +24,17 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
 
         #endregion
 
+        /// <summary>
+        /// Starts given quest.
+        /// </summary>
+        /// <param name="quest"></param>
         public void StartQuest(Quest quest)
         {
             LastCommand = StateCommads.StartQuest(quest);
             LastCommand.Execute();
         }
+
+        #region Private methods
 
         private bool FilterItem(Quest quest)
         {
@@ -37,6 +43,8 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
                 return quest.CurrentState == QuestState.Idle;
             }
             return true;
-        }
+        } 
+
+        #endregion
     }
 }

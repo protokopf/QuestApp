@@ -23,17 +23,16 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// </summary>
     public class ActiveQuestsFragment : BaseTraverseQuestsFragment<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
     {
-        private Android.Views.View _view;
-
         #region Fragment overriding
 
+        ///<inheritdoc/>
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            _view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
+            Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
 
-            QuestListView = _view.FindViewById<ListView>(Resource.Id.questListId);
-            TitleTextView = _view.FindViewById<TextView>(Resource.Id.questsListTitle);          
-            BackButton = _view.FindViewById<Button>(Resource.Id.questsListBack);
+            QuestListView = view.FindViewById<ListView>(Resource.Id.questListId);
+            TitleTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);          
+            BackButton = view.FindViewById<Button>(Resource.Id.questsListBack);
 
             TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
 
@@ -44,24 +43,27 @@ namespace Justus.QuestApp.View.Droid.Fragments
             QuestListView.ItemClick += ItemClickHandler;
             QuestListView.ChildViewAdded += QuestAddedHandler;
 
-            return _view;
+            return view;
         }
 
+        ///<inheritdoc/>
         public override void OnPause()
         {
             base.OnPause();
             PullQuests();          
         }
 
+        ///<inheritdoc/>
         public override void OnResume()
         {
             base.OnResume();
             PushQuests();
         }
 
-        public override void ResetState()
+        ///<inheritdoc/>
+        public override void OnSelect()
         {
-            base.ResetState();
+            base.OnSelect();
             TraverseToRoot();
         }
 

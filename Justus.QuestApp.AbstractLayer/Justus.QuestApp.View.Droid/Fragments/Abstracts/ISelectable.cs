@@ -13,13 +13,13 @@ using Android.Widget;
 namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
 {
     /// <summary>
-    /// Interface for types, which can be updated.
+    /// Interface for fragments, which repronses on fact, that their were selected.
     /// </summary>
-    public interface IStateResettable
+    public interface ISelectable
     {
         /// <summary>
         /// Updates.
         /// </summary>
-        void ResetState();
+        void OnSelect();
     }
 }

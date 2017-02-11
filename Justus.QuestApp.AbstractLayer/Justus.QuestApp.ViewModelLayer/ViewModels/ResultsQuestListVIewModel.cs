@@ -26,6 +26,10 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
 
         #endregion
 
+        /// <summary>
+        /// Restarts quest.
+        /// </summary>
+        /// <param name="quest"></param>
         public void RestartQuest(Quest quest)
         {
             Command cancel = StateCommads.CancelQuest(quest);
@@ -34,10 +38,16 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             LastCommand.Execute();
         }
 
+        /// <summary>
+        /// Deletes quest.
+        /// </summary>
+        /// <param name="quest"></param>
         public void DeleteQuest(Quest quest)
         {
 
         }
+
+        #region Private methods
 
         private bool FilterItem(Quest quest)
         {
@@ -47,5 +57,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             }
             return true;
         }
+
+        #endregion
     }
 }

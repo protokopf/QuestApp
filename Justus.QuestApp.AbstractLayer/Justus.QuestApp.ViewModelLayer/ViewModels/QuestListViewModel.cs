@@ -87,14 +87,6 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         }
 
         /// <summary>
-        /// Resets state of current quest list view model.
-        /// </summary>
-        public virtual void ResetState()
-        {
-            CurrentQuest = null;
-        }
-
-        /// <summary>
         /// Push all quests in async way.
         /// </summary>
         public async Task PushQuests()
@@ -121,9 +113,6 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             return quests;
         }
 
-        #endregion
-
-        #region Private methods
         #endregion
     }
 }

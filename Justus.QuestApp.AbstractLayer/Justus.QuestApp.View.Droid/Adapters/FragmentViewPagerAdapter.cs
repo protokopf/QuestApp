@@ -25,6 +25,10 @@ namespace Justus.QuestApp.View.Droid.Adapters
         private readonly List<Fragment> _fragments = new List<Fragment>(); 
         private readonly List<string> _fragmentsTitles = new List<string>();
 
+        /// <summary>
+        /// Receives reference to fragment manager.
+        /// </summary>
+        /// <param name="manager"></param>
         public FragmentViewPagerAdapter(FragmentManager manager) : base(manager)
         {
             

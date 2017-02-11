@@ -19,11 +19,19 @@ using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Adapters.List
 {
+    /// <summary>
+    /// Adapter for providing result quest list.
+    /// </summary>
     public class ResultQuestListAdapter : BaseQuestListAdapter<ResultQuestItemViewHolder>
     {
         private readonly string _failedStatus;
         private readonly string _doneStatus;
 
+        /// <summary>
+        /// Receives references to activity and list view model.
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <param name="listViewModel"></param>
         public ResultQuestListAdapter(Activity activity, QuestListViewModel listViewModel) : base(activity,listViewModel)
         {
             _doneStatus = ActivityRef.Resources.GetString(Resource.String.DoneStatus);

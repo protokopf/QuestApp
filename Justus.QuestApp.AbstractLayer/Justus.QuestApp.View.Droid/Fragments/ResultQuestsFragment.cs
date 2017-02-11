@@ -22,6 +22,9 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// </summary>
     public class ResultQuestsFragment : BaseTraverseQuestsFragment<ResultsQuestListViewModel, ResultQuestItemViewHolder>
     {
+        #region Fragment overriding
+
+        ///<inheritdoc/>
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
@@ -42,6 +45,10 @@ namespace Justus.QuestApp.View.Droid.Fragments
             return view;
         }
 
+        #endregion
+
+        #region Handlers
+
         private void QuestAddedHandler(object sender, ViewGroup.ChildViewAddedEventArgs e)
         {
             ResultQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(e.Child);
@@ -49,8 +56,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
             holder.DeleteButton.Click += (s, args) => { DeleteHandler(holder.ItemPosition); };
             holder.ChildrenButton.Click += (s, args) => { ChildrenHandler(holder.ItemPosition); };
         }
-
-        #region Handlers
 
         private void ItemClickHandler(object sender, AdapterView.ItemClickEventArgs e)
         {

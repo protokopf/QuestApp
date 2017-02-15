@@ -88,6 +88,15 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         }
 
         /// <summary>
+        /// Returns all view holders.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TViewHolder> GetViewHolders()
+        {
+            return HoldersDictionary.Values;
+        } 
+
+        /// <summary>
         /// Inflate view.
         /// </summary>
         /// <returns></returns>

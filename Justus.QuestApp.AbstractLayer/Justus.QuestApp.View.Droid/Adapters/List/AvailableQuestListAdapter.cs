@@ -46,6 +46,9 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         ///<inheritdoc/>
         protected override void FillViewHolder(AvailableQuestItemViewHolder holder, Quest questData, int position)
         {
+            holder.StartTime.Text = FormTime(questData.StartTime);
+            holder.Deadline.Text = FormTime(questData.Deadline);
+
             holder.ItemPosition = position;
             holder.Title.Text = questData.Title;
             holder.Description.Text = questData.Description;
@@ -54,5 +57,15 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         } 
 
         #endregion
+
+        private string FormTime(DateTime time)
+        {
+            if (time != DateTime.MaxValue)
+            {
+                return $"{time.Year}.{time.Month}.{time.Day} {time.Hour}:{time.Minute}:{time.Second}";
+            }
+            return "Not specified";
+
+        }
     }
 }

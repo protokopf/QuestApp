@@ -25,6 +25,8 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
         public AvailableQuestItemViewHolder(Android.Views.View itemView, int position) : base(itemView, position)
         {
             Title = itemView.FindViewById<TextView>(Resource.Id.availableQuestTitle);
+            StartTime = itemView.FindViewById<TextView>(Resource.Id.availableQuestStartTime);
+            Deadline = itemView.FindViewById<TextView>(Resource.Id.availableQuestDeadline);
 
             Description = ExpandDetails.FindViewById<TextView>(Resource.Id.availableQuestDescription);
             ChildrenButton = ExpandDetails.FindViewById<Button>(Resource.Id.availableQuestChildrenButton);
@@ -34,6 +36,10 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
         }
 
         public TextView Title { get; set; }
+
+        public TextView StartTime { get; set; }
+
+        public TextView Deadline { get; set; }
 
         public TextView Description { get; set; }
 

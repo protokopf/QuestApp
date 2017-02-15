@@ -72,11 +72,14 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// </summary>
         protected virtual void CollapsChildren()
         {
-            for (int i = 0; i < QuestListView.Count; ++i)
+            IEnumerable<TViewHolder> holders = QuestListAdapter.GetViewHolders();
+            foreach (TViewHolder holder in holders)
             {
-                TViewHolder holder = QuestListAdapter.GetViewHolderByView(QuestListView.GetChildAt(i));
-                holder.ExpandDetails.Visibility = ViewStates.Gone;
+                if (holder.ExpandDetails.Visibility == ViewStates.Visible)
+                {
+                    holder.ExpandDetails.Visibility = ViewStates.Gone;
+                }            
             }
         }
-    }
+    } 
 }

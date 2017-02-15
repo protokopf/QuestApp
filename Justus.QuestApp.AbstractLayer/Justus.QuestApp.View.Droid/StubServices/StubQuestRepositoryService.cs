@@ -123,7 +123,8 @@ namespace Justus.QuestApp.View.Droid.StubServices
                 Description = "Description " + id,
                 CurrentState = state,
                 Children = new List<Quest>(),
-                Deadline = DateTime.Now + new TimeSpan(0,id,0)
+                Deadline = GetDeadLine(id),
+                StartTime = GetStartDate(id)
             };
         }
 
@@ -143,10 +144,32 @@ namespace Justus.QuestApp.View.Droid.StubServices
             return quest;
         }
 
-        private QuestState GetState()
+        private DateTime GetDeadLine(int id)
         {
-            QuestState state = QuestState.Idle;
-            return state;
+            DateTime result = DateTime.MaxValue;
+            if (id%2 == 0)
+            {
+                result = DateTime.Now + new TimeSpan(0, 0, 10, 0);
+            }
+            else if (id%3 == 0)
+            {
+                result = DateTime.Now -new TimeSpan(0, 12, 0, 0);
+            }
+            return result;
+        }
+
+        private DateTime GetStartDate(int id)
+        {
+            DateTime result = DateTime.MaxValue;
+            if (id % 2 == 0)
+            {
+                result = DateTime.Now + new TimeSpan(0, 0, 5, 0);
+            }
+            else if (id % 3 == 0)
+            {
+                result = DateTime.Now - new TimeSpan(0, 12, 0, 0);
+            }
+            return result;
         }
     }
 

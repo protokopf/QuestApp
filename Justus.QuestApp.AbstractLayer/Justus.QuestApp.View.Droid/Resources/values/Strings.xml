@@ -37,4 +37,7 @@
   <string name="ApplicationTitle">Application titles</string>
   <string name="ProgressDialogTitle">Please, wait...</string>
   <string name="ErrorTitle">Oops...</string>
+
+  <string name="StartTimeLabel">Start time:</string>
+  <string name="DeadlineLabel">Deadline: </string>
 </resources>

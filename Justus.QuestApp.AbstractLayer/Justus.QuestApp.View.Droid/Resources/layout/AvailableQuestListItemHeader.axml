@@ -4,25 +4,47 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants">
-  <LinearLayout
-      android:orientation="horizontal"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:weightSum="10"
-         >
     <TextView
         android:id="@+id/availableQuestTitle"
         android:text="@string/QuestDefaultTitle"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:layout_weight="8"
-              />
-  </LinearLayout>
-
-  <include layout="@layout/AvailableQuestListItemBody"
-           android:visibility="gone"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"/>
-  
+        android:gravity="center" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:text="@string/StartTimeLabel"
+            android:gravity="center"
+            android:layout_weight="25" />
+        <TextView
+            android:id="@+id/availableQuestStartTime"
+            android:text="@string/QuestDefaultTimeLeft"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="25"
+            android:gravity="center" />
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:text="@string/DeadlineLabel"
+            android:gravity="center"
+            android:layout_weight="25" />
+        <TextView
+            android:id="@+id/availableQuestDeadline"
+            android:text="@string/QuestDefaultTimeLeft"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="25"
+            android:gravity="center" />
+    </LinearLayout>
+    <include
+        layout="@layout/AvailableQuestListItemBody"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

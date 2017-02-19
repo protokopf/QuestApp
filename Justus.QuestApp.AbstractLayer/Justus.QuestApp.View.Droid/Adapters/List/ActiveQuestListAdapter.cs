@@ -16,6 +16,8 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
     /// </summary>
     public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestItemViewHolder>
     {
+        private readonly string _startLabel;
+        private readonly string _restartLabel;
 
         /// <summary>
         /// Get references to activity and viewModel
@@ -24,6 +26,8 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         /// <param name="listViewModel"></param>
         public ActiveQuestListAdapter(Activity activity, QuestListViewModel listViewModel) : base(activity,listViewModel)
         {
+            _startLabel = activity.GetString(Resource.String.StartButtonText);
+            _restartLabel = activity.GetString(Resource.String.RestartButtonText);
         }
 
         #region BaseQuestListAdapter overriding
@@ -88,7 +92,9 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
 
         private void HandleButtonsForIdle(ActiveQuestItemViewHolder holder, Quest questData)
         {
+            holder.StartButton.Text = _startLabel;
             holder.StartButton.Visibility = ViewStates.Visible;
+
             holder.CancelButton.Visibility = ViewStates.Gone;
             holder.DeleteButton.Visibility = ViewStates.Visible;
             holder.DoneButton.Visibility = ViewStates.Gone;
@@ -97,8 +103,10 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
 
         private void HandleButtonsForFailed(ActiveQuestItemViewHolder holder, Quest questData)
         {
-            holder.StartButton.Visibility = ViewStates.Gone;
-            holder.CancelButton.Visibility = ViewStates.Visible;
+            holder.StartButton.Text = _restartLabel;
+            holder.StartButton.Visibility = ViewStates.Visible;
+
+            holder.CancelButton.Visibility = ViewStates.Gone;
             holder.DeleteButton.Visibility = ViewStates.Visible;
             holder.DoneButton.Visibility = ViewStates.Gone;
             holder.FailButton.Visibility = ViewStates.Gone;

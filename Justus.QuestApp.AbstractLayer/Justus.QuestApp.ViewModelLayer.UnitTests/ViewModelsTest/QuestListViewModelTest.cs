@@ -14,6 +14,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Justus.QuestApp.AbstractLayer.Commands.Factories;
 
 namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 {
@@ -39,6 +40,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register<IQuestRepository>(() => { return repository; });
             ServiceLocator.Register<ICommandManager>(() => { return comManager; });
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
+            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
             QuestListViewModel viewModel = new QuestListViewModel();
             int countCallBack = 0;
@@ -66,6 +68,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register<IQuestRepository>(() => { return repository; });
             ServiceLocator.Register<ICommandManager>(() => { return comManager; });
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
+            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
             QuestListViewModel viewModel = new QuestListViewModel();
             int countCallBack = 0;
@@ -92,6 +95,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => { return repository; });
             ServiceLocator.Register(() => { return comManager; });
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
+            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
             QuestListViewModel viewModel = new QuestListViewModel();
 
@@ -114,6 +118,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => { return repository; });
             ServiceLocator.Register(() => { return comManager; });
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
+            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
             QuestListViewModel viewModel = new QuestListViewModel();
             viewModel.CurrentQuest = new FakeQuest() { Title = "fakeTitleOfFakeQuest" };
@@ -137,6 +142,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => { return repository; });
             ServiceLocator.Register(() => { return comManager; });
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
+            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
             QuestListViewModel viewModel = new QuestListViewModel();
             viewModel.CurrentQuest = new FakeQuest() { Title = "child" };
@@ -163,6 +169,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => { return repository; });
             ServiceLocator.Register(() => { return comManager; });
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
+            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
             QuestListViewModel viewModel = new QuestListViewModel();
 
@@ -185,6 +192,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => { return repository; });
             ServiceLocator.Register(() => { return comManager; });
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
+            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
             QuestListViewModel viewModel = new QuestListViewModel();
             viewModel.CurrentQuest = new FakeQuest() { Children = new List<Quest>() };

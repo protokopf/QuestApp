@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands;
+using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Helpers;
@@ -22,6 +23,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         {
             ServiceLocator.ReleaseAll();
         }
+
 
         [Test]
         public void FilterQuest()
@@ -43,6 +45,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => repository);
             ServiceLocator.Register(() => comManager);
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
+            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
             QuestListViewModel viewModel = new ActiveQuestListViewModel();
 
@@ -85,6 +88,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.Register(() => repository);
             ServiceLocator.Register(() => comManager);
             ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
+            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
             QuestListViewModel viewModel = new ActiveQuestListViewModel();
 

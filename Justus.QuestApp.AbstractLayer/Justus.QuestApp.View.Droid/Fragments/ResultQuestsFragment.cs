@@ -47,6 +47,17 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #endregion
 
+        #region ISelectable overriding
+
+        ///<inheritdoc/>
+        public override void OnSelect()
+        {
+            ViewModel.ResetChildren();
+            base.OnSelect();
+        }
+
+        #endregion
+
         #region Handlers
 
         private void QuestAddedHandler(object sender, ViewGroup.ChildViewAddedEventArgs e)

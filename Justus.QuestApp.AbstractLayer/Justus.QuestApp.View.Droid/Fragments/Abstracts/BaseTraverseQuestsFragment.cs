@@ -51,6 +51,8 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
             BackButton.Enabled = ViewModel.CurrentQuest != null;
             QuestListView.Adapter = QuestListAdapter;
+
+            ViewModel.ResetChildren();
         }
 
         /// <summary>
@@ -65,6 +67,8 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
             BackButton.Enabled = ViewModel.CurrentQuest != null;
             QuestListView.Adapter = QuestListAdapter;
+
+            ViewModel.ResetChildren();
         }
 
         /// <summary>

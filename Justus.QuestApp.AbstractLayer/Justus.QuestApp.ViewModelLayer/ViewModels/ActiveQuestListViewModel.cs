@@ -31,6 +31,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             LastCommand = StateCommads.FailQuest(quest);
             LastCommand.Execute();
+            ResetChildren();
         }
 
         /// <summary>
@@ -41,6 +42,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             LastCommand = StateCommads.DoneQuest(quest);
             LastCommand.Execute();
+            ResetChildren();
         }
 
         /// <summary>
@@ -51,6 +53,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             LastCommand = StateCommads.CancelQuest(quest);
             LastCommand.Execute();
+            ResetChildren();
         }
 
         /// <summary>

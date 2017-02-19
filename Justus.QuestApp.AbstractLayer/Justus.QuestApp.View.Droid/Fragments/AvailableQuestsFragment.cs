@@ -44,6 +44,10 @@ namespace Justus.QuestApp.View.Droid.Fragments
             return view;
         }
 
+        #endregion
+
+        #region Handlers
+
         private void QuestListViewOnChildViewAdded(object sender, ViewGroup.ChildViewAddedEventArgs args)
         {
             AvailableQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(args.Child);
@@ -83,6 +87,17 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void BackButtonOnClick(object sender, EventArgs eventArgs)
         {
             TraverseToParent();
+        }
+
+        #endregion
+
+        #region ISelectable overriding
+
+        ///<inheritdoc/>
+        public override void OnSelect()
+        {
+            ViewModel.ResetChildren();
+            base.OnSelect();
         }
 
         #endregion

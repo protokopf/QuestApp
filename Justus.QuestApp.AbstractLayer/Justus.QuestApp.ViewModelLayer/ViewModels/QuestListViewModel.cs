@@ -19,11 +19,15 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// </summary>
     public class QuestListViewModel : BaseViewModel
     {
-        private readonly List<Quest> _emptyList; 
+        private readonly List<Quest> _emptyList;
+        private List<Quest> _currentChildren;
+        private bool _shouldResetChildren;
+
         protected IQuestRepository QuestRepository;
         protected IQuestProgressCounter ProgressCounter;
         protected IStateCommandsFactory StateCommads;
         protected Command LastCommand;
+        
 
         /// <summary>
         /// Default constructor. Resolves references to quest repository and command manager.
@@ -34,6 +38,8 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             ProgressCounter = ServiceLocator.Resolve<IQuestProgressCounter>();
             StateCommads = ServiceLocator.Resolve<IStateCommandsFactory>();
             _emptyList = new List<Quest>();
+            _currentChildren = new List<Quest>();
+            _shouldResetChildren = true;
         }
 
         /// <summary>
@@ -48,12 +54,17 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             get
             {
-                List<Quest> children = CurrentQuest == null ? QuestRepository.GetAll() : CurrentQuest.Children;
-                if (children == null || children.Count == 0)
+                if (_shouldResetChildren)
                 {
-                    return _emptyList;
+                    List<Quest> children = CurrentQuest == null ? QuestRepository.GetAll() : CurrentQuest.Children;
+                    if (children == null || children.Count == 0)
+                    {
+                        return _emptyList;
+                    }
+                    _shouldResetChildren = false;
+                    return _currentChildren = FilterQuests(children);
                 }
-                return FilterQuests(children);
+                return _currentChildren;
             }
         }
 
@@ -104,10 +115,24 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             IsBusy = true;
             await Task.Run(() => QuestRepository.PullQuests());
             IsBusy = false;
+            ResetChildren();
+        }
+
+        /// <summary>
+        /// Makes view model reset children within next call CurrentChildren property.
+        /// </summary>
+        public void ResetChildren()
+        {
+            _shouldResetChildren = true;
         }
 
         #region Protected methods
 
+        /// <summary>
+        /// Filters quests.
+        /// </summary>
+        /// <param name="quests"></param>
+        /// <returns></returns>
         protected virtual List<Quest> FilterQuests(List<Quest> quests)
         {
             return quests;

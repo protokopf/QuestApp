@@ -36,6 +36,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             Command start = StateCommads.StartQuest(quest);
             LastCommand = new CompositeCommand(new[] { cancel, start });
             LastCommand.Execute();
+            ResetChildren();
         }
 
         /// <summary>

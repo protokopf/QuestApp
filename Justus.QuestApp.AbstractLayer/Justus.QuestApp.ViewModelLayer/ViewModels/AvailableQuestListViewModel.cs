@@ -32,6 +32,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             LastCommand = StateCommads.StartQuest(quest);
             LastCommand.Execute();
+            ResetChildren();
         }
 
         #region Private methods

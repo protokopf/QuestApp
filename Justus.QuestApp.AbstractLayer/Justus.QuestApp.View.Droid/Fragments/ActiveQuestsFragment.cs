@@ -64,6 +64,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         public override void OnSelect()
         {
             base.OnSelect();
+            ViewModel.ResetChildren();
             TraverseToRoot();
         }
 

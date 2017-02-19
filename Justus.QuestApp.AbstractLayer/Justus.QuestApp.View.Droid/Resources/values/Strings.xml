@@ -40,4 +40,5 @@
 
   <string name="StartTimeLabel">Start time:</string>
   <string name="DeadlineLabel">Deadline: </string>
+  <string name="HyphenLabel">-</string>
 </resources>

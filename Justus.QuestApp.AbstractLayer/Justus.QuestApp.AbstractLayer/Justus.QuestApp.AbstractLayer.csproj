@@ -54,6 +54,8 @@
     <Compile Include="Model\IQuestProgressCounter.cs" />
     <Compile Include="Model\IQuestTimeLeftCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IntervalAbstractService.cs" />
+    <Compile Include="Services\IService.cs" />
     <Compile Include="Validators\IQuestValidator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

@@ -34,7 +34,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
             TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
 
-            BackButton.Enabled = ViewModel.CurrentQuest != null;
+            BackButton.Enabled = !ViewModel.InRoot;
             BackButton.Click += BackButtonOnClick;
 
             QuestListView.Adapter = QuestListAdapter = new AvailableQuestListAdapter(Activity, ViewModel);
@@ -87,17 +87,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void BackButtonOnClick(object sender, EventArgs eventArgs)
         {
             TraverseToParent();
-        }
-
-        #endregion
-
-        #region ISelectable overriding
-
-        ///<inheritdoc/>
-        public override void OnSelect()
-        {
-            ViewModel.ResetChildren();
-            base.OnSelect();
         }
 
         #endregion

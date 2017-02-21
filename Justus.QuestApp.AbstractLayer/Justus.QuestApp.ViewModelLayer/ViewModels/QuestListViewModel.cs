@@ -56,7 +56,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             {
                 if (_shouldResetChildren)
                 {
-                    List<Quest> children = CurrentQuest == null ? QuestRepository.GetAll() : CurrentQuest.Children;
+                    List<Quest> children = InRoot ? QuestRepository.GetAll() : CurrentQuest.Children;
                     if (children == null || children.Count == 0)
                     {
                         return _emptyList;
@@ -72,6 +72,11 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Get name of current parent quest.
         /// </summary>
         public string QuestsListTitle => CurrentQuest?.Title;
+
+        /// <summary>
+        /// Points, whether current quest hierarchy in root.
+        /// </summary>
+        public bool InRoot => CurrentQuest == null;
 
         /// <summary>
         /// Count progress of quest.
@@ -116,6 +121,45 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             await Task.Run(() => QuestRepository.PullQuests());
             IsBusy = false;
             ResetChildren();
+        }
+
+        /// <summary>
+        /// Traverse to parent of current quest.
+        /// </summary>
+        public void TraverseToParent()
+        {
+            if (!InRoot)
+            {
+                CurrentQuest = CurrentQuest.Parent;
+                ResetChildren();
+            }
+        }
+
+        /// <summary>
+        /// Traverse to 'childPosition' child of current quest.
+        /// </summary>
+        /// <param name="childPosition"></param>
+        public void TraverseToChild(int childPosition)
+        {
+            CurrentQuest = CurrentChildren[childPosition];
+            ResetChildren();            
+        }
+
+        /// <summary>
+        /// Traverse to root of current quest hierarchy.
+        /// </summary>
+        public void TraverseToRoot()
+        {
+            bool atLeastOneTraverse = false;
+            while (!InRoot)
+            {
+                CurrentQuest = CurrentQuest.Parent;
+                atLeastOneTraverse = true;
+            }
+            if (atLeastOneTraverse)
+            {
+                ResetChildren();
+            }
         }
 
         /// <summary>

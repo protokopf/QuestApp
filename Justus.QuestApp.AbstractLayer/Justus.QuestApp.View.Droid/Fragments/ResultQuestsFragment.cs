@@ -38,22 +38,11 @@ namespace Justus.QuestApp.View.Droid.Fragments
             QuestListView.ChildViewAdded += QuestAddedHandler;
 
             BackButton.Click += BackButtonOnClick;
-            BackButton.Enabled = ViewModel.CurrentQuest != null;
+            BackButton.Enabled = !ViewModel.InRoot;
 
             TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
 
             return view;
-        }
-
-        #endregion
-
-        #region ISelectable overriding
-
-        ///<inheritdoc/>
-        public override void OnSelect()
-        {
-            ViewModel.ResetChildren();
-            base.OnSelect();
         }
 
         #endregion

@@ -36,7 +36,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
             TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
 
-            BackButton.Enabled = ViewModel.CurrentQuest != null;
+            BackButton.Enabled = !ViewModel.InRoot;
             BackButton.Click += BackButtonHandler;
 
             QuestListView.Adapter = QuestListAdapter = new ActiveQuestListAdapter(this.Activity, ViewModel);
@@ -58,14 +58,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
         {
             base.OnResume();
             PushQuests();
-        }
-
-        ///<inheritdoc/>
-        public override void OnSelect()
-        {
-            base.OnSelect();
-            ViewModel.ResetChildren();
-            TraverseToRoot();
         }
 
         #endregion
@@ -145,21 +137,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private async void PushQuests()
         {
             await ViewModel.PushQuests();
-        }
-
-        private void TraverseToRoot()
-        {
-            if (ViewModel.CurrentQuest != null)
-            {
-                CollapsChildren();
-                while (ViewModel.CurrentQuest != null)
-                {
-                    ViewModel.CurrentQuest = ViewModel.CurrentQuest.Parent;
-                }
-                TitleTextView.Text = TitleTextDefault;
-                BackButton.Enabled = false;
-                QuestListView.Adapter = QuestListAdapter;
-            }
         }
     }
 }

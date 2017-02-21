@@ -40,6 +40,39 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// </summary>
         protected string TitleTextDefault;
 
+        #region ISelectable overriding
+
+        ///<inheritdoc/>
+        public override void OnSelect()
+        {
+            if (ViewModel.InRoot)
+            {
+                ViewModel.ResetChildren();
+            }
+            else
+            {
+                TraverseToRoot();
+            }
+            base.OnSelect();
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Traverse to root.
+        /// </summary>
+        protected void TraverseToRoot()
+        {
+            if (!ViewModel.InRoot)
+            {
+                CollapsChildren();
+                ViewModel.TraverseToRoot();
+                TitleTextView.Text = TitleTextDefault;
+                BackButton.Enabled = false;
+                QuestListView.Adapter = QuestListAdapter;
+            }
+        }
+
         /// <summary>
         /// Contains logic for traversing from child to parent.
         /// </summary>
@@ -47,12 +80,10 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         {
             CollapsChildren();
 
-            ViewModel.CurrentQuest = ViewModel.CurrentQuest.Parent;
+            ViewModel.TraverseToParent();
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
-            BackButton.Enabled = ViewModel.CurrentQuest != null;
+            BackButton.Enabled = !ViewModel.InRoot;
             QuestListView.Adapter = QuestListAdapter;
-
-            ViewModel.ResetChildren();
         }
 
         /// <summary>
@@ -63,12 +94,10 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         {
             CollapsChildren();
 
-            ViewModel.CurrentQuest = ViewModel.CurrentChildren[childPosition];
+            ViewModel.TraverseToChild(childPosition);
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
-            BackButton.Enabled = ViewModel.CurrentQuest != null;
+            BackButton.Enabled = !ViewModel.InRoot;
             QuestListView.Adapter = QuestListAdapter;
-
-            ViewModel.ResetChildren();
         }
 
         /// <summary>

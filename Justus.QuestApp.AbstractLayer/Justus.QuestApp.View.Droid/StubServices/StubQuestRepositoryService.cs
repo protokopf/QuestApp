@@ -147,28 +147,28 @@ namespace Justus.QuestApp.View.Droid.StubServices
         private DateTime GetDeadLine(int id)
         {
             DateTime result = DateTime.MaxValue;
-            if (id%2 == 0)
-            {
-                result = DateTime.Now + new TimeSpan(0, 0, 10, 0);
-            }
-            else if (id%3 == 0)
-            {
-                result = DateTime.Now -new TimeSpan(0, 12, 0, 0);
-            }
+            //if (id%2 == 0)
+            //{
+                result = DateTime.Now + new TimeSpan(0, 1, 60, 0);
+            //}
+            //else if (id%3 == 0)
+            //{
+            //    result = DateTime.Now -new TimeSpan(0, 12, 0, 0);
+            //}
             return result;
         }
 
         private DateTime GetStartDate(int id)
         {
             DateTime result = DateTime.MaxValue;
-            if (id % 2 == 0)
-            {
-                result = DateTime.Now + new TimeSpan(0, 0, 5, 0);
-            }
-            else if (id % 3 == 0)
-            {
-                result = DateTime.Now - new TimeSpan(0, 12, 0, 0);
-            }
+            //if (id % 2 == 0)
+            //{
+                result = DateTime.Now - new TimeSpan(0, 0, 5, 0);
+            //}
+            //else if (id % 3 == 0)
+            //{
+            //    result = DateTime.Now - new TimeSpan(0, 12, 0, 0);
+            //}
             return result;
         }
     }

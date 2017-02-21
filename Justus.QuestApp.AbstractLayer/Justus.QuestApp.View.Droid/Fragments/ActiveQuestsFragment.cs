@@ -10,11 +10,15 @@ using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Views;
 using Android.Widget;
+using Justus.QuestApp.AbstractLayer.Services;
 using Justus.QuestApp.View.Droid.Adapters;
 using Justus.QuestApp.View.Droid.Adapters.List;
 using Justus.QuestApp.View.Droid.Fragments.Abstracts;
+using Justus.QuestApp.View.Droid.Services.ViewServices;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Justus.QuestApp.View.Droid.Fragments
 {
@@ -23,6 +27,9 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// </summary>
     public class ActiveQuestsFragment : BaseTraverseQuestsFragment<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
     {
+
+        private IntervalAbstractService _intervalService;
+
         #region Fragment overriding
 
         ///<inheritdoc/>
@@ -43,6 +50,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
             QuestListView.ItemClick += ItemClickHandler;
             QuestListView.ChildViewAdded += QuestAddedHandler;
 
+            _intervalService = new SimpleQuestExpireService(1000, TaskScheduler.FromCurrentSynchronizationContext(),ViewModel, QuestListAdapter);
+
             return view;
         }
 
@@ -50,7 +59,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
         public override void OnPause()
         {
             base.OnPause();
-            PullQuests();          
+            PullQuests();   
+            _intervalService.Stop();       
         }
 
         ///<inheritdoc/>
@@ -58,6 +68,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         {
             base.OnResume();
             PushQuests();
+            _intervalService.Start();
         }
 
         #endregion

@@ -6,37 +6,37 @@ namespace Justus.QuestApp.AbstractLayer.Entities.Quest
     /// <summary>
     /// Abstract type for all possible quests types.
     /// </summary>
-    public abstract class Quest : IdentifiedEntity
+    public class Quest : IdentifiedEntity
     {
         /// <summary>
         /// Parents quest id.
         /// </summary>
-        public abstract int ParentId { get; set; }
+        public virtual int ParentId { get; set; }
 
         /// <summary>
         /// Quest title.
         /// </summary>
-        public abstract string Title { get; set; }
+        public virtual string Title { get; set; }
 
         /// <summary>
         /// Description of the quest.
         /// </summary>
-        public abstract string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Reference to parent quest.
         /// </summary>
-        public abstract Quest Parent { get; set; }
+        public virtual Quest Parent { get; set; }
 
         /// <summary>
         /// Quest children.
         /// </summary>
-        public abstract List<Quest> Children { get; set; }
+        public virtual List<Quest> Children { get; set; }
 
         /// <summary>
         /// Time, until which quest should be done.
         /// </summary>
-        public abstract DateTime Deadline { get; set; }
+        public virtual DateTime Deadline { get; set; }
 
         /// <summary>
         /// Time, when quest should start.

@@ -124,6 +124,7 @@
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Fragments\Abstracts\BaseQuestsFragment.cs" />
     <Compile Include="Services\ViewServices\SimpleQuestExpireService.cs" />
+    <Compile Include="StubServices\StubWebStringProvider.cs" />
     <Compile Include="ViewHoldersFillers\IViewHolderFiller.cs" />
     <Compile Include="ViewHolders\Abstracts\ExpandingPositionedVIewHolder.cs" />
     <Compile Include="ViewHolders\ActiveQuestItemViewHolder.cs" />
@@ -204,6 +205,10 @@
     <ProjectReference Include="..\Justus.QuestApp.ModelLayer\Justus.QuestApp.ModelLayer.csproj">
       <Project>{72c61b17-7e0a-4c31-9ab4-2a5e0935166e}</Project>
       <Name>Justus.QuestApp.ModelLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Justus.QuestApp.ServiceLayer\Justus.QuestApp.ServiceLayer.csproj">
+      <Project>{7a24e8f9-8c17-4617-bb96-127999a1eccf}</Project>
+      <Name>Justus.QuestApp.ServiceLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Justus.QuestApp.ViewModelLayer\Justus.QuestApp.ViewModelLayer.csproj">
       <Project>{0B2A3D17-4CAA-4435-9277-7029BF568E48}</Project>

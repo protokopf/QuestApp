@@ -21,7 +21,9 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     {
         private readonly List<Quest> _emptyList;
         private List<Quest> _currentChildren;
+
         private bool _shouldResetChildren;
+        private bool _shouldPullQuests;
 
         protected IQuestRepository QuestRepository;
         protected IQuestProgressCounter ProgressCounter;
@@ -39,7 +41,9 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             StateCommads = ServiceLocator.Resolve<IStateCommandsFactory>();
             _emptyList = new List<Quest>();
             _currentChildren = new List<Quest>();
+
             _shouldResetChildren = true;
+            _shouldPullQuests = true;
         }
 
         /// <summary>
@@ -56,12 +60,21 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             {
                 if (_shouldResetChildren)
                 {
+                    if (_shouldPullQuests)
+                    {
+                        QuestRepository.PullQuests();
+                        _shouldPullQuests = false;
+                    }
+
+                    _shouldResetChildren = false;
+
                     List<Quest> children = InRoot ? QuestRepository.GetAll() : CurrentQuest.Children;
+                    
                     if (children == null || children.Count == 0)
                     {
                         return _emptyList;
                     }
-                    _shouldResetChildren = false;
+                    
                     return _currentChildren = FilterQuests(children);
                 }
                 return _currentChildren;
@@ -85,8 +98,12 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <returns></returns>
         public int CountProgress(Quest quest)
         {
+            if (quest == null)
+            {
+                throw new ArgumentNullException(nameof(quest));
+            }
             ProgressValue value = ProgressCounter.CountProgress(quest);
-            int result = (int) (((double) value.Current/(double) value.Total)*100);
+            int result = (int)(value.Current / (double)value.Total * 100);
             return result;
         }
 

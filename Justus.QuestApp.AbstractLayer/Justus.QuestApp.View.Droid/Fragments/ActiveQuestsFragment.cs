@@ -27,7 +27,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// </summary>
     public class ActiveQuestsFragment : BaseTraverseQuestsFragment<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
     {
-
         private IntervalAbstractService _intervalService;
 
         #region Fragment overriding
@@ -59,7 +58,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
         public override void OnPause()
         {
             base.OnPause();
-            PullQuests();   
             _intervalService.Stop();       
         }
 
@@ -67,7 +65,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
         public override void OnResume()
         {
             base.OnResume();
-            PushQuests();
             _intervalService.Start();
         }
 

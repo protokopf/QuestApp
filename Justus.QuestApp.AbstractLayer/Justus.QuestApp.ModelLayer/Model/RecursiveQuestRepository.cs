@@ -211,12 +211,15 @@ namespace Justus.QuestApp.ModelLayer.Model
         {
             _dataStorage.Open(_connectionString);
             _questList = _dataStorage.GetAll();
-            InitializeId(_questList);
             _dataStorage.Close();
+
             if (_questList == null)
             {
                 _questList = new List<Quest>();
             }
+
+            InitializeId(_questList);
+
             CycleBinding(_questList);
             _questList.RemoveAll(quest => quest.Parent != null);
         }

@@ -8,6 +8,6 @@
         /// <summary>
         /// Entity identifier.
         /// </summary>
-        public abstract int Id { get; set; }
+        public virtual int Id { get; set; }
     }
 }

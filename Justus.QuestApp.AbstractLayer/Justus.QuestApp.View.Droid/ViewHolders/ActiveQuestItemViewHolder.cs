@@ -1,8 +1,6 @@
 using System;
 using Android.Graphics;
 using Android.Runtime;
-using Android.Support.V7.Widget;
-using Android.Telecom;
 using Android.Widget;
 using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
 

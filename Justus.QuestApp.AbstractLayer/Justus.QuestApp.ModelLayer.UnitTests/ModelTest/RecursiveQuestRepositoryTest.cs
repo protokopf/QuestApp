@@ -7,7 +7,6 @@ using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Model;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
-using NUnit.Framework.Internal;
 using NUnit.Framework;
 using Rhino.Mocks;
 

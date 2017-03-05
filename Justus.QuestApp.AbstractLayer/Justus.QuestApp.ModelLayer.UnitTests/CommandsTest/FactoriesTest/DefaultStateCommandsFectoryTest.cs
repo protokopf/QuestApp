@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
-using NUnit.Framework.Internal;
 using NUnit.Framework;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
 using Justus.QuestApp.ModelLayer.Commands.State;
@@ -16,13 +11,13 @@ using Rhino.Mocks;
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
 {
     [TestFixture]
-    class UpdatingStateCommandsFectoryTest
+    class DefaultStateCommandsFectoryTest
     {
         [Test]
         public void CtorNullTest()
         {
             //Arrange & Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new UpdatingStateCommandsFactory(null));
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new DefaultStateCommandsFactory(null));
 
             //Assert
             Assert.IsNotNull(ex);
@@ -35,7 +30,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             //Arrange
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
 
-            IStateCommandsFactory factory = new UpdatingStateCommandsFactory(repository);
+            IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
             ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => factory.DoneQuest(null));
@@ -51,7 +46,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             //Arrange
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
 
-            IStateCommandsFactory factory = new UpdatingStateCommandsFactory(repository);
+            IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
             ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => factory.FailQuest(null));
@@ -67,7 +62,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             //Arrange
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
 
-            IStateCommandsFactory factory = new UpdatingStateCommandsFactory(repository);
+            IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
             ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => factory.StartQuest(null));
@@ -83,7 +78,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             //Arrange
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
 
-            IStateCommandsFactory factory = new UpdatingStateCommandsFactory(repository);
+            IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
             ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => factory.CancelQuest(null));
@@ -100,7 +95,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
             Quest quest = MockRepository.GeneratePartialMock<Quest>();
 
-            IStateCommandsFactory factory = new UpdatingStateCommandsFactory(repository);
+            IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
             Command command = factory.DoneQuest(quest);
@@ -116,7 +111,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
             Quest quest = MockRepository.GeneratePartialMock<Quest>();
 
-            IStateCommandsFactory factory = new UpdatingStateCommandsFactory(repository);
+            IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
             Command command = factory.FailQuest(quest);
@@ -132,7 +127,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
             Quest quest = MockRepository.GeneratePartialMock<Quest>();
 
-            IStateCommandsFactory factory = new UpdatingStateCommandsFactory(repository);
+            IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
             Command command = factory.CancelQuest(quest);
@@ -148,7 +143,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
             Quest quest = MockRepository.GeneratePartialMock<Quest>();
 
-            IStateCommandsFactory factory = new UpdatingStateCommandsFactory(repository);
+            IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
             Command command = factory.StartQuest(quest);

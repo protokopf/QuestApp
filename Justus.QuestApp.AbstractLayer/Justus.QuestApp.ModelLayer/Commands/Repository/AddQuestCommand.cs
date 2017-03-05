@@ -1,30 +1,34 @@
-﻿using Justus.QuestApp.AbstractLayer.Entities.Quest;
+﻿using System;
 using Justus.QuestApp.AbstractLayer.Model;
-using System;
+using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.ModelLayer.Commands.Abstracts;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Repository
 {
     /// <summary>
-    /// Add quest to repository.
+    /// Adds quest to parent. If received quest has parent - command breaks relation between given
+    /// quest and old parent and create new relations.
     /// </summary>
     public class AddQuestCommand : AbstractRepositoryCommand
     {
-        private Quest _toAdd;
+        protected readonly Quest Parent;
+        protected readonly Quest ChildToAdd;
 
         /// <summary>
-        /// Initialize command with repository and quest to add.
+        /// Receives reference to repository, parent and new child.
         /// </summary>
         /// <param name="repository"></param>
-        /// <param name="toAdd"></param>
-        public AddQuestCommand(IQuestRepository repository, Quest questToAdd) : base(repository)
+        /// <param name="parent"></param>
+        /// <param name="childToAdd"></param>
+        public AddQuestCommand(IQuestRepository repository, Quest parent, Quest childToAdd) : 
+            base(repository)
         {
-            if(questToAdd == null)
+            if(childToAdd == null)
             {
-                throw new ArgumentNullException(nameof(questToAdd));
+                throw new ArgumentNullException(nameof(childToAdd));
             }
-            _toAdd = questToAdd;
-            HasExecuted = false;
+            Parent = parent;
+            ChildToAdd = childToAdd;
         }
 
         #region AbstractRepositoryCommand overriding
@@ -34,8 +38,11 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         {
             if(!HasExecuted)
             {
-                Repository.Insert(_toAdd);
-                Repository.GetAll().Add(_toAdd);
+                if (Parent != null)
+                {
+                    ConnectWithParent(Parent, ChildToAdd);
+                }
+                Repository.Insert(ChildToAdd);               
                 HasExecuted = true;
             }
         }
@@ -45,12 +52,39 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         {
             if(HasExecuted)
             {
-                Repository.RevertInsert(_toAdd);
-                Repository.GetAll().Remove(_toAdd);
+                if (Parent != null)
+                {
+                    BreakWithParent(Parent, ChildToAdd);
+                }
+                Repository.RevertInsert(ChildToAdd);
                 HasExecuted = false;
             }
-        } 
+        }
 
         #endregion
+
+        /// <summary>
+        /// Breaks connection between parent and child.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="child"></param>
+        protected void BreakWithParent(Quest parent, Quest child)
+        {
+            parent.Children.Remove(child);
+            child.Parent = null;
+            child.ParentId = 0;
+        }
+
+        /// <summary>
+        /// Establishes connection between parent and child.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="child"></param>
+        protected void ConnectWithParent(Quest parent, Quest child)
+        {
+            child.Parent = parent;
+            child.ParentId = parent.ParentId;
+            parent.Children.Add(child);
+        }
     }
 }

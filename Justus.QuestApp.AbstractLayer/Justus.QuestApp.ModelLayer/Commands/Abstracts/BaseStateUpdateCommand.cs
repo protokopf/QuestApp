@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
 

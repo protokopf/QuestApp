@@ -4,7 +4,6 @@ using Android.App;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 

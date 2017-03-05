@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
@@ -29,6 +26,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void FilterQuest()
         {
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            repository.Expect(rep => rep.PullQuests()).Repeat.Once();
 
             List<Quest> fromRepository = new List<Quest>()
             {
@@ -82,6 +80,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             };
 
             repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
+            repository.Expect(rep => rep.PullQuests()).Repeat.Once();
 
             ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
 

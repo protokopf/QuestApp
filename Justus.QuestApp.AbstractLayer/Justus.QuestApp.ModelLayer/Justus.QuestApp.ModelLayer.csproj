@@ -39,14 +39,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CompositeCommand.cs" />
-    <Compile Include="Commands\Factories\UpdatingStateCommandsFactory.cs" />
+    <Compile Include="Commands\Factories\DefaultRepositoryCommandsFactory.cs" />
+    <Compile Include="Commands\Factories\DefaultStateCommandsFactory.cs" />
     <Compile Include="Commands\Management\CommandCyclingManager.cs" />
     <Compile Include="Commands\Abstracts\BaseStateUpdateCommand.cs" />
     <Compile Include="Commands\State\DownHierarchyStateUpdateCommand.cs" />
     <Compile Include="Commands\State\ThisStateUpdateCommand.cs" />
     <Compile Include="Commands\State\UpHierarchyStateUpdateCommand.cs" />
     <Compile Include="Commands\Repository\AddQuestCommand.cs" />
-    <Compile Include="Commands\Repository\AddQuestToParentCommand.cs" />
     <Compile Include="Commands\Repository\DeleteQuestCommand.cs" />
     <Compile Include="Commands\Repository\RebindQuestCommand.cs" />
     <Compile Include="Commands\Abstracts\AbstractRepositoryCommand.cs" />

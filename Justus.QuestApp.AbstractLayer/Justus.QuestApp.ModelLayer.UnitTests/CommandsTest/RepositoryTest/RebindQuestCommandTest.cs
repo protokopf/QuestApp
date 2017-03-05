@@ -7,9 +7,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
 {
@@ -47,7 +44,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
 
             //Assert
             Assert.IsNotNull(ex);
-            Assert.AreEqual("questToAdd", ex.ParamName);
+            Assert.AreEqual("childToAdd", ex.ParamName);
         }
 
         [Test]
@@ -64,7 +61,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
 
             //Assert
             Assert.IsNotNull(ex);
-            Assert.AreEqual("parent", ex.ParamName);
+            Assert.AreEqual("newParent", ex.ParamName);
         }
 
         [Test]
@@ -101,7 +98,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
 
             repository.Expect(rep => rep.Update(null)).IgnoreArguments().Repeat.Once();
 
-            Command command = new RebindQuestCommand(repository,toRebind,newParent, oldParent);
+            Command command = new RebindQuestCommand(repository, toRebind, newParent, oldParent);
 
             //Act
             command.Execute();

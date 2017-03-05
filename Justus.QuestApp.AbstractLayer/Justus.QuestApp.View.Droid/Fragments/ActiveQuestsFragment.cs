@@ -1,23 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Support.Design.Widget;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.AbstractLayer.Services;
-using Justus.QuestApp.View.Droid.Adapters;
 using Justus.QuestApp.View.Droid.Adapters.List;
 using Justus.QuestApp.View.Droid.Fragments.Abstracts;
 using Justus.QuestApp.View.Droid.Services.ViewServices;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Justus.QuestApp.View.Droid.Fragments

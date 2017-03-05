@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using Android.App;
-using Android.Content;
 using Android.Graphics;
 using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.View.Droid.Fragments;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 

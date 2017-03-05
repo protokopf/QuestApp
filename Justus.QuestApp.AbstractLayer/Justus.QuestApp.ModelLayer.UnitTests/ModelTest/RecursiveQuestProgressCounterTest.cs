@@ -4,7 +4,6 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Model;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
-using NUnit.Framework.Internal;
 using NUnit.Framework;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest

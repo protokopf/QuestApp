@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.ModelLayer.Commands.State;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {

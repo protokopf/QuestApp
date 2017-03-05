@@ -7,7 +7,6 @@ using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
 using Justus.QuestApp.ModelLayer.Model;
 using Justus.QuestApp.ServiceLayer.DataServices;
-using Justus.QuestApp.View.Droid.StubServices;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid
@@ -39,7 +38,7 @@ namespace Justus.QuestApp.View.Droid
             ServiceLocator.Register<IQuestRepository>(() => new RecursiveQuestRepository(
                 new RestDataStorage(), "http://192.168.0.104/api/Quests"));
             ServiceLocator.Register<IQuestProgressCounter>(() => new RecursiveQuestProgressCounter());
-            ServiceLocator.Register<IStateCommandsFactory>(() => new UpdatingStateCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
+            ServiceLocator.Register<IStateCommandsFactory>(() => new DefaultStateCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
         }
 
         private void InitializeViewModelServices()

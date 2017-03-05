@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
@@ -14,7 +10,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
     /// <summary>
     /// Update quests and make changes in repository.
     /// </summary>
-    public class UpdatingStateCommandsFactory : IStateCommandsFactory
+    public class DefaultStateCommandsFactory : IStateCommandsFactory
     {
         private readonly IQuestRepository _repository;
 
@@ -22,7 +18,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         /// Receives dependency to quest repository.
         /// </summary>
         /// <param name="repository"></param>
-        public UpdatingStateCommandsFactory(IQuestRepository repository)
+        public DefaultStateCommandsFactory(IQuestRepository repository)
         {
             if (repository == null)
             {

@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\Factories\IRepositoryCommandsFactory.cs" />
     <Compile Include="Commands\ICommandManager.cs" />
     <Compile Include="Commands\Factories\IStateCommandsFactory.cs" />
     <Compile Include="Data\IConnectionStringProvider.cs" />

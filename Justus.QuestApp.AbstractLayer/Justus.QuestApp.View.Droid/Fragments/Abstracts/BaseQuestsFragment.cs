@@ -1,6 +1,5 @@
 using Android.Widget;
 using Justus.QuestApp.View.Droid.Adapters.List;
-using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 

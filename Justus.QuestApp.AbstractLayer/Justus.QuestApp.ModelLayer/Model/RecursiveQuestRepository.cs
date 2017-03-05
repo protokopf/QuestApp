@@ -203,7 +203,7 @@ namespace Justus.QuestApp.ModelLayer.Model
                     _toDelete.Clear();
                 }
             }
-            _questList.Clear();
+            //_questList.Clear();
         }
 
         ///<inheritdoc/>

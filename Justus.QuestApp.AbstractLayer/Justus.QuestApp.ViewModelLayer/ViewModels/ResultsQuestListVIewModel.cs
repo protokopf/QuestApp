@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.ModelLayer.Commands;
+using Justus.QuestApp.ModelLayer.Commands.Repository;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
@@ -43,9 +44,15 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Deletes quest.
         /// </summary>
         /// <param name="quest"></param>
-        public void DeleteQuest(Quest quest)
+        public Task DeleteQuest(int position)
         {
-
+            Quest quest = CurrentChildren[position];
+            LastCommand = new DeleteQuestCommand(QuestRepository, quest);
+            return Task.Run(() =>
+            {
+                LastCommand.Execute();
+                QuestRepository.PushQuests();
+            });
         }
 
         #region Private methods

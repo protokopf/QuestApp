@@ -74,9 +74,11 @@ namespace Justus.QuestApp.View.Droid.Fragments
             QuestListAdapter.NotifyDataSetChanged();
         }
 
-        private void DeleteHandler(int position)
+        private async void DeleteHandler(int position)
         {
-            Toast.MakeText(this.Context, $"Delete of {position} clicked!", ToastLength.Short).Show();
+            await ViewModel.DeleteQuest(position);
+            ViewModel.ResetChildren();
+            RedrawListView();
         }
 
         private void ChildrenHandler(int position)

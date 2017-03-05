@@ -69,7 +69,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
                 ViewModel.TraverseToRoot();
                 TitleTextView.Text = TitleTextDefault;
                 BackButton.Enabled = false;
-                QuestListView.Adapter = QuestListAdapter;
+                RedrawListView();
             }
         }
 
@@ -83,7 +83,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
             ViewModel.TraverseToParent();
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
             BackButton.Enabled = !ViewModel.InRoot;
-            QuestListView.Adapter = QuestListAdapter;
+            RedrawListView();
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
             ViewModel.TraverseToChild(childPosition);
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
             BackButton.Enabled = !ViewModel.InRoot;
-            QuestListView.Adapter = QuestListAdapter;
+            RedrawListView();
         }
 
         /// <summary>

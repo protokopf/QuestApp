@@ -72,7 +72,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
                     
                     if (children == null || children.Count == 0)
                     {
-                        return _emptyList;
+                        return _currentChildren = _emptyList;
                     }
                     
                     return _currentChildren = FilterQuests(children);

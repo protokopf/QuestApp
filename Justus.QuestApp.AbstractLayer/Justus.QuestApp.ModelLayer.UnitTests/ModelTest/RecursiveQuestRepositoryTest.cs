@@ -112,6 +112,38 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         }
 
         [Test]
+        public void InsertNullTest()
+        {
+            //Arrange
+            FakeQuestStorage fakeStorage = new FakeQuestStorage();
+
+            IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
+
+            //Act
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => repository.Insert(null));
+
+            //Assert
+            Assert.IsNotNull(ex);
+            Assert.AreEqual(ex.ParamName, "quest");
+        }
+
+        [Test]
+        public void InsertAllNullTest()
+        {
+            //Arrange
+            FakeQuestStorage fakeStorage = new FakeQuestStorage();
+
+            IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
+
+            //Act
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => repository.InsertAll(null));
+
+            //Assert
+            Assert.IsNotNull(ex);
+            Assert.AreEqual(ex.ParamName, "quests");
+        }
+
+        [Test]
         public void InsertAllWhenQuestsHaveChildrenTest()
         {
             //Arrange
@@ -264,6 +296,22 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         }
 
         [Test]
+        public void UpdateNullTest()
+        {
+            //Arrange
+            FakeQuestStorage fakeStorage = new FakeQuestStorage();
+
+            IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
+
+            //Act
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => repository.Update(null));
+
+            //Assert
+            Assert.IsNotNull(ex);
+            Assert.AreEqual(ex.ParamName, "quest");
+        }
+
+        [Test]
         public void UpdateAllTest()
         {
             //Arrange
@@ -291,6 +339,22 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             Assert.AreEqual(10, storedItems.Count);
             Assert.IsNotNull(storedItems.Find(x => (x.Title == "New title1") && (x.Id == 4)));
             Assert.IsNotNull(storedItems.Find(x => (x.Title == "New title2") && (x.Id == 5)));
+        }
+
+        [Test]
+        public void UpdateAllNullTest()
+        {
+            //Arrange
+            FakeQuestStorage fakeStorage = new FakeQuestStorage();
+
+            IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
+
+            //Act
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => repository.UpdateAll(null));
+
+            //Assert
+            Assert.IsNotNull(ex);
+            Assert.AreEqual(ex.ParamName, "quests");
         }
 
         [Test]
@@ -507,6 +571,22 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         }
 
         [Test]
+        public void DeleteNullTest()
+        {
+            //Arrange
+            FakeQuestStorage fakeStorage = new FakeQuestStorage();
+
+            IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
+
+            //Act
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => repository.Delete(null));
+
+            //Assert
+            Assert.IsNotNull(ex);
+            Assert.AreEqual(ex.ParamName, "quest");
+        }
+
+        [Test]
         public void DeleteAllTest()
         {
             //Arrange
@@ -598,7 +678,27 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         }
 
         [Test]
-        public void PushQuestsReleasesAllQuestsTest()
+        public void PullQuestDataStorageReturnsNullTest()
+        {
+            //Arrange
+            FakeQuestStorage fakeStorage = MockRepository.GeneratePartialMock<FakeQuestStorage>();
+            fakeStorage.Expect(s => s.GetAll()).Repeat.Once().Return(null);
+
+            IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
+
+            //Act
+            repository.PullQuests();
+            List<Quest> all = repository.GetAll();
+
+            //Assert
+            Assert.IsNotNull(all);
+            Assert.IsEmpty(all);
+
+            fakeStorage.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void PushQuestsNotClearAllQuestsFromMemoryTest()
         {
             //Arrange
             FakeQuestStorage fakeStorage = new FakeQuestStorage();
@@ -630,7 +730,29 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
      
             Assert.AreEqual(5, countBeforePushQuests);
-            Assert.AreEqual(0, countAfterPushQuests);
+            Assert.AreEqual(5, countAfterPushQuests);
+        }
+
+        [Test]
+        public void DisposeCallPushQuestsTest()
+        {
+            //Arrange
+            IDataAccessInterface<Quest> storage = MockRepository.GenerateStrictMock<IDataAccessInterface<Quest>>();
+            storage.Expect(s => s.Open(Arg<string>.Is.NotNull)).Repeat.Once();
+            storage.Expect(s => s.InsertAll(Arg<List<Quest>>.Is.NotNull)).Repeat.Once();
+            storage.Expect(s => s.Dispose()).Repeat.Once();
+
+
+            List<Quest> quests = QuestHelper.CreateQuests(2);
+
+            IQuestRepository repository = new RecursiveQuestRepository(storage, "no matter");
+            
+            //Act
+            repository.InsertAll(quests);
+            repository.Dispose();
+
+            //Assert
+            storage.VerifyAllExpectations();
         }
     }
 }

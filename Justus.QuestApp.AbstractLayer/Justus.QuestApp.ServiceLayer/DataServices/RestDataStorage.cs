@@ -25,7 +25,7 @@ namespace Justus.QuestApp.ServiceLayer.DataServices
         ///<inheritdoc/>
         public void Dispose()
         {
-            
+            Close();
         }
 
         ///<inheritdoc/>
@@ -116,7 +116,20 @@ namespace Justus.QuestApp.ServiceLayer.DataServices
         ///<inheritdoc/>
         public void Delete(int id)
         {
-            
+            HttpWebRequest request = WebRequest.CreateHttp($"{_apiUrlString}/{id}");
+            request.Method = "DELETE";
+            request.Accept = "application/json";
+
+            using (WebResponse response = request.GetResponseAsync().Result)
+            {
+                using (Stream stream = response.GetResponseStream())
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        string responseString = reader.ReadToEnd();
+                    }
+                }
+            }
         }
 
         ///<inheritdoc/>

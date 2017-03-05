@@ -34,5 +34,16 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         } 
 
         #endregion
+
+        /// <summary>
+        /// Redraws list view.
+        /// </summary>
+        protected void RedrawListView()
+        {
+            if (QuestListView != null && QuestListAdapter != null)
+            {
+                QuestListView.Adapter = QuestListAdapter;
+            }
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace Justus.QuestApp.View.Droid.Services.ViewServices
             for (int i = 0; i < length; ++i)
             {
                 Quest currentQuest = _viewModel.CurrentChildren[i];
-                if (currentQuest.Deadline > DateTime.Now)
+                if (currentQuest.Deadline > DateTime.Now && currentQuest.CurrentState == QuestState.Progress)
                 {
                     _toUpdate.Add(i);
                 }

@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandsTest\CompositeCommandTest.cs" />
+    <Compile Include="CommandsTest\FactoriesTest\DefaultRepositoryCommandsFactoryTest.cs" />
     <Compile Include="CommandsTest\FactoriesTest\DefaultStateCommandsFectoryTest.cs" />
     <Compile Include="CommandsTest\ManagementTest\CommandCyclingManagerTest.cs" />
     <Compile Include="CommandsTest\QuestStateTest\DownHierarchyStateUpdateCommandTest.cs" />

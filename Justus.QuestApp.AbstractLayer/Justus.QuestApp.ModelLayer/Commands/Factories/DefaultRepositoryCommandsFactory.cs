@@ -3,6 +3,7 @@ using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.ModelLayer.Commands.Repository;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Factories
 {
@@ -31,19 +32,19 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         ///<inheritdoc/>
         public Command AddQuest(Quest quest, Quest parentQuest)
         {
-            throw new NotImplementedException();
+            return new AddQuestCommand(_repository,parentQuest, quest);
         }
 
         ///<inheritdoc/>
         public Command DeleteQuest(Quest quest)
         {
-            throw new NotImplementedException();
+            return new DeleteQuestCommand(_repository, quest);
         }
 
         ///<inheritdoc/>
         public Command UpdateQuest(Quest quest)
         {
-            throw new NotImplementedException();
+            return new UpdateQuestCommand(_repository, quest);
         }
          
         #endregion

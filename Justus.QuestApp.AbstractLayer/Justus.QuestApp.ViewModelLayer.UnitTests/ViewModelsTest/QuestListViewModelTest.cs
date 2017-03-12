@@ -24,6 +24,12 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ServiceLocator.ReleaseAll();
         }
 
+        [SetUp]
+        public void SetUp()
+        {
+            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>());
+        }
+
 
         [Test]
         public void PullQuestsTest()

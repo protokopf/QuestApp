@@ -41,6 +41,9 @@ namespace Justus.QuestApp.View.Droid.Activities
                 case Resource.Id.menuSecondOption:
                     Snackbar.Make(_coordinatorLayout, "Second menu item clicked!", Snackbar.LengthShort).Show();
                     break;
+                case Resource.Id.menuExit:
+                    Snackbar.Make(_coordinatorLayout, "No exit, son of a bitch.", Snackbar.LengthShort).Show();
+                    break;
             }
             return base.OnOptionsItemSelected(item);
         }

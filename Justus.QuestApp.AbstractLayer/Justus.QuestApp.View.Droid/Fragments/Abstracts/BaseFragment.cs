@@ -32,6 +32,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         public BaseFragment()
         {
             ViewModel = ServiceLocator.Resolve<TViewModel>();
+            ViewModel.IsBusyChanged += OnIsBusyChanged;
         }
 
         #region Fragment overriding

@@ -38,21 +38,6 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             ResetChildren();
         }
 
-        /// <summary>
-        /// Deletes quest.
-        /// </summary>
-        /// <param name="quest"></param>
-        public Task DeleteQuest(int position)
-        {
-            Quest quest = CurrentChildren[position];
-            LastCommand = new DeleteQuestCommand(QuestRepository, quest);
-            return Task.Run(() =>
-            {
-                LastCommand.Execute();
-                QuestRepository.PushQuests();
-            });
-        }
-
         #region Private methods
 
         private bool FilterItem(Quest quest)

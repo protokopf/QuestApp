@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities;
+using Justus.QuestApp.ModelLayer.Commands.Repository;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
@@ -19,11 +20,12 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         private List<Quest> _currentChildren;
 
         private bool _shouldResetChildren;
-        private bool _shouldPullQuests;
+        private bool _areQuestsPulled;
 
         protected IQuestRepository QuestRepository;
         protected IQuestProgressCounter ProgressCounter;
         protected IStateCommandsFactory StateCommads;
+        protected IRepositoryCommandsFactory RepositoryCommands;
         protected Command LastCommand;
         
 
@@ -35,11 +37,12 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             QuestRepository = ServiceLocator.Resolve<IQuestRepository>();
             ProgressCounter = ServiceLocator.Resolve<IQuestProgressCounter>();
             StateCommads = ServiceLocator.Resolve<IStateCommandsFactory>();
+            RepositoryCommands = ServiceLocator.Resolve<IRepositoryCommandsFactory>();
             _emptyList = new List<Quest>();
             _currentChildren = new List<Quest>();
 
             _shouldResetChildren = true;
-            _shouldPullQuests = true;
+            _areQuestsPulled = false;
         }
 
         /// <summary>
@@ -56,12 +59,6 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             {
                 if (_shouldResetChildren)
                 {
-                    if (_shouldPullQuests)
-                    {
-                        QuestRepository.PullQuests();
-                        _shouldPullQuests = false;
-                    }
-
                     _shouldResetChildren = false;
 
                     List<Quest> children = InRoot ? QuestRepository.GetAll() : CurrentQuest.Children;
@@ -130,10 +127,20 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// </summary>
         public async Task PullQuests()
         {
+            _areQuestsPulled = false;
             IsBusy = true;
             await Task.Run(() => QuestRepository.PullQuests());
             IsBusy = false;
             ResetChildren();
+        }
+
+        /// <summary>
+        /// Points, whether quests have been pulled.
+        /// </summary>
+        /// <returns></returns>
+        public bool AreQuestsPulled()
+        {
+            return _areQuestsPulled;
         }
 
         /// <summary>
@@ -181,6 +188,21 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         public void ResetChildren()
         {
             _shouldResetChildren = true;
+        }
+
+        /// <summary>
+        /// Deletes quest.
+        /// </summary>
+        /// <param name="position"></param>
+        public Task DeleteQuest(int position)
+        {
+            Quest quest = CurrentChildren[position];
+            LastCommand = RepositoryCommands.DeleteQuest(quest);
+            return Task.Run(() =>
+            {
+                LastCommand.Execute();
+                QuestRepository.PushQuests();
+            });
         }
 
         #region Protected methods

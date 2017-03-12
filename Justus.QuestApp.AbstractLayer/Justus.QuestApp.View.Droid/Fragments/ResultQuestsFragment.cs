@@ -66,13 +66,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
             QuestListAdapter.NotifyDataSetChanged();
         }
 
-        private async void DeleteHandler(int position)
-        {
-            await ViewModel.DeleteQuest(position);
-            ViewModel.ResetChildren();
-            RedrawListView();
-        }
-
         private void ChildrenHandler(int position)
         {
             TraverseToChild(position);

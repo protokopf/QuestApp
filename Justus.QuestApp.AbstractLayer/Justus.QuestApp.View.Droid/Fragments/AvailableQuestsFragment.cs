@@ -44,29 +44,24 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void QuestListViewOnChildViewAdded(object sender, ViewGroup.ChildViewAddedEventArgs args)
         {
             AvailableQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(args.Child);
-            holder.DeleteButton.Click += (o, eventArgs) => { DeleteClickHandler(holder.ItemPosition); };
-            holder.ChildrenButton.Click += (o, eventArgs) => { ChildrenClickHandler(holder.ItemPosition); };
-            holder.StartButton.Click += (o, eventArgs) => { StartClickHandler(holder.ItemPosition); };
-            holder.EditButton.Click += (o, eventArgs) => { EditClickHandler(holder.ItemPosition); };
+            holder.DeleteButton.Click += (o, eventArgs) => { DeleteHandler(holder.ItemPosition); };
+            holder.ChildrenButton.Click += (o, eventArgs) => { ChildrenHandler(holder.ItemPosition); };
+            holder.StartButton.Click += (o, eventArgs) => { StartHandler(holder.ItemPosition); };
+            holder.EditButton.Click += (o, eventArgs) => { EditHandler(holder.ItemPosition); };
         }
 
-        private void EditClickHandler(int itemPosition)
+        private void EditHandler(int itemPosition)
         {
             Toast.MakeText(this.Context, $"Edit of {itemPosition} clicked!", ToastLength.Short).Show();
         }
 
-        private void StartClickHandler(int itemPosition)
+        private void StartHandler(int itemPosition)
         {
             ViewModel.StartQuest(QuestListAdapter[itemPosition]);
             QuestListAdapter.NotifyDataSetChanged();
         }
 
-        private void DeleteClickHandler(int itemPosition)
-        {
-            Toast.MakeText(this.Context, $"Delete of {itemPosition} clicked!", ToastLength.Short).Show();
-        }
-
-        private void ChildrenClickHandler(int itemPosition)
+        private void ChildrenHandler(int itemPosition)
         {
             TraverseToChild(itemPosition);
         }

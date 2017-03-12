@@ -69,7 +69,7 @@ namespace Justus.QuestApp.View.Droid.StubServices
 
         public void Delete(Quest quest)
         {
-            throw new NotImplementedException();
+            _quests.Remove(quest);
         }
 
         public void DeleteAll()

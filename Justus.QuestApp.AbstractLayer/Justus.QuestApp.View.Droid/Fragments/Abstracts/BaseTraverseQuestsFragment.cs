@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
@@ -31,10 +32,21 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// </summary>
         protected string TitleTextDefault;
 
+        #region Fragment overriding
+
+        ///<inheritdoc/>
+        public override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            PullQuests();
+        }
+
+        #endregion
+
         #region ISelectable overriding
 
         ///<inheritdoc/>
-        public override void OnSelect()
+        public async override void OnSelect()
         {
             if (ViewModel.InRoot)
             {
@@ -105,5 +117,32 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
                 }            
             }
         }
+
+        /// <summary>
+        /// Make view model pull its quests.
+        /// </summary>
+        private async void PullQuests()
+        {
+            if(!ViewModel.AreQuestsPulled())
+            {
+                await ViewModel.PullQuests();
+            }          
+        }
+
+        #region Handlers
+
+        /// <summary>
+        /// Handles deleting quest from list.
+        /// </summary>
+        /// <param name="position"></param>
+        protected virtual async void DeleteHandler(int position)
+        {
+            await ViewModel.DeleteQuest(position);
+            ViewModel.ResetChildren();
+            RedrawListView();
+            Toast.MakeText(this.Context, $"Quest in {position} position was deleted.", ToastLength.Short).Show();
+        }
+
+        #endregion
     } 
 }

@@ -10,6 +10,7 @@
       <!---Menu labels-->
       <string name="MenuFirstOption">First item</string>
       <string name="MenuSecondOption">Second item</string>
+      <string name="MenuExit">Exit</string>
   
   <!--QuestChildItemLayoutStrings-->
   <string name="ChildrenButtonText">Children</string>

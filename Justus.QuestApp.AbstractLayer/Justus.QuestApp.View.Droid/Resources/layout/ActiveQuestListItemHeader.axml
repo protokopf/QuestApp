@@ -31,7 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_margin="3dp"
-        style="?android:attr/progressBarStyleHorizontal" />
+        android:indeterminate="false"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
     <include
         layout="@layout/ActiveQuestListItemBody"
         android:visibility="gone"

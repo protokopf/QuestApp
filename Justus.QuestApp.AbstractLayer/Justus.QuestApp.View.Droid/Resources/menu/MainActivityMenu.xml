@@ -13,4 +13,9 @@
     android:title="@string/MenuSecondOption"
     android:orderInCategory="100"
     app:showAsAction="never" />
+  <item
+  android:id="@+id/menuExit"
+  android:title="@string/MenuExit"
+  android:orderInCategory="100"
+  app:showAsAction="never" />
 </menu>

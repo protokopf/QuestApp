@@ -68,14 +68,14 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
             holder.ChildrenButton.Click += (o, eventArgs) => { ChildrenClickHandler(holder.ItemPosition); };
 
-            holder.StartButton.Click += (o, eventArgs) => { StartClickHandler(holder.ItemPosition); };
-            holder.DoneButton.Click += (o, eventArgs) => { DoneClickHandler(holder.ItemPosition); };
-            holder.FailButton.Click += (o, eventArgs) => { FailClickHandler(holder.ItemPosition); };
-            holder.DeleteButton.Click += (o, eventArgs) => { DeleteClickHandler(holder.ItemPosition); };
-            holder.CancelButton.Click += (o, eventArgs) => { CancelClickHandler(holder.ItemPosition); };
+            holder.StartButton.Click += (o, eventArgs) => { StartHandler(holder.ItemPosition); };
+            holder.DoneButton.Click += (o, eventArgs) => { DoneHandler(holder.ItemPosition); };
+            holder.FailButton.Click += (o, eventArgs) => { FailHandler(holder.ItemPosition); };
+            holder.DeleteButton.Click += (o, eventArgs) => { DeleteHandler(holder.ItemPosition); };
+            holder.CancelButton.Click += (o, eventArgs) => { CancelHandler(holder.ItemPosition); };
         }
 
-        private void StartClickHandler(int itemPosition)
+        private void StartHandler(int itemPosition)
         {
             ViewModel.StartQuest(ViewModel.CurrentChildren[itemPosition]);
             QuestListAdapter.NotifyDataSetChanged();
@@ -92,7 +92,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             this.TraverseToParent();
         }
 
-        private void DoneClickHandler(int viewPosition)
+        private void DoneHandler(int viewPosition)
         {
             ViewModel.DoneQuest(ViewModel.CurrentChildren[viewPosition]);
             QuestListAdapter.NotifyDataSetChanged();
@@ -103,7 +103,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ViewModel.UndoLastCommand();
         }
 
-        private void FailClickHandler(int viewPosition)
+        private void FailHandler(int viewPosition)
         {
             ViewModel.FailQuest(ViewModel.CurrentChildren[viewPosition]);
             QuestListAdapter.NotifyDataSetChanged();
@@ -114,12 +114,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             this.TraverseToChild(viewPosition);
         }
 
-        private void DeleteClickHandler(int viewPosition)
-        {
-            Toast.MakeText(this.Context, $"Delete of {viewPosition} clicked!", ToastLength.Short).Show();
-        }
-
-        private void CancelClickHandler(int viewPosition)
+        private void CancelHandler(int viewPosition)
         {
             ViewModel.CancelQuest(ViewModel.CurrentChildren[viewPosition]);
             QuestListAdapter.NotifyDataSetChanged();

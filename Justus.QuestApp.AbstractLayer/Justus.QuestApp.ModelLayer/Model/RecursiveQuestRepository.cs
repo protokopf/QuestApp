@@ -151,6 +151,15 @@ namespace Justus.QuestApp.ModelLayer.Model
             {
                 throw new ArgumentNullException(nameof(quest));
             }
+            Quest parentOfDeleted = quest.Parent;
+            if (parentOfDeleted == null)
+            {
+                _questList.Remove(quest);
+            }
+            else
+            {
+                parentOfDeleted.Children.Remove(quest);
+            }
             _toDelete.Add(quest.Id);
         }
 
@@ -203,16 +212,17 @@ namespace Justus.QuestApp.ModelLayer.Model
                     _toDelete.Clear();
                 }
             }
-            //_questList.Clear();
         }
 
         ///<inheritdoc/>
         public void PullQuests()
         {
-            _dataStorage.Open(_connectionString);
-            _questList = _dataStorage.GetAll();
-            _dataStorage.Close();
-
+            using (_dataStorage)
+            {
+                _dataStorage.Open(_connectionString);
+                _questList = _dataStorage.GetAll();
+            }
+                
             if (_questList == null)
             {
                 _questList = new List<Quest>();

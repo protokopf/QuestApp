@@ -48,14 +48,8 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
         {
             //Arrange
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            List<Quest> repositoryCache = new List<Quest>()
-            {
-                QuestHelper.CreateCompositeQuest(2,3,QuestState.Progress)
-            };
-            int beforeCommandlength = QuestHelper.CountSubQuests(repositoryCache);
 
-            Quest toDelete = repositoryCache[0].Children[0];
-            int deletedId = toDelete.Id;
+            Quest toDelete = QuestHelper.CreateQuest(42);
 
             repository.Expect(rep => rep.Delete(null)).IgnoreArguments().Repeat.Once();
 
@@ -65,41 +59,10 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             command.Execute();
 
             //Assert
-            Assert.AreEqual(beforeCommandlength - 4, QuestHelper.CountSubQuests(repositoryCache));
-
-            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(repositoryCache, x => x.Parent != toDelete));
-            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(repositoryCache, x => !x.Children.Contains(toDelete)));
-
-            repository.VerifyAllExpectations();
-        }
-
-        [Test]
-        public void ExecuteDeleteTopLevelQuestTest()
-        {
-            //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            List<Quest> repositoryCache = new List<Quest>()
-            {
-                QuestHelper.CreateCompositeQuest(2,3,QuestState.Progress)
-            };
-            int beforeCommandlength = QuestHelper.CountSubQuests(repositoryCache);
-
-            Quest toDelete = repositoryCache[0];
-            int deletedId = toDelete.Id;
-
-            repository.Expect(rep => rep.GetAll()).Return(repositoryCache).Repeat.Once();
-            repository.Expect(rep => rep.Delete(null)).IgnoreArguments().Repeat.Once();
-
-            Command command = new DeleteQuestCommand(repository, toDelete);
-
-            //Act
-            command.Execute();
-
-            //Assert
-            Assert.AreEqual(0, QuestHelper.CountSubQuests(repositoryCache));
-
-            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(repositoryCache, x => x.Parent != toDelete));
-            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(repositoryCache, x => !x.Children.Contains(toDelete)));
+            Quest deleted =
+                repository.GetArgumentsForCallsMadeOn(rep => rep.Delete(Arg<Quest>.Is.Anything))[0][0] as Quest;
+            Assert.IsNotNull(deleted);
+            Assert.AreEqual(toDelete, deleted);
 
             repository.VerifyAllExpectations();
         }
@@ -164,38 +127,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
 
             Assert.IsTrue(QuestHelper.CheckThatAnyQuestFromHierarchyMatchPredicate(repositoryCache, q => q.Id == deletedId));
             Assert.IsTrue(QuestHelper.CheckThatAnyQuestFromHierarchyMatchPredicate(repositoryCache, q => q.Children.Contains(toDelete)));
-
-            repository.VerifyAllExpectations();
-        }
-
-        [Test]
-        public void UndoTopLevelQuestTest()
-        {
-            //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            List<Quest> repositoryCache = new List<Quest>()
-            {
-                QuestHelper.CreateCompositeQuest(2,3,QuestState.Progress)
-            };
-            int beforeCommandlength = QuestHelper.CountSubQuests(repositoryCache);
-
-            Quest toDelete = repositoryCache[0];
-            int deletedId = toDelete.Id;
-
-            repository.Expect(rep => rep.GetAll()).Return(repositoryCache).Repeat.Twice();
-            repository.Expect(rep => rep.Delete(null)).IgnoreArguments().Repeat.Once();
-            repository.Expect(rep => rep.RevertDelete(null)).IgnoreArguments().Return(true).Repeat.Once();
-
-            Command command = new DeleteQuestCommand(repository, toDelete);
-
-            //Act
-            command.Execute();
-            command.Undo();
-
-            //Assert
-            Assert.AreEqual(beforeCommandlength, QuestHelper.CountSubQuests(repositoryCache));
-
-            Assert.IsTrue(QuestHelper.CheckThatAnyQuestFromHierarchyMatchPredicate(repositoryCache, q => q.Id == deletedId));
 
             repository.VerifyAllExpectations();
         }

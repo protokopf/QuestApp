@@ -16,14 +16,13 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// </summary>
     public class DeleteQuestCommand : AbstractRepositoryCommand
     {
-        private Quest _parentOfDeleted = null;
-        private Quest _toDelete = null;
+        private readonly Quest _toDelete = null;
 
         /// <summary>
         /// Receives references to repository and quest to delete.
         /// </summary>
         /// <param name="repository"></param>
-        /// <param name="toDelete"></param>
+        /// <param name="questToDelete"></param>
         public DeleteQuestCommand(IQuestRepository repository, Quest questToDelete) : base(repository)
         {
             if (questToDelete == null)
@@ -41,16 +40,6 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         {
             if (!HasExecuted)
             {
-                _parentOfDeleted = _toDelete.Parent;
-                if(_parentOfDeleted != null)
-                {
-                    _parentOfDeleted.Children.Remove(_toDelete);
-                }
-                else
-                {
-                    //If quest does not have parent -> it is top level quest.
-                    Repository.GetAll().Remove(_toDelete);
-                }
                 Repository.Delete(_toDelete);
                 HasExecuted = true;
             }        
@@ -62,14 +51,6 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             if (HasExecuted)
             {
                 Repository.RevertDelete(_toDelete);
-                if(_parentOfDeleted != null)
-                {
-                    _parentOfDeleted.Children.Add(_toDelete);
-                }
-                else
-                {
-                    Repository.GetAll().Add(_toDelete);
-                }
                 HasExecuted = false;
             }
         }

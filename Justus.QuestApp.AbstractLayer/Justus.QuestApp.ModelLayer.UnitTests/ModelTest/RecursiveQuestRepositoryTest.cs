@@ -570,6 +570,66 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         }
 
         [Test]
+        public void DeleteQuestWithParentTest()
+        {
+            //Arrange
+            IDataAccessInterface<Quest> innerStorage = MockRepository.GenerateStrictMock<IDataAccessInterface<Quest>>();
+            innerStorage.Expect(st => st.Delete(Arg<int>.Is.Anything));
+            innerStorage.Expect(st => st.Open(Arg<string>.Is.NotNull));
+            innerStorage.Expect(st => st.Dispose());
+
+            Quest parent = QuestHelper.CreateCompositeQuest(1, 1, QuestState.Progress);
+            Quest toDelete = parent.Children.FirstOrDefault();
+            toDelete.Id = 666;
+
+            IQuestRepository repository = new RecursiveQuestRepository(innerStorage, "someConnectionString");
+
+            //Act
+            repository.Delete(toDelete);
+            repository.PushQuests();
+
+            //Assert
+            int deletedId = (int)innerStorage.GetArgumentsForCallsMadeOn(rep => rep.Delete(Arg<int>.Is.Anything))[0][0];
+
+            Assert.AreEqual(666, deletedId);
+            Assert.IsFalse(parent.Children.Contains(toDelete));
+
+            innerStorage.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void DeleteTestWithoutParent()
+        {
+            //Arrange
+            List<Quest> allQuests = QuestHelper.CreateQuests(3);
+            Quest toDelete = allQuests[0];
+            toDelete.Id = 666;
+
+            IDataAccessInterface<Quest> innerStorage = MockRepository.GenerateStrictMock<IDataAccessInterface<Quest>>();
+            innerStorage.Expect(st => st.Delete(Arg<int>.Is.Anything)).Repeat.Once();
+            innerStorage.Expect(st => st.Open(Arg<string>.Is.NotNull)).Repeat.Twice();
+            innerStorage.Expect(st => st.Dispose()).Repeat.Twice();
+            innerStorage.Expect(st => st.GetAll()).Repeat.Once().Return(allQuests);
+
+            IQuestRepository repository = new RecursiveQuestRepository(innerStorage, "someConnectionString");
+
+            //Act
+            repository.PullQuests();
+            repository.Delete(toDelete);
+            repository.PushQuests();
+
+            //Assert
+            List<Quest> all = repository.GetAll();
+
+            int deletedId = (int)innerStorage.GetArgumentsForCallsMadeOn(rep => rep.Delete(Arg<int>.Is.Anything))[0][0];
+
+            Assert.IsFalse(all.Contains(toDelete));
+            Assert.AreEqual(666, deletedId);
+
+            innerStorage.VerifyAllExpectations();
+        }
+
+        [Test]
         public void DeleteNullTest()
         {
             //Arrange

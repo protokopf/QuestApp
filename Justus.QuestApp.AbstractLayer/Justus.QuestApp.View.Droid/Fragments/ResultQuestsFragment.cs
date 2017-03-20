@@ -24,11 +24,13 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
             TitleTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);
             BackButton = view.FindViewById<Button>(Resource.Id.questsListBack);
+            SyncButton = view.FindViewById<Button>(Resource.Id.syncButton);
 
             QuestListView.Adapter = QuestListAdapter = new ResultQuestListAdapter(this.Activity, ViewModel);
             QuestListView.ItemClick += ItemClickHandler;
             QuestListView.ChildViewAdded += QuestAddedHandler;
 
+            SyncButton.Click += SyncButtonOnClick;
             BackButton.Click += BackButtonOnClick;
             BackButton.Enabled = !ViewModel.InRoot;
 
@@ -38,6 +40,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
         }
 
         #endregion
+
+        private async void SyncButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            await ViewModel.PullQuests();
+            RedrawListView();
+        }
 
         #region Handlers
 
@@ -62,7 +70,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void RestartHandler(int position)
         {
-            ViewModel.RestartQuest(ViewModel.CurrentChildren[position]);
+            ViewModel.RestartQuest(ViewModel.Leaves[position]);
             QuestListAdapter.NotifyDataSetChanged();
         }
 

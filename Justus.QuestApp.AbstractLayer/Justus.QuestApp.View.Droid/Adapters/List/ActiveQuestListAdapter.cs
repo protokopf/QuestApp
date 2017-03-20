@@ -11,7 +11,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
     /// <summary>
     /// Adapter for active quests.
     /// </summary>
-    public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestItemViewHolder>
+    public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestItemViewHolder, ActiveQuestListViewModel>
     {
         private readonly string _startLabel;
         private readonly string _restartLabel;
@@ -21,7 +21,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         /// </summary>
         /// <param name="activity"></param>
         /// <param name="listViewModel"></param>
-        public ActiveQuestListAdapter(Activity activity, QuestListViewModel listViewModel) : base(activity,listViewModel)
+        public ActiveQuestListAdapter(Activity activity, ActiveQuestListViewModel listViewModel) : base(activity,listViewModel)
         {
             _startLabel = activity.GetString(Resource.String.StartButtonText);
             _restartLabel = activity.GetString(Resource.String.RestartButtonText);

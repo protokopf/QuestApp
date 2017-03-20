@@ -13,12 +13,12 @@ namespace Justus.QuestApp.View.Droid.Services.ViewServices
     {
         private readonly TaskScheduler _sheduler;
         private readonly QuestListViewModel _viewModel;
-        private readonly BaseQuestListAdapter<ActiveQuestItemViewHolder> _adapter;
+        private readonly BaseQuestListAdapter<ActiveQuestItemViewHolder, ActiveQuestListViewModel> _adapter;
 
-        private HashSet<int> _toUpdate;
+        private readonly HashSet<int> _toUpdate;
 
-        public SimpleQuestExpireService(int intervalMilliseconds, TaskScheduler sheduler, QuestListViewModel vm,
-            BaseQuestListAdapter<ActiveQuestItemViewHolder> adapter) 
+        public SimpleQuestExpireService(int intervalMilliseconds, TaskScheduler sheduler, ActiveQuestListViewModel vm,
+            BaseQuestListAdapter<ActiveQuestItemViewHolder, ActiveQuestListViewModel> adapter) 
             : base(intervalMilliseconds)
         {
             _sheduler = sheduler;
@@ -37,7 +37,7 @@ namespace Justus.QuestApp.View.Droid.Services.ViewServices
             int length = _adapter.Count;
             for (int i = 0; i < length; ++i)
             {
-                Quest currentQuest = _viewModel.CurrentChildren[i];
+                Quest currentQuest = _viewModel.Leaves[i];
                 if (currentQuest.Deadline > DateTime.Now && currentQuest.CurrentState == QuestState.Progress)
                 {
                     _toUpdate.Add(i);
@@ -52,7 +52,7 @@ namespace Justus.QuestApp.View.Droid.Services.ViewServices
             {
                 if (_toUpdate.Contains(i))
                 {
-                    viewHolder.TimeLeft.Text = FormLeftTime(_viewModel.CurrentChildren[i].Deadline);
+                    viewHolder.TimeLeft.Text = FormLeftTime(_viewModel.Leaves[i].Deadline);
                 }
             }
             _toUpdate.Clear();

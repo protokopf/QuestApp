@@ -29,11 +29,13 @@ namespace Justus.QuestApp.View.Droid.Fragments
             QuestListView = view.FindViewById<ListView>(Resource.Id.questListId);
             TitleTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);          
             BackButton = view.FindViewById<Button>(Resource.Id.questsListBack);
+            SyncButton = view.FindViewById<Button>(Resource.Id.syncButton);
 
             TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
 
             BackButton.Enabled = !ViewModel.InRoot;
             BackButton.Click += BackButtonHandler;
+            SyncButton.Click += SyncButtonOnClick;
 
             QuestListView.Adapter = QuestListAdapter = new ActiveQuestListAdapter(this.Activity, ViewModel);
             QuestListView.ItemClick += ItemClickHandler;
@@ -42,6 +44,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
             _intervalService = new SimpleQuestExpireService(1000, TaskScheduler.FromCurrentSynchronizationContext(),ViewModel, QuestListAdapter);
 
             return view;
+        }
+
+        private async void SyncButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            await ViewModel.PullQuests();
+            RedrawListView();
         }
 
         ///<inheritdoc/>
@@ -77,7 +85,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void StartHandler(int itemPosition)
         {
-            ViewModel.StartQuest(ViewModel.CurrentChildren[itemPosition]);
+            ViewModel.StartQuest(ViewModel.Leaves[itemPosition]);
             QuestListAdapter.NotifyDataSetChanged();
         }
 
@@ -94,7 +102,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void DoneHandler(int viewPosition)
         {
-            ViewModel.DoneQuest(ViewModel.CurrentChildren[viewPosition]);
+            ViewModel.DoneQuest(ViewModel.Leaves[viewPosition]);
             QuestListAdapter.NotifyDataSetChanged();
         }
 
@@ -105,7 +113,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void FailHandler(int viewPosition)
         {
-            ViewModel.FailQuest(ViewModel.CurrentChildren[viewPosition]);
+            ViewModel.FailQuest(ViewModel.Leaves[viewPosition]);
             QuestListAdapter.NotifyDataSetChanged();
         }
 
@@ -116,20 +124,10 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void CancelHandler(int viewPosition)
         {
-            ViewModel.CancelQuest(ViewModel.CurrentChildren[viewPosition]);
+            ViewModel.CancelQuest(ViewModel.Leaves[viewPosition]);
             QuestListAdapter.NotifyDataSetChanged();
         }
 
         #endregion
-
-        private async void PullQuests()
-        {
-            await ViewModel.PullQuests();
-        }
-
-        private async void PushQuests()
-        {
-            await ViewModel.PushQuests();
-        }
     }
 }

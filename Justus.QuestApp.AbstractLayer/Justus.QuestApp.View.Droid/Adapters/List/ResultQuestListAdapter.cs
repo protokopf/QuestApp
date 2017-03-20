@@ -10,7 +10,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
     /// <summary>
     /// Adapter for providing result quest list.
     /// </summary>
-    public class ResultQuestListAdapter : BaseQuestListAdapter<ResultQuestItemViewHolder>
+    public class ResultQuestListAdapter : BaseQuestListAdapter<ResultQuestItemViewHolder, ResultsQuestListViewModel>
     {
         private readonly string _failedStatus;
         private readonly string _doneStatus;
@@ -20,7 +20,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         /// </summary>
         /// <param name="activity"></param>
         /// <param name="listViewModel"></param>
-        public ResultQuestListAdapter(Activity activity, QuestListViewModel listViewModel) : base(activity,listViewModel)
+        public ResultQuestListAdapter(Activity activity, ResultsQuestListViewModel listViewModel) : base(activity,listViewModel)
         {
             _doneStatus = ActivityRef.Resources.GetString(Resource.String.DoneStatus);
             _failedStatus = ActivityRef.Resources.GetString(Resource.String.FailedStatus);

@@ -2,6 +2,8 @@ using System;
 using Android.App;
 using Android.Runtime;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
+using Justus.QuestApp.AbstractLayer.Data;
+using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
@@ -35,7 +37,11 @@ namespace Justus.QuestApp.View.Droid
 
         private void InitializeModelServices()
         {
-            ServiceLocator.Register<IQuestRepository>(() => new StubQuestRepositoryService(10,1,3));
+            ServiceLocator.Register<IDataAccessInterface<Quest>>(() => new StubQuestRepositoryService(2, 1, 3));
+            ServiceLocator.Register<IQuestRepository>(() => new RecursiveQuestRepository(
+                ServiceLocator.Resolve<IDataAccessInterface<Quest>>(),
+                "some connection string"
+                ));
             //ServiceLocator.Register<IQuestRepository>(() => new RecursiveQuestRepository(
             //    new RestDataStorage(), "http://192.168.0.104/api/Quests"));
             ServiceLocator.Register<IQuestProgressCounter>(() => new RecursiveQuestProgressCounter());

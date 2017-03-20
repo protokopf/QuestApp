@@ -50,7 +50,7 @@
     <Compile Include="ViewModels\AvailableQuestListViewModel.cs" />
     <Compile Include="ViewModels\QuestListViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\ResultsQuestListVIewModel.cs" />
+    <Compile Include="ViewModels\ResultsQuestListViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

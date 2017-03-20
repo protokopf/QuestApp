@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
+using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Helpers;
@@ -32,7 +34,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void FilterQuest()
         {
             IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(rep => rep.PullQuests()).Repeat.Once();
 
             List<Quest> fromRepository = new List<Quest>()
             {
@@ -54,7 +55,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             QuestListViewModel viewModel = new ActiveQuestListViewModel();
 
             //Act
-            List<Quest> quests = viewModel.CurrentChildren;
+            List<Quest> quests = viewModel.Leaves;
 
             //Assert
             Assert.IsNotNull(quests);
@@ -86,7 +87,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             };
 
             repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
-            repository.Expect(rep => rep.PullQuests()).Repeat.Once();
 
             ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
 
@@ -98,7 +98,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             QuestListViewModel viewModel = new ActiveQuestListViewModel();
 
             //Act
-            List<Quest> quests = viewModel.CurrentChildren;
+            List<Quest> quests = viewModel.Leaves;
 
             //Assert
             Assert.IsNotNull(quests);
@@ -115,6 +115,51 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             Assert.IsTrue(fromRepository.Any(quest => quest.CurrentState == QuestState.Progress));
 
             repository.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void CountProgressTest()
+        {
+            //Arrange
+            IQuestProgressCounter counter = MockRepository.GenerateStrictMock<IQuestProgressCounter>();
+            counter.Expect(c => c.CountProgress(Arg<Quest>.Is.Anything)).Repeat.Once().Return(new ProgressValue()
+            {
+                Current = 5,
+                Total = 10
+            });
+
+            ServiceLocator.Register(() => counter);
+            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IQuestRepository>());
+            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<ICommandManager>());
+            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel();
+
+            //Act
+            int progress = viewModel.CountProgress(new Quest());
+
+            //Assert
+            Assert.AreEqual(50, progress);
+            counter.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void CountProgressNullException()
+        {
+            //Arrange
+            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
+            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IQuestRepository>());
+            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<ICommandManager>());
+            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel();
+
+            //Act
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => viewModel.CountProgress(null));
+
+            //Assert
+            Assert.IsNotNull(ex);
+            Assert.AreEqual(ex.ParamName, "quest");
         }
 
 

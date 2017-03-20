@@ -17,7 +17,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// <summary>
         /// Adapter for list view.
         /// </summary>
-        protected BaseQuestListAdapter<TViewHolder> QuestListAdapter;
+        protected BaseQuestListAdapter<TViewHolder, TViewModel> QuestListAdapter;
 
         /// <summary>
         /// Reference to list view.

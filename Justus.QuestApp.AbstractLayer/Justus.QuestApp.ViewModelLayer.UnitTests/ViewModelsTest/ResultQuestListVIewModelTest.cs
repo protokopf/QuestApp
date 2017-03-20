@@ -41,7 +41,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             };
 
             repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
-            repository.Expect(rep => rep.PullQuests()).Repeat.Once();
 
             ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
 
@@ -53,7 +52,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             QuestListViewModel viewModel = new ResultsQuestListViewModel();
 
             //Act
-            List<Quest> quests = viewModel.CurrentChildren;
+            List<Quest> quests = viewModel.Leaves;
 
             //Assert
             Assert.IsNotNull(quests);
@@ -86,7 +85,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             };
 
             repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
-            repository.Expect(rep => rep.PullQuests()).Repeat.Once();
 
             ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
 
@@ -98,7 +96,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             QuestListViewModel viewModel = new ResultsQuestListViewModel();
 
             //Act
-            List<Quest> quests = viewModel.CurrentChildren;
+            List<Quest> quests = viewModel.Leaves;
 
             //Assert
             Assert.IsNotNull(quests);

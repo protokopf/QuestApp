@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
   
    <!--TabHostActivity-->
@@ -34,6 +34,7 @@
   <!---QuestListHeaderStrings-->
   <string name="QuestListTitle">Root</string>
   <string name="QuestListBack">back</string>
+  <string name="SyncButtonText">Sync</string>
   
   <string name="ApplicationTitle">Application titles</string>
   <string name="ProgressDialogTitle">Please, wait...</string>

@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.ModelLayer.Helpers;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
@@ -9,6 +13,13 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// </summary>
     public class ActiveQuestListViewModel : QuestListViewModel
     {
+        private readonly IQuestProgressCounter _progressCounter;
+
+        public ActiveQuestListViewModel()
+        {
+            _progressCounter = ServiceLocator.Resolve<IQuestProgressCounter>();
+        }
+
         #region QuestListViewModel overriding
 
         ///<inheritdoc/>
@@ -18,6 +29,22 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         }
 
         #endregion
+
+        /// <summary>
+        /// Count progress of quest.
+        /// </summary>
+        /// <param name="quest"></param>
+        /// <returns></returns>
+        public int CountProgress(Quest quest)
+        {
+            if (quest == null)
+            {
+                throw new ArgumentNullException(nameof(quest));
+            }
+            ProgressValue value = _progressCounter.CountProgress(quest);
+            int result = (int)(value.Current / (double)value.Total * 100);
+            return result;
+        }
 
         /// <summary>
         /// Fails given quest.

@@ -28,25 +28,19 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         protected Button BackButton;
 
         /// <summary>
+        /// Reference to sync button.
+        /// </summary>
+        protected Button SyncButton;
+
+        /// <summary>
         /// Defaul quest title.
         /// </summary>
         protected string TitleTextDefault;
 
-        #region Fragment overriding
-
-        ///<inheritdoc/>
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-            PullQuests();
-        }
-
-        #endregion
-
         #region ISelectable overriding
 
         ///<inheritdoc/>
-        public async override void OnSelect()
+        public override void OnSelect()
         {
             if (ViewModel.InRoot)
             {
@@ -97,7 +91,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         {
             CollapsChildren();
 
-            ViewModel.TraverseToChild(childPosition);
+            ViewModel.TraverseToLeaf(childPosition);
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
             BackButton.Enabled = !ViewModel.InRoot;
             RedrawListView();
@@ -116,17 +110,6 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
                     holder.ExpandDetails.Visibility = ViewStates.Gone;
                 }            
             }
-        }
-
-        /// <summary>
-        /// Make view model pull its quests.
-        /// </summary>
-        private async void PullQuests()
-        {
-            if(!ViewModel.AreQuestsPulled())
-            {
-                await ViewModel.PullQuests();
-            }          
         }
 
         #region Handlers

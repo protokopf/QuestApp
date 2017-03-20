@@ -2848,14 +2848,14 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f0700af
 			public const int media_actions = 2131165359;
 			
-			// aapt resource value: 0x7f0700c7
-			public const int menuExit = 2131165383;
-			
-			// aapt resource value: 0x7f0700c5
-			public const int menuFirstOption = 2131165381;
+			// aapt resource value: 0x7f0700c8
+			public const int menuExit = 2131165384;
 			
 			// aapt resource value: 0x7f0700c6
-			public const int menuSecondOption = 2131165382;
+			public const int menuFirstOption = 2131165382;
+			
+			// aapt resource value: 0x7f0700c7
+			public const int menuSecondOption = 2131165383;
 			
 			// aapt resource value: 0x7f07001e
 			public const int middle = 2131165214;
@@ -3010,26 +3010,26 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f070057
 			public const int radio = 2131165271;
 			
-			// aapt resource value: 0x7f0700c0
-			public const int resultQuestChildrenButton = 2131165376;
-			
-			// aapt resource value: 0x7f0700c2
-			public const int resultQuestDelete = 2131165378;
-			
-			// aapt resource value: 0x7f0700bf
-			public const int resultQuestDescription = 2131165375;
-			
-			// aapt resource value: 0x7f0700be
-			public const int resultQuestItemDetails = 2131165374;
-			
 			// aapt resource value: 0x7f0700c1
-			public const int resultQuestRestart = 2131165377;
-			
-			// aapt resource value: 0x7f0700c4
-			public const int resultQuestStatus = 2131165380;
+			public const int resultQuestChildrenButton = 2131165377;
 			
 			// aapt resource value: 0x7f0700c3
-			public const int resultQuestTitle = 2131165379;
+			public const int resultQuestDelete = 2131165379;
+			
+			// aapt resource value: 0x7f0700c0
+			public const int resultQuestDescription = 2131165376;
+			
+			// aapt resource value: 0x7f0700bf
+			public const int resultQuestItemDetails = 2131165375;
+			
+			// aapt resource value: 0x7f0700c2
+			public const int resultQuestRestart = 2131165378;
+			
+			// aapt resource value: 0x7f0700c5
+			public const int resultQuestStatus = 2131165381;
+			
+			// aapt resource value: 0x7f0700c4
+			public const int resultQuestTitle = 2131165380;
 			
 			// aapt resource value: 0x7f070031
 			public const int right = 2131165233;
@@ -3138,6 +3138,9 @@ namespace Justus.QuestApp.View.Droid
 			
 			// aapt resource value: 0x7f070069
 			public const int submit_area = 2131165289;
+			
+			// aapt resource value: 0x7f0700be
+			public const int syncButton = 2131165374;
 			
 			// aapt resource value: 0x7f07000d
 			public const int tabMode = 2131165197;
@@ -3498,8 +3501,8 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f080039
 			public const int ActiveQuestsLabel = 2131230777;
 			
-			// aapt resource value: 0x7f08004f
-			public const int ApplicationTitle = 2131230799;
+			// aapt resource value: 0x7f080050
+			public const int ApplicationTitle = 2131230800;
 			
 			// aapt resource value: 0x7f080046
 			public const int CancelButtonText = 2131230790;
@@ -3507,8 +3510,8 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f08003f
 			public const int ChildrenButtonText = 2131230783;
 			
-			// aapt resource value: 0x7f080053
-			public const int DeadlineLabel = 2131230803;
+			// aapt resource value: 0x7f080054
+			public const int DeadlineLabel = 2131230804;
 			
 			// aapt resource value: 0x7f080047
 			public const int DefaultDesctiprion = 2131230791;
@@ -3525,8 +3528,8 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f080042
 			public const int EditButtonText = 2131230786;
 			
-			// aapt resource value: 0x7f080051
-			public const int ErrorTitle = 2131230801;
+			// aapt resource value: 0x7f080052
+			public const int ErrorTitle = 2131230802;
 			
 			// aapt resource value: 0x7f080041
 			public const int FailButtonText = 2131230785;
@@ -3534,8 +3537,8 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f080048
 			public const int FailedStatus = 2131230792;
 			
-			// aapt resource value: 0x7f080054
-			public const int HyphenLabel = 2131230804;
+			// aapt resource value: 0x7f080055
+			public const int HyphenLabel = 2131230805;
 			
 			// aapt resource value: 0x7f08003b
 			public const int IdleQuestsLabel = 2131230779;
@@ -3552,8 +3555,8 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f08003d
 			public const int MenuSecondOption = 2131230781;
 			
-			// aapt resource value: 0x7f080050
-			public const int ProgressDialogTitle = 2131230800;
+			// aapt resource value: 0x7f080051
+			public const int ProgressDialogTitle = 2131230801;
 			
 			// aapt resource value: 0x7f08004c
 			public const int QuestDefaultStatus = 2131230796;
@@ -3579,8 +3582,11 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f080044
 			public const int StartButtonText = 2131230788;
 			
-			// aapt resource value: 0x7f080052
-			public const int StartTimeLabel = 2131230802;
+			// aapt resource value: 0x7f080053
+			public const int StartTimeLabel = 2131230803;
+			
+			// aapt resource value: 0x7f08004f
+			public const int SyncButtonText = 2131230799;
 			
 			// aapt resource value: 0x7f080014
 			public const int abc_action_bar_home_description = 2131230740;

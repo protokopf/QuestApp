@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Justus.QuestApp.ModelLayer.Helpers
 {
@@ -32,7 +34,17 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         /// <returns></returns>
         public static T Resolve<T>()
         {
-            return (T) Resolve(typeof(T));
+            return (T)ResolveAssignable(typeof(T));
+        }
+
+        /// <summary>
+        /// Returns enumaration of T implementations.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> ResolveAll<T>()
+        {
+            return ResolveAllAssignable(typeof(T)).OfType<T>();
         }
 
         /// <summary>
@@ -44,18 +56,36 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         }
 
         /// <summary>
-        /// Resolve object by type.
+        /// Resolve service by looking whether given type is assignable from any type from inner collection.
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private static object Resolve(Type type)
+        private static object ResolveAssignable(Type type)
         {
-            Lazy<object> service = null;
-            if (Services.TryGetValue(type, out service))
+            foreach (var pair in Services)
             {
-                return service.Value;
+                TypeInfo currentInfo = pair.Key.GetTypeInfo();
+                TypeInfo paramInfo = type.GetTypeInfo();
+
+                if(paramInfo.IsAssignableFrom(currentInfo))
+                {
+                    return pair.Value.Value;
+                }
             }
             throw new InvalidOperationException($"Service {type} not found!");
+        }
+
+        /// <summary>
+        /// Return enumeration of assignable to type types.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static IEnumerable<object> ResolveAllAssignable(Type type)
+        {
+            TypeInfo typeInfo = type.GetTypeInfo();
+            return from serv in Services
+                where typeInfo.IsAssignableFrom(serv.Key.GetTypeInfo())
+                select serv.Value.Value;
         }
     }
 }

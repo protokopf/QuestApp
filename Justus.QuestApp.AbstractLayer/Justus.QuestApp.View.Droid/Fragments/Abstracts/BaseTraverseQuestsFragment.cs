@@ -28,11 +28,6 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         protected Button BackButton;
 
         /// <summary>
-        /// Reference to sync button.
-        /// </summary>
-        protected Button SyncButton;
-
-        /// <summary>
         /// Defaul quest title.
         /// </summary>
         protected string TitleTextDefault;

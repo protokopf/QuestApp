@@ -11,6 +11,8 @@ using Android.Runtime;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using Justus.QuestApp.AbstractLayer.Helpers;
+using Justus.QuestApp.ModelLayer.Helpers;
 
 namespace Justus.QuestApp.View.Droid.Activities
 {
@@ -45,8 +47,17 @@ namespace Justus.QuestApp.View.Droid.Activities
         /// </summary>
         private async void InitializeComponents()
         {
-            await Task.Run(() => Thread.Sleep(3000));
+            await Task.Run(() => InitializeWork());
             StartActivity(typeof(MainTabbedActivity));
+        }
+
+        private void InitializeWork()
+        {
+            IEnumerable<IInitializable> implementations = ServiceLocator.ResolveAll<IInitializable>();
+            foreach (IInitializable toInit in implementations)
+            {
+                toInit.Initialize();
+            }
         }
 
         #endregion

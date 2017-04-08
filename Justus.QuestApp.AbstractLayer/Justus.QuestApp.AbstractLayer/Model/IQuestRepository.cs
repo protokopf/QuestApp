@@ -80,11 +80,6 @@ namespace Justus.QuestApp.AbstractLayer.Model
         /// <summary>
         /// Saves all made changes and releases quests from memory.
         /// </summary>
-        void PushQuests();
-
-        /// <summary>
-        /// Pull all quests to memory.
-        /// </summary>
-        void PullQuests();
+        void Save();
     }
 }

@@ -14,10 +14,5 @@
         android:text="@string/QuestListTitle"
         android:textAppearance="?android:attr/textAppearanceLarge"
         style="@style/WrapContent.QuestListTitle"
-        android:layout_weight="8" />
-    <Button
-        android:id="@+id/syncButton"
-        android:text="@string/SyncButtonText"
-        style="@style/WrapContent.Button"
-        android:layout_weight="1" />
+        android:layout_weight="9" />
 </LinearLayout>

@@ -141,27 +141,6 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         }
 
         /// <summary>
-        /// Push all quests in async way.
-        /// </summary>
-        public async Task PushQuests()
-        {
-            IsBusy = true;
-            await Task.Run(() => QuestRepository.PushQuests());
-            IsBusy = false;
-        }
-
-        /// <summary>
-        /// Pull all changes in async way.
-        /// </summary>
-        public async Task PullQuests()
-        {
-            IsBusy = true;
-            await Task.Run(() => QuestRepository.PullQuests());
-            IsBusy = false;
-            ResetChildren();
-        }
-
-        /// <summary>
         /// Makes view model reset children within next call Leaves property.
         /// </summary>
         public void ResetChildren()
@@ -180,7 +159,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             return Task.Run(() =>
             {
                 LastCommand.Execute();
-                QuestRepository.PushQuests();
+                QuestRepository.Save();
             });
         }
 

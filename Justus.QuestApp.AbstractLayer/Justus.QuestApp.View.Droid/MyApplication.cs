@@ -37,16 +37,16 @@ namespace Justus.QuestApp.View.Droid
 
         private void InitializeModelServices()
         {
-            ServiceLocator.Register<IDataAccessInterface<Quest>>(() => new StubQuestRepositoryService(2, 1, 3));
-            ServiceLocator.Register<IQuestRepository>(() => new RecursiveQuestRepository(
+            ServiceLocator.Register(() => new StubQuestRepositoryService(2, 1, 3));
+            ServiceLocator.Register(() => new RecursiveQuestRepository(
                 ServiceLocator.Resolve<IDataAccessInterface<Quest>>(),
                 "some connection string"
                 ));
             //ServiceLocator.Register<IQuestRepository>(() => new RecursiveQuestRepository(
             //    new RestDataStorage(), "http://192.168.0.104/api/Quests"));
-            ServiceLocator.Register<IQuestProgressCounter>(() => new RecursiveQuestProgressCounter());
-            ServiceLocator.Register<IStateCommandsFactory>(() => new DefaultStateCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
-            ServiceLocator.Register<IRepositoryCommandsFactory>(() => new DefaultRepositoryCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
+            ServiceLocator.Register(() => new RecursiveQuestProgressCounter());
+            ServiceLocator.Register(() => new DefaultStateCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
+            ServiceLocator.Register(() => new DefaultRepositoryCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
         }
 
         private void InitializeViewModelServices()

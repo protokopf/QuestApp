@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Justus.QuestApp.AbstractLayer.Data;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model;
 
 namespace Justus.QuestApp.ModelLayer.Model
@@ -20,7 +21,7 @@ namespace Justus.QuestApp.ModelLayer.Model
     /// <summary>
     /// Gives access to recursive quest repository.
     /// </summary>
-    public class RecursiveQuestRepository : IQuestRepository
+    public class RecursiveQuestRepository : IQuestRepository, IInitializable
     {
         /// <summary>
         /// Reference to data storage interface.
@@ -211,7 +212,7 @@ namespace Justus.QuestApp.ModelLayer.Model
         }
 
         ///<inheritdoc/>
-        public void PushQuests()
+        public void Save()
         {
             lock (_dataLocker)
             {
@@ -253,7 +254,17 @@ namespace Justus.QuestApp.ModelLayer.Model
         }
 
         ///<inheritdoc/>
-        public void PullQuests()
+        public void Dispose()
+        {
+            Save();
+        }
+
+        #endregion
+
+        #region IInitializable implementation
+
+        ///<inheritdoc/>
+        public void Initialize()
         {
             lock (_dataLocker)
             {
@@ -273,12 +284,6 @@ namespace Justus.QuestApp.ModelLayer.Model
                 CycleBinding(_questList);
                 _questList.RemoveAll(quest => quest.Parent != null);
             }
-        }
-
-        ///<inheritdoc/>
-        public void Dispose()
-        {
-            PushQuests();
         }
 
         #endregion

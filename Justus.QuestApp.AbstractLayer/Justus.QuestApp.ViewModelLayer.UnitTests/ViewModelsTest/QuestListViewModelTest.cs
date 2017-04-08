@@ -32,62 +32,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 
 
         [Test]
-        public void PullQuestsTest()
-        {
-            //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(rep => rep.PullQuests()).Repeat.Once();
-
-            ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
-
-            ServiceLocator.Register<IQuestRepository>(() => { return repository; });
-            ServiceLocator.Register<ICommandManager>(() => { return comManager; });
-            ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
-            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
-
-            QuestListViewModel viewModel = new QuestListViewModel();
-            int countCallBack = 0;
-            viewModel.IsBusyChanged += (sender, args) => { countCallBack++; };
-
-            //Act
-            Task t = viewModel.PullQuests();
-            t.Wait();
-
-            //Assert
-            Assert.AreEqual(2, countCallBack);
-            repository.VerifyAllExpectations();
-            comManager.VerifyAllExpectations();
-        }
-
-        [Test]
-        public void PushQuestsTest()
-        {
-            //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(rep => rep.PushQuests()).Repeat.Once();
-
-            ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
-
-            ServiceLocator.Register<IQuestRepository>(() => { return repository; });
-            ServiceLocator.Register<ICommandManager>(() => { return comManager; });
-            ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
-            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
-
-            QuestListViewModel viewModel = new QuestListViewModel();
-            int countCallBack = 0;
-            viewModel.IsBusyChanged += (sender, args) => { countCallBack++; };
-
-            //Act
-            Task t = viewModel.PushQuests();
-            t.Wait();
-
-            //Assert
-            Assert.AreEqual(2, countCallBack);
-
-            repository.VerifyAllExpectations();
-        }
-
-        [Test]
         public void QuestsListTitleWhenCurrentQuestIsNullTest()
         {
             //Arrange

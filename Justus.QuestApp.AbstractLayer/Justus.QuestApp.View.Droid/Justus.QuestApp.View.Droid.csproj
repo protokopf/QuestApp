@@ -114,6 +114,7 @@
   <ItemGroup>
     <Compile Include="Activities\BaseTabbedActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
+    <Compile Include="Activities\StartScreenActivity.cs" />
     <Compile Include="Adapters\List\AvailableQuestListAdapter.cs" />
     <Compile Include="Adapters\List\BaseQuestListAdapter.cs" />
     <Compile Include="Adapters\List\ActiveQuestListAdapter.cs" />
@@ -176,6 +177,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\AvailableQuestListItemHeader.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\LoadingScreenLayout.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

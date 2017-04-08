@@ -14,7 +14,7 @@ namespace Justus.QuestApp.View.Droid.Activities
     /// <summary>
     /// Main activity, that hosts fragments in separates tabs.
     /// </summary>
-    [Activity(Label = "@string/MainActivityLabel", MainLauncher = true)]
+    [Activity(Label = "@string/MainActivityLabel"/*, MainLauncher = true*/)]
     public class MainTabbedActivity : BaseTabbedActivity
     {
         private FragmentViewPagerAdapter _fragmentAdapter;

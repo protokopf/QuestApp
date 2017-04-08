@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!--Loading activity-->
+  <string name="LoadingActivityLabel">Loading activity</string>
+  <string name="LoadingActivityText">Loading...</string>
+  
   
    <!--TabHostActivity-->
   <string name="MainActivityLabel">Quest Application</string>

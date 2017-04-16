@@ -2,6 +2,8 @@ using System;
 using Android.App;
 using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.View.Droid.Abstract.Adapters;
+using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -10,14 +12,18 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
     /// <summary>
     /// Adapter for available quest list view.
     /// </summary>
-    public class AvailableQuestsAdapter : BaseQuestsAdapter<AvailableQuestItemViewHolder, AvailableQuestListViewModel>
+    public class AvailableQuestsAdapter : BaseQuestsAdapter<AvailableQuestViewHolder, AvailableQuestListViewModel>
     {
         /// <summary>
         /// Receives references to activity and list view model.
         /// </summary>
         /// <param name="activity"></param>
         /// <param name="questsViewModel"></param>
-        public AvailableQuestsAdapter(Activity activity, AvailableQuestListViewModel questsViewModel) : base(activity,questsViewModel)
+        /// <param name="holderClickManager"></param>
+        public AvailableQuestsAdapter(Activity activity, 
+            AvailableQuestListViewModel questsViewModel, 
+            IViewHolderClickManager<AvailableQuestViewHolder> holderClickManager) :
+            base(activity,questsViewModel, holderClickManager)
         {
         }
 
@@ -30,14 +36,16 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         }
 
         ///<inheritdoc/>
-        protected override AvailableQuestItemViewHolder CreateViewHolder(Android.Views.View view)
+        protected override AvailableQuestViewHolder CreateViewHolder(Android.Views.View view)
         {
-            return new AvailableQuestItemViewHolder(view);
+            return new AvailableQuestViewHolder(view);
         }
 
         ///<inheritdoc/>
-        protected override void FillViewHolder(AvailableQuestItemViewHolder holder, Quest questData, int position)
+        protected override void FillViewHolder(AvailableQuestViewHolder holder, Quest questData, int position)
         {
+            holder.Collapse();
+            
             holder.StartTime.Text = FormTime(questData.StartTime);
             holder.Deadline.Text = FormTime(questData.Deadline);
 

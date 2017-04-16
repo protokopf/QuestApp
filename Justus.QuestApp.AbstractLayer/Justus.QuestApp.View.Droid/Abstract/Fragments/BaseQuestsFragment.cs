@@ -1,10 +1,9 @@
 using Android.Support.V7.Widget;
-using Android.Widget;
-using Justus.QuestApp.View.Droid.Adapters.Quests;
-using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
+using Justus.QuestApp.View.Droid.Abstract.Adapters;
+using Justus.QuestApp.View.Droid.Abstract.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
-namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
+namespace Justus.QuestApp.View.Droid.Abstract.Fragments
 {
     /// <summary>
     /// Base class for quest list fragments.
@@ -30,14 +29,14 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         ///<inheritdoc/>
         public virtual void OnSelect()
         {
-            QuestsAdapter?.NotifyDataSetChanged();
+            RedrawList();
         } 
 
         #endregion
 
-        protected void RedrawListView()
+        protected void RedrawList()
         {
-            
+            QuestsAdapter?.NotifyDataSetChanged();
         }
     }
 }

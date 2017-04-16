@@ -2,7 +2,7 @@ using System;
 using Android.Runtime;
 using Android.Support.V7.Widget;
 
-namespace Justus.QuestApp.View.Droid.ViewHolders.Abstracts
+namespace Justus.QuestApp.View.Droid.Abstract.ViewHolders
 {
     /// <summary>
     /// Base holder class for all positioned views.
@@ -22,7 +22,6 @@ namespace Justus.QuestApp.View.Droid.ViewHolders.Abstracts
         /// Get view
         /// </summary>
         /// <param name="itemView"></param>
-        /// <param name="position"></param>
         protected PositionedViewHolder(Android.Views.View itemView) : base(itemView)
         {
         }

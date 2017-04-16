@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/questitemborder">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -11,6 +12,7 @@
         android:weightSum="10">
         <TextView
             android:id="@+id/questTitle"
+            style="@android:style/TextAppearance.Large"
             android:text="@string/QuestDefaultTitle"
             android:layout_height="wrap_content"
             android:layout_width="0dp"

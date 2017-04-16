@@ -4,10 +4,10 @@ using Android.OS;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
-using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
+using Justus.QuestApp.View.Droid.Abstract.ViewHolders;
 
-namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
+namespace Justus.QuestApp.View.Droid.Abstract.Fragments
 {
     /// <summary>
     /// Base class for fragment, which displays list of quests. 
@@ -17,7 +17,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
     /// <typeparam name="TViewHolder"></typeparam>
     public abstract class BaseTraverseQuestsFragment<TViewModel, TViewHolder> : BaseQuestsFragment<TViewModel, TViewHolder>
         where TViewModel : QuestListViewModel
-        where TViewHolder : ExpandingPositionedViewHolder
+        where TViewHolder : ToggledViewHolder
     {
         /// <summary>
         /// Reference to text view which displays current title.
@@ -82,11 +82,10 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         {
             if (!ViewModel.InRoot)
             {
-                CollapsChildren();
                 ViewModel.TraverseToRoot();
                 TitleTextView.Text = TitleTextDefault;
                 BackButton.Enabled = false;
-                RedrawListView();
+                RedrawList();
             }
         }
 
@@ -95,12 +94,10 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// </summary>
         protected virtual void TraverseToParent()
         {
-            CollapsChildren();
-
             ViewModel.TraverseToParent();
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
             BackButton.Enabled = !ViewModel.InRoot;
-            RedrawListView();
+            RedrawList();
         }
 
         /// <summary>
@@ -109,27 +106,10 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// <param name="childPosition"></param>
         protected virtual void TraverseToChild(int childPosition)
         {
-            CollapsChildren();
-
             ViewModel.TraverseToLeaf(childPosition);
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
             BackButton.Enabled = !ViewModel.InRoot;
-            RedrawListView();
-        }
-
-        /// <summary>
-        /// Collaps all children of ListView.
-        /// </summary>
-        protected virtual void CollapsChildren()
-        {
-            IEnumerable<TViewHolder> holders = QuestsAdapter.GetViewHolders();
-            foreach (TViewHolder holder in holders)
-            {
-                if (holder.ExpandDetails.Visibility == ViewStates.Visible)
-                {
-                    holder.ExpandDetails.Visibility = ViewStates.Gone;
-                }            
-            }
+            RedrawList();
         }
 
         protected abstract RecyclerView HandleRecyclerView(Android.Views.View fragmentView);
@@ -149,7 +129,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         {
             await ViewModel.DeleteQuest(position);
             ViewModel.ResetChildren();
-            RedrawListView();
+            RedrawList();
             Toast.MakeText(this.Context, $"Quest in {position} position was deleted.", ToastLength.Short).Show();
         }
 

@@ -3,10 +3,11 @@ using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.View;
 using Android.Views;
+using Justus.QuestApp.View.Droid.Abstract.Activities;
+using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Adapters;
 using Justus.QuestApp.View.Droid.Fragments;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
-using Justus.QuestApp.View.Droid.Fragments.Abstracts;
 
 namespace Justus.QuestApp.View.Droid.Activities
 {

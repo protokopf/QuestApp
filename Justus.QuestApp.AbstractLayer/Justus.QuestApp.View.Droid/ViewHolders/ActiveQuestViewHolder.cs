@@ -2,20 +2,20 @@ using System;
 using Android.Graphics;
 using Android.Runtime;
 using Android.Widget;
-using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
+using Justus.QuestApp.View.Droid.Abstract.ViewHolders;
 
 namespace Justus.QuestApp.View.Droid.ViewHolders
 {
     /// <summary>
     /// View holder for active quest item.
     /// </summary>
-    public class ActiveQuestItemViewHolder : ExpandingPositionedViewHolder
+    public class ActiveQuestViewHolder : ToggledViewHolder
     {
-        public ActiveQuestItemViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        public ActiveQuestViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
         {
         }
 
-        public ActiveQuestItemViewHolder(Android.Views.View view) : base(view)
+        public ActiveQuestViewHolder(Android.Views.View view) : base(view)
         {
             Title = view.FindViewById<TextView>(Resource.Id.questTitle);
             TimeLeft = view.FindViewById<TextView>(Resource.Id.questTimeLeft);
@@ -50,7 +50,7 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
 
         #endregion
 
-        #region ExpandingPositionedViewHolder overridng
+        #region ToggledViewHolder overridng
 
         ///<inheritdoc/>
         protected override int GetExpandDetailsId()

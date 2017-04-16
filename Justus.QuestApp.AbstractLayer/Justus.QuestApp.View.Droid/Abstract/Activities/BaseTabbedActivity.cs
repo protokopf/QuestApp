@@ -4,7 +4,7 @@ using Android.Support.V4.View;
 using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 
-namespace Justus.QuestApp.View.Droid.Activities
+namespace Justus.QuestApp.View.Droid.Abstract.Activities
 {
     public abstract class BaseTabbedActivity : AppCompatActivity
     {

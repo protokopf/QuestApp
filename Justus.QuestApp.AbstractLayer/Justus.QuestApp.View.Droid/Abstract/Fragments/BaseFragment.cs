@@ -8,13 +8,13 @@ using Justus.QuestApp.ViewModelLayer.ViewModels;
 using AlertDialog = Android.Support.V7.App.AlertDialog;
 using Fragment = Android.Support.V4.App.Fragment;
 
-namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
+namespace Justus.QuestApp.View.Droid.Abstract.Fragments
 {
     /// <summary>
     /// Base type for all fragments.
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
-    public class BaseFragment<TViewModel> : Fragment where TViewModel : BaseViewModel
+    public abstract class BaseFragment<TViewModel> : Fragment where TViewModel : BaseViewModel
     {
         /// <summary>
         /// Reference to view model.
@@ -29,7 +29,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// <summary>
         /// Default constructor. Resolves view model reference.
         /// </summary>
-        public BaseFragment()
+        protected BaseFragment()
         {
             ViewModel = ServiceLocator.Resolve<TViewModel>();
             ViewModel.IsBusyChanged += OnIsBusyChanged;

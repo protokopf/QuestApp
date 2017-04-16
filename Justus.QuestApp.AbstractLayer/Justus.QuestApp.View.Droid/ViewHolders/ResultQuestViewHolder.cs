@@ -1,20 +1,20 @@
 using System;
 using Android.Runtime;
 using Android.Widget;
-using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
+using Justus.QuestApp.View.Droid.Abstract.ViewHolders;
 
 namespace Justus.QuestApp.View.Droid.ViewHolders
 {
     /// <summary>
     /// View holder for result quest item.
     /// </summary>
-    public class ResultQuestItemViewHolder : ExpandingPositionedViewHolder
+    public class ResultQuestViewHolder : ToggledViewHolder
     {
-        public ResultQuestItemViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        public ResultQuestViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
         {
         }
 
-        public ResultQuestItemViewHolder(Android.Views.View itemView) : base(itemView)
+        public ResultQuestViewHolder(Android.Views.View itemView) : base(itemView)
         {
             Title = itemView.FindViewById<TextView>(Resource.Id.resultQuestTitle);
             Status = itemView.FindViewById<TextView>(Resource.Id.resultQuestStatus);
@@ -36,7 +36,7 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
 
         public Button DeleteButton { get; set; }
 
-        #region ExpandingPositionedViewHolder overridng
+        #region ToggledViewHolder overridng
 
         ///<inhericdoc/>
         protected override int GetExpandDetailsId()

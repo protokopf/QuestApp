@@ -3,6 +3,8 @@ using Android.App;
 using Android.Graphics;
 using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.View.Droid.Abstract.Adapters;
+using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -11,7 +13,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
     /// <summary>
     /// Adapter for active quests.
     /// </summary>
-    public class ActiveQuestsAdapter : BaseQuestsAdapter<ActiveQuestItemViewHolder, ActiveQuestListViewModel>
+    public class ActiveQuestsAdapter : BaseQuestsAdapter<ActiveQuestViewHolder, ActiveQuestListViewModel>
     {
         private readonly string _startLabel;
         private readonly string _restartLabel;
@@ -21,7 +23,11 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         /// </summary>
         /// <param name="activity"></param>
         /// <param name="questsViewModel"></param>
-        public ActiveQuestsAdapter(Activity activity, ActiveQuestListViewModel questsViewModel) : base(activity,questsViewModel)
+        /// <param name="clickManager"></param>
+        public ActiveQuestsAdapter(Activity activity, 
+            ActiveQuestListViewModel questsViewModel,
+            IViewHolderClickManager<ActiveQuestViewHolder> clickManager) 
+            : base(activity,questsViewModel, clickManager)
         {
             _startLabel = activity.GetString(Resource.String.StartButtonText);
             _restartLabel = activity.GetString(Resource.String.RestartButtonText);
@@ -36,14 +42,15 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         }
 
         ///<inheritdoc/>
-        protected override ActiveQuestItemViewHolder CreateViewHolder(Android.Views.View view)
+        protected override ActiveQuestViewHolder CreateViewHolder(Android.Views.View view)
         {
-            return new ActiveQuestItemViewHolder(view);
+            return new ActiveQuestViewHolder(view);
         }
 
         ///<inheritdoc/>
-        protected override void FillViewHolder(ActiveQuestItemViewHolder holder, Quest questData, int position)
+        protected override void FillViewHolder(ActiveQuestViewHolder holder, Quest questData, int position)
         {
+            holder.Collapse();
             holder.Title.Text = questData.Title;
             holder.Description.Text = questData.Description;
             holder.TimeLeft.Text = FormLeftTime(questData.Deadline);
@@ -76,7 +83,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
 
         #region Private methods
 
-        private void HandleButtonsForProgress(ActiveQuestItemViewHolder holder, Quest questData)
+        private void HandleButtonsForProgress(ActiveQuestViewHolder holder, Quest questData)
         {
             ViewStates doneFailState = questData.Children != null && questData.Children.Count != 0 ? ViewStates.Gone : ViewStates.Visible;
 
@@ -87,7 +94,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
             holder.FailButton.Visibility = doneFailState;
         }
 
-        private void HandleButtonsForIdle(ActiveQuestItemViewHolder holder, Quest questData)
+        private void HandleButtonsForIdle(ActiveQuestViewHolder holder, Quest questData)
         {
             holder.StartButton.Text = _startLabel;
             holder.StartButton.Visibility = ViewStates.Visible;
@@ -98,7 +105,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
             holder.FailButton.Visibility = ViewStates.Gone;
         }
 
-        private void HandleButtonsForFailed(ActiveQuestItemViewHolder holder, Quest questData)
+        private void HandleButtonsForFailed(ActiveQuestViewHolder holder, Quest questData)
         {
             holder.StartButton.Text = _restartLabel;
             holder.StartButton.Visibility = ViewStates.Visible;
@@ -109,7 +116,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
             holder.FailButton.Visibility = ViewStates.Gone;
         }
 
-        private void HandleButtonsForDone(ActiveQuestItemViewHolder holder, Quest questData)
+        private void HandleButtonsForDone(ActiveQuestViewHolder holder, Quest questData)
         {
             holder.StartButton.Visibility = ViewStates.Gone;
             holder.CancelButton.Visibility = ViewStates.Gone;

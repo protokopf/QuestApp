@@ -2,6 +2,8 @@ using Android.App;
 using Android.Graphics;
 using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.View.Droid.Abstract.Adapters;
+using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -10,7 +12,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
     /// <summary>
     /// Adapter for providing result quest list.
     /// </summary>
-    public class ResultQuestsAdapter : BaseQuestsAdapter<ResultQuestItemViewHolder, ResultsQuestListViewModel>
+    public class ResultQuestsAdapter : BaseQuestsAdapter<ResultQuestViewHolder, ResultsQuestListViewModel>
     {
         private readonly string _failedStatus;
         private readonly string _doneStatus;
@@ -20,7 +22,11 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         /// </summary>
         /// <param name="activity"></param>
         /// <param name="questsViewModel"></param>
-        public ResultQuestsAdapter(Activity activity, ResultsQuestListViewModel questsViewModel) : base(activity,questsViewModel)
+        /// <param name="clickManager"></param>
+        public ResultQuestsAdapter(Activity activity, 
+            ResultsQuestListViewModel questsViewModel,
+            IViewHolderClickManager<ResultQuestViewHolder> clickManager) 
+            : base(activity,questsViewModel, clickManager)
         {
             _doneStatus = ActivityRef.Resources.GetString(Resource.String.DoneStatus);
             _failedStatus = ActivityRef.Resources.GetString(Resource.String.FailedStatus);
@@ -35,14 +41,15 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         }
 
         ///<inheritdoc/>
-        protected override ResultQuestItemViewHolder CreateViewHolder(Android.Views.View view)
+        protected override ResultQuestViewHolder CreateViewHolder(Android.Views.View view)
         {
-            return new ResultQuestItemViewHolder(view);
+            return new ResultQuestViewHolder(view);
         }
 
         ///<inheritdoc/>
-        protected override void FillViewHolder(ResultQuestItemViewHolder holder, Quest questData, int position)
+        protected override void FillViewHolder(ResultQuestViewHolder holder, Quest questData, int position)
         {
+            holder.Collapse();
             holder.ItemPosition = position;
             holder.RestartButton.Visibility = questData.Parent == null ? ViewStates.Visible : ViewStates.Gone;
             holder.Title.Text = questData.Title;

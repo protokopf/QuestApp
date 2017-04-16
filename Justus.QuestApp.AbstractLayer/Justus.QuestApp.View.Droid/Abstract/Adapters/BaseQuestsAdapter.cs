@@ -5,9 +5,10 @@ using Android.Support.V7.Widget;
 using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
-using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
+using Justus.QuestApp.View.Droid.Abstract.ViewHolders;
+using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 
-namespace Justus.QuestApp.View.Droid.Adapters.Quests
+namespace Justus.QuestApp.View.Droid.Abstract.Adapters
 {
     /// <summary>
     /// Base type for quest list adapters
@@ -17,15 +18,16 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         where TViewModel : IQuestCompositeModel
     {
         protected readonly TViewModel QuestsViewModel;
-        protected readonly Dictionary<Android.Views.View, TViewHolder> HoldersDictionary;
         protected readonly Activity ActivityRef;
+        protected readonly IViewHolderClickManager<TViewHolder> ClickManager;
 
         /// <summary>
         /// Get references to fragment and questsViewModel
         /// </summary>
         /// <param name="activity"></param>
         /// <param name="questsViewModel"></param>
-        protected BaseQuestsAdapter(Activity activity, TViewModel questsViewModel)
+        /// <param name="clickManager"></param>
+        protected BaseQuestsAdapter(Activity activity, TViewModel questsViewModel, IViewHolderClickManager<TViewHolder> clickManager)
         {
             if (activity == null)
             {
@@ -35,24 +37,24 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
             {
                 throw new ArgumentNullException(nameof(questsViewModel));
             }
+            if (clickManager == null)
+            {
+                throw new ArgumentNullException(nameof(clickManager));
+            }
             ActivityRef = activity;
             QuestsViewModel = questsViewModel;
-            HoldersDictionary = new Dictionary<Android.Views.View, TViewHolder>();
+            ClickManager = clickManager;
         }
 
         #region RecyclerViewRef.Adapter overriding
 
-        /////<inheritdoc/>
-        //public override long GetItemId(int position)
-        //{
-        //    return position;
-        //}
 
         ///<inheritdoc/>
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
             Android.Views.View row = LayoutInflater.From(parent.Context).Inflate(GetViewId(), parent, false);
             TViewHolder holder = CreateViewHolder(row);
+            ClickManager.BindClickListeners(holder);
             return holder;
         }
 
@@ -68,27 +70,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
 
 
         #endregion
-
-        ///// <summary>
-        ///// Returns associated view holder with view.
-        ///// </summary>
-        ///// <param name="view"></param>
-        ///// <returns></returns>
-        //public TViewHolder GetViewHolderByView(Android.Views.View view)
-        //{
-        //    TViewHolder holder = null;
-        //    HoldersDictionary.TryGetValue(view, out holder);
-        //    return holder;
-        //}
-
-        /// <summary>
-        /// Returns all view holders.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<TViewHolder> GetViewHolders()
-        {
-            return HoldersDictionary.Values;
-        }
 
         /// <summary>
         /// Returns id of view.

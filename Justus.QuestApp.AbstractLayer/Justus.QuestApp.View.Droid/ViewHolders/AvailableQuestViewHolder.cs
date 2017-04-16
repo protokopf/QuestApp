@@ -1,20 +1,20 @@
 using System;
 using Android.Runtime;
 using Android.Widget;
-using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
+using Justus.QuestApp.View.Droid.Abstract.ViewHolders;
 
 namespace Justus.QuestApp.View.Droid.ViewHolders
 {
     /// <summary>
     /// View holder for available quest item.
     /// </summary>
-    public class AvailableQuestItemViewHolder : ExpandingPositionedViewHolder
+    public class AvailableQuestViewHolder : ToggledViewHolder
     {
-        public AvailableQuestItemViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        public AvailableQuestViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
         {
         }
 
-        public AvailableQuestItemViewHolder(Android.Views.View itemView) : base(itemView)
+        public AvailableQuestViewHolder(Android.Views.View itemView) : base(itemView)
         {
             Title = itemView.FindViewById<TextView>(Resource.Id.availableQuestTitle);
             StartTime = itemView.FindViewById<TextView>(Resource.Id.availableQuestStartTime);
@@ -43,7 +43,7 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
 
         public Button EditButton { get; set; }
 
-        #region ExpandingPositionedViewHolder overriding
+        #region ToggledViewHolder overriding
 
         protected override int GetExpandDetailsId()
         {

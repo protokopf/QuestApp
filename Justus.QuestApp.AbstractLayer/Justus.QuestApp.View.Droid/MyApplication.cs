@@ -37,7 +37,7 @@ namespace Justus.QuestApp.View.Droid
 
         private void InitializeModelServices()
         {
-            ServiceLocator.Register(() => new StubQuestRepositoryService(2, 1, 3));
+            ServiceLocator.Register(() => new StubQuestRepositoryService(12, 1, 3));
             ServiceLocator.Register(() => new RecursiveQuestRepository(
                 ServiceLocator.Resolve<IDataAccessInterface<Quest>>(),
                 "some connection string"

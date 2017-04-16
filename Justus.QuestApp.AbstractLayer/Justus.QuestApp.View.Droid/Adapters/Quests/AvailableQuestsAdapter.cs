@@ -5,23 +5,23 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
-namespace Justus.QuestApp.View.Droid.Adapters.List
+namespace Justus.QuestApp.View.Droid.Adapters.Quests
 {
     /// <summary>
     /// Adapter for available quest list view.
     /// </summary>
-    public class AvailableQuestListAdapter : BaseQuestListAdapter<AvailableQuestItemViewHolder, AvailableQuestListViewModel>
+    public class AvailableQuestsAdapter : BaseQuestsAdapter<AvailableQuestItemViewHolder, AvailableQuestListViewModel>
     {
         /// <summary>
         /// Receives references to activity and list view model.
         /// </summary>
         /// <param name="activity"></param>
-        /// <param name="listViewModel"></param>
-        public AvailableQuestListAdapter(Activity activity, AvailableQuestListViewModel listViewModel) : base(activity,listViewModel)
+        /// <param name="questsViewModel"></param>
+        public AvailableQuestsAdapter(Activity activity, AvailableQuestListViewModel questsViewModel) : base(activity,questsViewModel)
         {
         }
 
-        #region BaseQuestListAdapter overriding
+        #region BaseQuestsAdapter overriding
 
         ///<inheritdoc/>
         protected override int GetViewId()
@@ -30,9 +30,9 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         }
 
         ///<inheritdoc/>
-        protected override AvailableQuestItemViewHolder CreateViewHolder(Android.Views.View view, int position)
+        protected override AvailableQuestItemViewHolder CreateViewHolder(Android.Views.View view)
         {
-            return new AvailableQuestItemViewHolder(view, position);
+            return new AvailableQuestItemViewHolder(view);
         }
 
         ///<inheritdoc/>

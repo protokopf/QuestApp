@@ -3,10 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/questitemborder"
     android:descendantFocusability="blocksDescendants">
     <TextView
         android:id="@+id/availableQuestTitle"
         android:text="@string/QuestDefaultTitle"
+        style="@android:style/TextAppearance.Large"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:gravity="center" />

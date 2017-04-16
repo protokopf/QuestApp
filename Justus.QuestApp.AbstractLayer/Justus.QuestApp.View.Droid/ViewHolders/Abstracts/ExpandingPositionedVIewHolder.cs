@@ -13,7 +13,7 @@ namespace Justus.QuestApp.View.Droid.ViewHolders.Abstracts
         {
         }
 
-        protected ExpandingPositionedViewHolder(Android.Views.View itemView, int position) : base(itemView, position)
+        protected ExpandingPositionedViewHolder(Android.Views.View itemView) : base(itemView)
         {
             // ReSharper disable once DoNotCallOverridableMethodsInConstructor
             ExpandDetails = itemView.FindViewById<LinearLayout>(GetExpandDetailsId());

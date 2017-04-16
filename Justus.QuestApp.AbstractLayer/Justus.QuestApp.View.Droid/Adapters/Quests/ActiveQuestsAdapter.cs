@@ -6,12 +6,12 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
-namespace Justus.QuestApp.View.Droid.Adapters.List
+namespace Justus.QuestApp.View.Droid.Adapters.Quests
 {
     /// <summary>
     /// Adapter for active quests.
     /// </summary>
-    public class ActiveQuestListAdapter : BaseQuestListAdapter<ActiveQuestItemViewHolder, ActiveQuestListViewModel>
+    public class ActiveQuestsAdapter : BaseQuestsAdapter<ActiveQuestItemViewHolder, ActiveQuestListViewModel>
     {
         private readonly string _startLabel;
         private readonly string _restartLabel;
@@ -20,14 +20,14 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         /// Get references to activity and viewModel
         /// </summary>
         /// <param name="activity"></param>
-        /// <param name="listViewModel"></param>
-        public ActiveQuestListAdapter(Activity activity, ActiveQuestListViewModel listViewModel) : base(activity,listViewModel)
+        /// <param name="questsViewModel"></param>
+        public ActiveQuestsAdapter(Activity activity, ActiveQuestListViewModel questsViewModel) : base(activity,questsViewModel)
         {
             _startLabel = activity.GetString(Resource.String.StartButtonText);
             _restartLabel = activity.GetString(Resource.String.RestartButtonText);
         }
 
-        #region BaseQuestListAdapter overriding
+        #region BaseQuestsAdapter overriding
 
         ///<inheritdoc/>
         protected override int GetViewId()
@@ -36,9 +36,9 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         }
 
         ///<inheritdoc/>
-        protected override ActiveQuestItemViewHolder CreateViewHolder(Android.Views.View view, int position)
+        protected override ActiveQuestItemViewHolder CreateViewHolder(Android.Views.View view)
         {
-            return new ActiveQuestItemViewHolder(view, position);
+            return new ActiveQuestItemViewHolder(view);
         }
 
         ///<inheritdoc/>
@@ -47,7 +47,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
             holder.Title.Text = questData.Title;
             holder.Description.Text = questData.Description;
             holder.TimeLeft.Text = FormLeftTime(questData.Deadline);
-            holder.Progress.Progress = ListViewModel.CountProgress(questData);
+            holder.Progress.Progress = QuestsViewModel.CountProgress(questData);
             holder.ChildrenButton.Enabled = questData.Children != null;
             holder.ItemPosition = position;
 

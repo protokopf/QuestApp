@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Services;
-using Justus.QuestApp.View.Droid.Adapters.List;
+using Justus.QuestApp.View.Droid.Adapters.Quests;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -13,12 +13,12 @@ namespace Justus.QuestApp.View.Droid.Services.ViewServices
     {
         private readonly TaskScheduler _sheduler;
         private readonly QuestListViewModel _viewModel;
-        private readonly BaseQuestListAdapter<ActiveQuestItemViewHolder, ActiveQuestListViewModel> _adapter;
+        private readonly BaseQuestsAdapter<ActiveQuestItemViewHolder, ActiveQuestListViewModel> _adapter;
 
         private readonly HashSet<int> _toUpdate;
 
         public SimpleQuestExpireService(int intervalMilliseconds, TaskScheduler sheduler, ActiveQuestListViewModel vm,
-            BaseQuestListAdapter<ActiveQuestItemViewHolder, ActiveQuestListViewModel> adapter) 
+            BaseQuestsAdapter<ActiveQuestItemViewHolder, ActiveQuestListViewModel> adapter) 
             : base(intervalMilliseconds)
         {
             _sheduler = sheduler;
@@ -34,7 +34,7 @@ namespace Justus.QuestApp.View.Droid.Services.ViewServices
 
         private void FindQuestsToUpdate()
         {
-            int length = _adapter.Count;
+            int length = _adapter.ItemCount;
             for (int i = 0; i < length; ++i)
             {
                 Quest currentQuest = _viewModel.Leaves[i];

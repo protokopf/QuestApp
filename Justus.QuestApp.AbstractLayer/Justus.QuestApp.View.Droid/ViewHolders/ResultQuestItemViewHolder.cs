@@ -14,7 +14,7 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
         {
         }
 
-        public ResultQuestItemViewHolder(Android.Views.View itemView, int position) : base(itemView, position)
+        public ResultQuestItemViewHolder(Android.Views.View itemView) : base(itemView)
         {
             Title = itemView.FindViewById<TextView>(Resource.Id.resultQuestTitle);
             Status = itemView.FindViewById<TextView>(Resource.Id.resultQuestStatus);

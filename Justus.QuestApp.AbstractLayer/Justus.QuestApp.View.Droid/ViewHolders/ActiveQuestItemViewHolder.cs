@@ -15,7 +15,7 @@ namespace Justus.QuestApp.View.Droid.ViewHolders
         {
         }
 
-        public ActiveQuestItemViewHolder(Android.Views.View view, int position) : base(view, position)
+        public ActiveQuestItemViewHolder(Android.Views.View view) : base(view)
         {
             Title = view.FindViewById<TextView>(Resource.Id.questTitle);
             TimeLeft = view.FindViewById<TextView>(Resource.Id.questTimeLeft);

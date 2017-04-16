@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Android.OS;
+using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.View.Droid.ViewHolders.Abstracts;
@@ -13,7 +15,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TViewHolder"></typeparam>
-    public class BaseTraverseQuestsFragment<TViewModel, TViewHolder> : BaseQuestsFragment<TViewModel, TViewHolder>
+    public abstract class BaseTraverseQuestsFragment<TViewModel, TViewHolder> : BaseQuestsFragment<TViewModel, TViewHolder>
         where TViewModel : QuestListViewModel
         where TViewHolder : ExpandingPositionedViewHolder
     {
@@ -31,6 +33,29 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// Defaul quest title.
         /// </summary>
         protected string TitleTextDefault;
+
+        #region Fragment overriding
+
+        ///<inheritdoc/>
+        public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState)
+        {
+            Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
+
+            RecyclerViewRef = HandleRecyclerView(view);
+
+            TitleTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);
+            BackButton = view.FindViewById<Button>(Resource.Id.questsListBack);
+
+            TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
+
+            BackButton.Enabled = !ViewModel.InRoot;
+            BackButton.Click += BackButtonHandler;
+
+            return view;
+        }
+
+        #endregion
 
         #region ISelectable overriding
 
@@ -97,7 +122,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
         /// </summary>
         protected virtual void CollapsChildren()
         {
-            IEnumerable<TViewHolder> holders = QuestListAdapter.GetViewHolders();
+            IEnumerable<TViewHolder> holders = QuestsAdapter.GetViewHolders();
             foreach (TViewHolder holder in holders)
             {
                 if (holder.ExpandDetails.Visibility == ViewStates.Visible)
@@ -107,7 +132,14 @@ namespace Justus.QuestApp.View.Droid.Fragments.Abstracts
             }
         }
 
+        protected abstract RecyclerView HandleRecyclerView(Android.Views.View fragmentView);
+
         #region Handlers
+
+        private void BackButtonHandler(object sender, EventArgs e)
+        {
+            this.TraverseToParent();
+        }
 
         /// <summary>
         /// Handles deleting quest from list.

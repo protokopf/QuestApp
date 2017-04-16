@@ -5,12 +5,12 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
-namespace Justus.QuestApp.View.Droid.Adapters.List
+namespace Justus.QuestApp.View.Droid.Adapters.Quests
 {
     /// <summary>
     /// Adapter for providing result quest list.
     /// </summary>
-    public class ResultQuestListAdapter : BaseQuestListAdapter<ResultQuestItemViewHolder, ResultsQuestListViewModel>
+    public class ResultQuestsAdapter : BaseQuestsAdapter<ResultQuestItemViewHolder, ResultsQuestListViewModel>
     {
         private readonly string _failedStatus;
         private readonly string _doneStatus;
@@ -19,14 +19,14 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         /// Receives references to activity and list view model.
         /// </summary>
         /// <param name="activity"></param>
-        /// <param name="listViewModel"></param>
-        public ResultQuestListAdapter(Activity activity, ResultsQuestListViewModel listViewModel) : base(activity,listViewModel)
+        /// <param name="questsViewModel"></param>
+        public ResultQuestsAdapter(Activity activity, ResultsQuestListViewModel questsViewModel) : base(activity,questsViewModel)
         {
             _doneStatus = ActivityRef.Resources.GetString(Resource.String.DoneStatus);
             _failedStatus = ActivityRef.Resources.GetString(Resource.String.FailedStatus);
         }
 
-        #region BaseQuestListAdapter overriding
+        #region BaseQuestsAdapter overriding
 
         ///<inheritdoc/>
         protected override int  GetViewId()
@@ -35,9 +35,9 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
         }
 
         ///<inheritdoc/>
-        protected override ResultQuestItemViewHolder CreateViewHolder(Android.Views.View view, int position)
+        protected override ResultQuestItemViewHolder CreateViewHolder(Android.Views.View view)
         {
-            return new ResultQuestItemViewHolder(view, position);
+            return new ResultQuestItemViewHolder(view);
         }
 
         ///<inheritdoc/>
@@ -64,7 +64,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.List
                     break;
             }
         }
-
         #endregion
     }
 }

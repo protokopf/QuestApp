@@ -18,6 +18,8 @@
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,7 +34,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,9 +42,20 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
-    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <AndroidLinkMode>Full</AndroidLinkMode>
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+    <BundleAssemblies>False</BundleAssemblies>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <Debugger>Xamarin</Debugger>
+    <AotAssemblies>False</AotAssemblies>
+    <EnableLLVM>False</EnableLLVM>
+    <AndroidEnableMultiDex>False</AndroidEnableMultiDex>
+    <EnableProguard>False</EnableProguard>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <AndroidSupportedAbis>armeabi;armeabi-v7a;x86;x86_64;arm64-v8a</AndroidSupportedAbis>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Java.Interop" />
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
@@ -51,36 +64,141 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application.cs" />
+    <Compile Include="Activities\BaseTabbedActivity.cs" />
+    <Compile Include="Activities\MainTabbedActivity.cs" />
+    <Compile Include="Activities\StartScreenActivity.cs" />
+    <Compile Include="Adapters\Quests\AvailableQuestsAdapter.cs" />
+    <Compile Include="Adapters\Quests\BaseQuestsAdapter.cs" />
+    <Compile Include="Adapters\Quests\ActiveQuestsAdapter.cs" />
+    <Compile Include="Adapters\FragmentViewPagerAdapter.cs" />
+    <Compile Include="Adapters\Quests\ResultQuestsAdapter.cs" />
+    <Compile Include="Decorators\DividerItemDecoration.cs" />
+    <Compile Include="Fragments\Abstracts\BaseTraverseQuestsFragment.cs" />
+    <Compile Include="Fragments\Abstracts\ISelectable.cs" />
+    <Compile Include="Fragments\AvailableQuestsFragment.cs" />
+    <Compile Include="Fragments\Abstracts\BaseQuestsFragment.cs" />
+    <Compile Include="Services\ViewServices\SimpleQuestExpireService.cs" />
+    <Compile Include="StubServices\StubWebStringProvider.cs" />
+    <Compile Include="ViewHoldersFillers\IViewHolderFiller.cs" />
+    <Compile Include="ViewHolders\Abstracts\ExpandingPositionedVIewHolder.cs" />
+    <Compile Include="ViewHolders\ActiveQuestItemViewHolder.cs" />
+    <Compile Include="Fragments\ActiveQuestsFragment.cs" />
+    <Compile Include="Fragments\Abstracts\BaseFragment.cs" />
+    <Compile Include="Fragments\ResultQuestsFragment.cs" />
+    <Compile Include="MyApplication.cs" />
+    <Compile Include="Fragments\NotImplementedFragment.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Activities\BaseActivity.cs" />
+    <Compile Include="StubServices\StubCommandManager.cs" />
+    <Compile Include="StubServices\StubQuestRepositoryService.cs" />
+    <Compile Include="ViewHolders\AvailableQuestItemViewHolder.cs" />
+    <Compile Include="ViewHolders\Abstracts\PositionedViewHolder.cs" />
+    <Compile Include="ViewHolders\ResultQuestItemViewHolder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
+    <AndroidResource Include="Resources\layout\ActiveQuestListItemBody.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\QuestListHeader.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\NotImplementedFragmentLayout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\MainActivityLayout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\ActiveQuestListItemHeader.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\QuestListFragmentLayout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\menu\MainActivityMenu.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\ResultQuestListItemHeader.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\ResultQuestListItemBody.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\AvailableQuestListItemBody.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\AvailableQuestListItemHeader.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\LoadingScreenLayout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\values\Strings.xml" />
+    <AndroidResource Include="Resources\values\Strings.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <None Include="Properties\AndroidManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\AndroidManifest.xml" />
+    <AndroidResource Include="Resources\values\CommonStyles.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\layout\" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\Justus.QuestApp.AbstractLayer\Justus.QuestApp.AbstractLayer.csproj">
+      <Project>{9D27BB00-D325-4644-B1D2-B13196C4D8AC}</Project>
+      <Name>Justus.QuestApp.AbstractLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Justus.QuestApp.ModelLayer\Justus.QuestApp.ModelLayer.csproj">
       <Project>{72c61b17-7e0a-4c31-9ab4-2a5e0935166e}</Project>
       <Name>Justus.QuestApp.ModelLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Justus.QuestApp.ServiceLayer\Justus.QuestApp.ServiceLayer.csproj">
+      <Project>{7a24e8f9-8c17-4617-bb96-127999a1eccf}</Project>
+      <Name>Justus.QuestApp.ServiceLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Justus.QuestApp.ViewModelLayer\Justus.QuestApp.ViewModelLayer.csproj">
       <Project>{0B2A3D17-4CAA-4435-9277-7029BF568E48}</Project>
       <Name>Justus.QuestApp.ViewModelLayer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\TextViewStyles.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\ButtonStyles.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\addButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Colors.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\DefaultDimens.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Themes.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values-v21\Themes.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\Quest_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\questItemBorder.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\questItemDivider.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

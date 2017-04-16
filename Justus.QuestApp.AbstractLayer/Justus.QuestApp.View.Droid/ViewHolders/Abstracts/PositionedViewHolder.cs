@@ -19,13 +19,12 @@ namespace Justus.QuestApp.View.Droid.ViewHolders.Abstracts
         }
 
         /// <summary>
-        /// Get view and its position.
+        /// Get view
         /// </summary>
         /// <param name="itemView"></param>
         /// <param name="position"></param>
-        protected PositionedViewHolder(Android.Views.View itemView, int position) : base(itemView)
+        protected PositionedViewHolder(Android.Views.View itemView) : base(itemView)
         {
-            ItemPosition = position;
         }
 
         public int ItemPosition { get; set; }

@@ -40,7 +40,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
         {
-            Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
+            Android.Views.View view = inflater.Inflate(GetLayoutId(), container, false);
 
             RecyclerViewRef = HandleRecyclerView(view);
 
@@ -112,7 +112,18 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
             RedrawList();
         }
 
+        /// <summary>
+        /// Returns RecyclerView.
+        /// </summary>
+        /// <param name="fragmentView"></param>
+        /// <returns></returns>
         protected abstract RecyclerView HandleRecyclerView(Android.Views.View fragmentView);
+
+        /// <summary>
+        /// Returns id of layout, that will be used for current fragment.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract int GetLayoutId();
 
         #region Handlers
 

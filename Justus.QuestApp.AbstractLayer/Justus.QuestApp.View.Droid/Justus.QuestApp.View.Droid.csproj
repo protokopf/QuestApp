@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\Activities\BaseTabbedActivity.cs" />
+    <Compile Include="Abstract\Fragments\IFabManager.cs" />
     <Compile Include="Abstract\ViewHoldersClickManagers\IViewHolderClickManager.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
     <Compile Include="Activities\StartScreenActivity.cs" />
@@ -209,9 +210,6 @@
     <AndroidResource Include="Resources\values\ButtonStyles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\addButton.png" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\values\Colors.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -234,7 +232,9 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\questItemDivider.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\add_button.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

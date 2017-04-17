@@ -1,6 +1,7 @@
 using System;
 using Android.Graphics.Drawables;
 using Android.OS;
+using Android.Support.Design.Widget;
 using Android.Support.V4.Content.Res;
 using Android.Support.V7.Widget;
 using Android.Views;
@@ -17,9 +18,23 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// Type for interacting with available quests.
     /// </summary>
     public class AvailableQuestsFragment : BaseTraverseQuestsFragment<AvailableQuestListViewModel, AvailableQuestViewHolder>,
-        IViewHolderClickManager<AvailableQuestViewHolder>
+        IViewHolderClickManager<AvailableQuestViewHolder>,
+        IFabManager
     {
+        private FloatingActionButton _fab = null;
+
         #region BaseTraverseQuestsFragment overriding
+
+        ///<inheritdoc/>
+        public override void OnDestroyView()
+        {            
+            if (_fab != null)
+            {
+                _fab.Click -= FabOnClick;
+                _fab = null;
+            }
+            base.OnDestroyView();
+        }
 
         ///<inehritdoc/>
         protected override RecyclerView HandleRecyclerView(Android.Views.View fragmentView)
@@ -34,6 +49,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
             decor.SetDrawable(dr);
             recView.AddItemDecoration(decor);
             return recView;
+        }
+
+        ///<inheritdoc/>
+        protected override int GetLayoutId()
+        {
+            return Resource.Layout.QuestListFragmentLayout;
         }
 
         #endregion
@@ -54,6 +75,29 @@ namespace Justus.QuestApp.View.Droid.Fragments
         public void UnbindClickListeners(AvailableQuestViewHolder holder)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IFabManager implementation
+
+        ///<inheritdoc/>
+        public void Manage(FloatingActionButton fab)
+        {
+            if (fab != null)
+            {
+                fab.Visibility = ViewStates.Visible;
+                if (_fab == null)
+                {
+                    fab.Click += FabOnClick;
+                    _fab = fab;
+                }
+            }
+        }
+
+        private void FabOnClick(object sender, EventArgs eventArgs)
+        {
+            Toast.MakeText(this.Context, "FAB click from Available fragment!", ToastLength.Short).Show();
         }
 
         #endregion

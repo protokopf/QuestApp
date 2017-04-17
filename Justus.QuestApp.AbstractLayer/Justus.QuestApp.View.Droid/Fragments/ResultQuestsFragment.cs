@@ -1,6 +1,7 @@
 using System;
 using Android.Graphics.Drawables;
 using Android.OS;
+using Android.Support.Design.Widget;
 using Android.Support.V4.Content.Res;
 using Android.Support.V7.Widget;
 using Android.Views;
@@ -17,7 +18,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// Fragment for displaying result quests.
     /// </summary>
     public class ResultQuestsFragment : BaseTraverseQuestsFragment<ResultsQuestListViewModel, ResultQuestViewHolder>,
-        IViewHolderClickManager<ResultQuestViewHolder>
+        IViewHolderClickManager<ResultQuestViewHolder>,
+        IFabManager
     {
         #region BaseTraverseQuestsFragment overriding
 
@@ -39,6 +41,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
             return recView;
         }
 
+        ///<inheritdoc/>
+        protected override int GetLayoutId()
+        {
+            return Resource.Layout.QuestListFragmentLayout;
+        }
+
         #endregion
 
         #region IViewHolderClickManager implementation
@@ -56,6 +64,19 @@ namespace Justus.QuestApp.View.Droid.Fragments
         public void UnbindClickListeners(ResultQuestViewHolder holder)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IFabManager implementation
+
+        ///<inheritdoc/>
+        public void Manage(FloatingActionButton fab)
+        {
+            if (fab != null)
+            {
+                fab.Visibility = ViewStates.Gone;
+            }
         }
 
         #endregion

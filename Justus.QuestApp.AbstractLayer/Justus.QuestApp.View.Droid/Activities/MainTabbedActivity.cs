@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Android.App;
 using Android.OS;
 using Android.Support.Design.Widget;
@@ -20,6 +21,10 @@ namespace Justus.QuestApp.View.Droid.Activities
     {
         private FragmentViewPagerAdapter _fragmentAdapter;
         private CoordinatorLayout _coordinatorLayout;
+        private FloatingActionButton _floatingActionButton;
+
+        private readonly List<ISelectable> _selectables = new List<ISelectable>();
+        private readonly List<IFabManager> _fabManagers = new List<IFabManager>();
 
         #region BaseTabbedActivity overriding
 
@@ -50,14 +55,6 @@ namespace Justus.QuestApp.View.Droid.Activities
         }
 
         ///<inheritdoc/>
-        protected override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-            _coordinatorLayout = FindViewById<CoordinatorLayout>(Resource.Id.mainActivityCoordinatorLayout);
-            ViewPager.PageSelected += PageChanged;
-        }
-
-        ///<inheritdoc/>
         protected override void OnDestroy()
         {
             ViewPager.PageSelected -= PageChanged;
@@ -85,8 +82,15 @@ namespace Justus.QuestApp.View.Droid.Activities
         ///<inheritdoc/>
         protected override ViewPager InitializeViewPager()
         {
+            _selectables.Clear();
+            _fabManagers.Clear();
+
             ViewPager viewPager = FindViewById<ViewPager>(Resource.Id.mainActivityViewPager);
+
             SetupViewPager(viewPager);
+
+            viewPager.PageSelected += PageChanged;
+
             return viewPager;
         }
 
@@ -94,6 +98,9 @@ namespace Justus.QuestApp.View.Droid.Activities
         protected override void SetView()
         {
             SetContentView(Resource.Layout.MainActivityLayout);
+            _coordinatorLayout = FindViewById<CoordinatorLayout>(Resource.Id.mainActivityCoordinatorLayout);
+            _floatingActionButton = FindViewById<FloatingActionButton>(Resource.Id.floatButtonId);
+            _floatingActionButton.Visibility = ViewStates.Gone;
         }
 
         #endregion
@@ -104,21 +111,36 @@ namespace Justus.QuestApp.View.Droid.Activities
         {
             _fragmentAdapter = new FragmentViewPagerAdapter(SupportFragmentManager);
 
-            _fragmentAdapter.AddFragment(new ActiveQuestsFragment(),  Resources.GetString(Resource.String.ActiveQuestsLabel));
-            _fragmentAdapter.AddFragment(new ResultQuestsFragment(), Resources.GetString(Resource.String.ResultQuestsLabel));
-            _fragmentAdapter.AddFragment(new AvailableQuestsFragment(), Resources.GetString(Resource.String.IdleQuestsLabel));
+            ActiveQuestsFragment active = new ActiveQuestsFragment();
+            ResultQuestsFragment result = new ResultQuestsFragment();
+            AvailableQuestsFragment available = new AvailableQuestsFragment();
+
+            _fragmentAdapter.AddFragment(active,  Resources.GetString(Resource.String.ActiveQuestsLabel));
+            _fragmentAdapter.AddFragment(result, Resources.GetString(Resource.String.ResultQuestsLabel));
+            _fragmentAdapter.AddFragment(available, Resources.GetString(Resource.String.IdleQuestsLabel));
+
+            _selectables.Add(active);
+            _selectables.Add(result);
+            _selectables.Add(available);
+
+            _fabManagers.Add(active);
+            _fabManagers.Add(result);
+            _fabManagers.Add(available);
 
             viewPager.Adapter = _fragmentAdapter;
         }
 
         private void PageChanged(object sender, ViewPager.PageSelectedEventArgs e)
         {
-            ISelectable updateable = _fragmentAdapter.GetItem(e.Position) as ISelectable;
-            if(updateable != null)
+            int position = e.Position;
+            if (position >= 0 && position < _selectables.Count)
             {
-                updateable.OnSelect();
+                _selectables[position].OnSelect();
             }
-
+            if (position >= 0 && position < _fabManagers.Count)
+            {
+                _fabManagers[position].Manage(_floatingActionButton);
+            }
         }
 
         #endregion

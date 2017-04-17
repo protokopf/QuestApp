@@ -8,6 +8,7 @@ using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 using System.Threading.Tasks;
 using Android.Graphics.Drawables;
+using Android.Support.Design.Widget;
 using Android.Support.V4.Content.Res;
 using Android.Support.V7.Widget;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
@@ -20,7 +21,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// Fragment, that contains list of active quests.
     /// </summary>
     public class ActiveQuestsFragment : BaseTraverseQuestsFragment<ActiveQuestListViewModel, ActiveQuestViewHolder>, 
-        IViewHolderClickManager<ActiveQuestViewHolder>
+        IViewHolderClickManager<ActiveQuestViewHolder>,
+        IFabManager
     {
         //private IntervalAbstractService _intervalService;
 
@@ -46,6 +48,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
         }
 
         ///<inheritdoc/>
+        protected override int GetLayoutId()
+        {
+            return Resource.Layout.QuestListFragmentLayout;
+        }
+
+        ///<inheritdoc/>
         public override void OnPause()
         {
             base.OnPause();
@@ -60,7 +68,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
         }
 
         #endregion
-
 
         #region IViewHolderClickManager implementation
 
@@ -82,6 +89,19 @@ namespace Justus.QuestApp.View.Droid.Fragments
         public void UnbindClickListeners(ActiveQuestViewHolder holder)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IFabManager implementation
+
+        ///<inheritdoc/>
+        public void Manage(FloatingActionButton fab)
+        {
+            if (fab != null)
+            {
+                fab.Visibility = ViewStates.Gone;
+            }
         }
 
         #endregion

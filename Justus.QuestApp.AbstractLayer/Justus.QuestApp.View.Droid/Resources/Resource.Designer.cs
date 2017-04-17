@@ -1836,6 +1836,12 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f07008a
 			public const int notification_top_pad_large_text = 2131165322;
 			
+			// aapt resource value: 0x7f070092
+			public const int quest_item_margin = 2131165330;
+			
+			// aapt resource value: 0x7f070093
+			public const int quest_item_padding = 2131165331;
+			
 			// aapt resource value: 0x7f070090
 			public const int tab_label = 2131165328;
 			

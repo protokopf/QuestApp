@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using Justus.QuestApp.AbstractLayer.Data;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
@@ -83,7 +84,7 @@ namespace Justus.QuestApp.View.Droid.StubServices
             {
                 Id = id,
                 Title = "Quest ¹ " + id,
-                Description = "Description " + id,
+                Description = /*GenerateDescription()*/ $"Desription {id}",
                 CurrentState = state,
                 Children = new List<Quest>(),
                 Deadline = GetDeadLine(id),
@@ -122,6 +123,17 @@ namespace Justus.QuestApp.View.Droid.StubServices
             DateTime result = DateTime.MaxValue;
             result = DateTime.Now - new TimeSpan(0, 0, 5, 0);
             return result;
+        }
+
+        private string GenerateDescription()
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < 15; ++i)
+            {
+                builder.AppendLine(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+            }
+            return builder.ToString();
         }
 
         public void Open(string pathToStorage)

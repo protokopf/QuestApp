@@ -3,6 +3,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/quest_item_margin"
+    android:layout_marginRight="@dimen/quest_item_margin"
+    android:padding="@dimen/quest_item_padding"
     android:descendantFocusability="blocksDescendants"
     android:background="@drawable/questitemborder">
     <LinearLayout

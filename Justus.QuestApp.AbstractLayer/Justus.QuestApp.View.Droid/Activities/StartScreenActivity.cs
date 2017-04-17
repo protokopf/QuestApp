@@ -49,6 +49,7 @@ namespace Justus.QuestApp.View.Droid.Activities
         {
             await Task.Run(() => InitializeWork());
             StartActivity(typeof(MainTabbedActivity));
+            this.Finish();
         }
 
         private void InitializeWork()

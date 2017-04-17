@@ -129,7 +129,8 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         {
             await ViewModel.DeleteQuest(position);
             ViewModel.ResetChildren();
-            RedrawList();
+            QuestsAdapter.NotifyItemRemoved(position);
+            QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
             Toast.MakeText(this.Context, $"Quest in {position} position was deleted.", ToastLength.Short).Show();
         }
 

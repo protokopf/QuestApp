@@ -113,13 +113,26 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void StartHandler(int itemPosition)
         {
             ViewModel.StartQuest(ViewModel.Leaves[itemPosition]);
+            //Staring quest won't removing it from sequence, so we just notifying adapter about changes.
             QuestsAdapter.NotifyItemChanged(itemPosition);
         }
 
         private void DoneHandler(int viewPosition)
         {
             ViewModel.DoneQuest(ViewModel.Leaves[viewPosition]);
-            QuestsAdapter.NotifyItemChanged(viewPosition);
+            if (ViewModel.InRoot)
+            {
+                //If we are in the root of quests hierarchy, quest will be removed after marked as done 
+                //(moved to another category), so we need notify adapter about removing item.
+                QuestsAdapter.NotifyItemRemoved(viewPosition);
+                QuestsAdapter.NotifyItemRangeChanged(viewPosition, QuestsAdapter.ItemCount);
+            }
+            else
+            {
+                //In other cases quest should be just changed, about what we are notifying
+                //adapter.
+                QuestsAdapter.NotifyItemChanged(viewPosition);
+            }          
         }
 
         private void Undo(Android.Views.View view)
@@ -130,7 +143,19 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void FailHandler(int viewPosition)
         {
             ViewModel.FailQuest(ViewModel.Leaves[viewPosition]);
-            QuestsAdapter.NotifyItemChanged(viewPosition);
+            if (ViewModel.InRoot)
+            {
+                //If we are in the root of quests hierarchy, quest will be removed after marked as failed 
+                //(moved to another category), so we need notify adapter about removing item.
+                QuestsAdapter.NotifyItemRemoved(viewPosition);
+                QuestsAdapter.NotifyItemRangeChanged(viewPosition, QuestsAdapter.ItemCount);
+            }
+            else
+            {
+                //In other cases quest should be just changed, about what we are notifying
+                //adapter.
+                QuestsAdapter.NotifyItemChanged(viewPosition);
+            }
         }
 
         private void ChildrenClickHandler(int viewPosition)

@@ -14,9 +14,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
     /// </summary>
     public class ResultQuestsAdapter : BaseQuestsAdapter<ResultQuestViewHolder, ResultsQuestListViewModel>
     {
-        private readonly string _failedStatus;
-        private readonly string _doneStatus;
-
         /// <summary>
         /// Receives references to activity and list view model.
         /// </summary>
@@ -28,8 +25,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
             IViewHolderClickManager<ResultQuestViewHolder> clickManager) 
             : base(activity,questsViewModel, clickManager)
         {
-            _doneStatus = ActivityRef.Resources.GetString(Resource.String.DoneStatus);
-            _failedStatus = ActivityRef.Resources.GetString(Resource.String.FailedStatus);
         }
 
         #region BaseQuestsAdapter overriding
@@ -58,11 +53,11 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
             switch (questData.CurrentState)
             {
                 case QuestState.Done:
-                    holder.Status.Text = _doneStatus;
+                    holder.Status.SetText(Resource.String.DoneStatus);
                     holder.Status.SetTextColor(Color.Green);
                     break;
                 case QuestState.Failed:
-                    holder.Status.Text = _failedStatus;
+                    holder.Status.SetText(Resource.String.FailedStatus);
                     holder.Status.SetTextColor(Color.Red);
                     break;
                 default:

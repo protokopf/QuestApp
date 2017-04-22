@@ -85,7 +85,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
                 ViewModel.TraverseToRoot();
                 TitleTextView.Text = TitleTextDefault;
                 BackButton.Enabled = false;
-                RedrawList();
+                RedrawQuests();
             }
         }
 
@@ -94,10 +94,13 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         /// </summary>
         protected virtual void TraverseToParent()
         {
-            ViewModel.TraverseToParent();
-            TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
-            BackButton.Enabled = !ViewModel.InRoot;
-            RedrawList();
+            if (!ViewModel.InRoot)
+            {
+                ViewModel.TraverseToParent();
+                TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
+                BackButton.Enabled = !ViewModel.InRoot;
+                RedrawQuests();
+            }
         }
 
         /// <summary>
@@ -109,7 +112,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
             ViewModel.TraverseToLeaf(childPosition);
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
             BackButton.Enabled = !ViewModel.InRoot;
-            RedrawList();
+            RedrawQuests();
         }
 
         /// <summary>

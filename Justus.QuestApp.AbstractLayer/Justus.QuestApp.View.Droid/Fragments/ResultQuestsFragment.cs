@@ -86,7 +86,10 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void RestartHandler(int position)
         {
             ViewModel.RestartQuest(ViewModel.Leaves[position]);
-            QuestsAdapter.NotifyItemChanged(position);
+
+            //Only top level quests can be restarted, so they will be removed from Result category.
+            QuestsAdapter.NotifyItemRemoved(position);
+            QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
         }
 
         private void ChildrenHandler(int position)

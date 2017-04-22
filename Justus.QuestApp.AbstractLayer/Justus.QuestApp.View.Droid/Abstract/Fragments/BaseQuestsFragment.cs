@@ -29,12 +29,12 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         ///<inheritdoc/>
         public virtual void OnSelect()
         {
-            RedrawList();
+            RedrawQuests();
         } 
 
         #endregion
 
-        protected void RedrawList()
+        protected void RedrawQuests()
         {
             QuestsAdapter?.NotifyDataSetChanged();
         }

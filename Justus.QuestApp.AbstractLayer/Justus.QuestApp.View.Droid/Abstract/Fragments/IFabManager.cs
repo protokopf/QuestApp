@@ -22,6 +22,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         /// Manages given FAB.
         /// </summary>
         /// <param name="fab"></param>
-        void Manage(FloatingActionButton fab);
+        void ManageFab(FloatingActionButton fab);
     }
+
 }

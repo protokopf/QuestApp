@@ -18,8 +18,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// Fragment for displaying result quests.
     /// </summary>
     public class ResultQuestsFragment : BaseTraverseQuestsFragment<ResultsQuestListViewModel, ResultQuestViewHolder>,
-        IViewHolderClickManager<ResultQuestViewHolder>,
-        IFabManager
+        IViewHolderClickManager<ResultQuestViewHolder>
     {
         #region BaseTraverseQuestsFragment overriding
 

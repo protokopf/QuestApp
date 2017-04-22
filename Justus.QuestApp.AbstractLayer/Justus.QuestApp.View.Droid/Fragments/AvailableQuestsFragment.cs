@@ -30,7 +30,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         {            
             if (_fab != null)
             {
-                _fab.Click -= FabOnClick;
+                _fab.Click -= FabHandler;
                 _fab = null;
             }
             base.OnDestroyView();
@@ -79,31 +79,27 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #endregion
 
-        #region IFabManager implementation
+        #region IFabClickListener implementation
 
         ///<inheritdoc/>
-        public void Manage(FloatingActionButton fab)
+        public void ManageFab(FloatingActionButton fab)
         {
             if (fab != null)
             {
-                fab.Visibility = ViewStates.Visible;
-                if (_fab == null)
-                {
-                    fab.Click += FabOnClick;
-                    _fab = fab;
-                }
+                _fab = fab;
+                _fab.Click += FabHandler;
+                _fab.Show();
             }
-        }
-
-        private void FabOnClick(object sender, EventArgs eventArgs)
-        {
-            Toast.MakeText(this.Context, "FAB click from Available fragment!", ToastLength.Short).Show();
         }
 
         #endregion
 
         #region Handlers
 
+        private void FabHandler(object sender, EventArgs e)
+        {
+            Toast.MakeText(this.Context, $"Fab click from AvailableQuestsFragment!", ToastLength.Short).Show();
+        }
 
         private void EditHandler(int itemPosition)
         {

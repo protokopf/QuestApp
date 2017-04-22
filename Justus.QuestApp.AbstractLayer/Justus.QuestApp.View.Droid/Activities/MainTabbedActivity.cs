@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Android.App;
 using Android.OS;
 using Android.Support.Design.Widget;
@@ -8,6 +10,7 @@ using Justus.QuestApp.View.Droid.Abstract.Activities;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Adapters;
 using Justus.QuestApp.View.Droid.Fragments;
+using Fragment = Android.Support.V4.App.Fragment;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace Justus.QuestApp.View.Droid.Activities
@@ -22,9 +25,6 @@ namespace Justus.QuestApp.View.Droid.Activities
         private FragmentViewPagerAdapter _fragmentAdapter;
         private CoordinatorLayout _coordinatorLayout;
         private FloatingActionButton _floatingActionButton;
-
-        private readonly List<ISelectable> _selectables = new List<ISelectable>();
-        private readonly List<IFabManager> _fabManagers = new List<IFabManager>();
 
         #region BaseTabbedActivity overriding
 
@@ -82,9 +82,6 @@ namespace Justus.QuestApp.View.Droid.Activities
         ///<inheritdoc/>
         protected override ViewPager InitializeViewPager()
         {
-            _selectables.Clear();
-            _fabManagers.Clear();
-
             ViewPager viewPager = FindViewById<ViewPager>(Resource.Id.mainActivityViewPager);
 
             SetupViewPager(viewPager);
@@ -119,28 +116,22 @@ namespace Justus.QuestApp.View.Droid.Activities
             _fragmentAdapter.AddFragment(result, Resources.GetString(Resource.String.ResultQuestsLabel));
             _fragmentAdapter.AddFragment(available, Resources.GetString(Resource.String.IdleQuestsLabel));
 
-            _selectables.Add(active);
-            _selectables.Add(result);
-            _selectables.Add(available);
-
-            _fabManagers.Add(active);
-            _fabManagers.Add(result);
-            _fabManagers.Add(available);
-
             viewPager.Adapter = _fragmentAdapter;
         }
 
         private void PageChanged(object sender, ViewPager.PageSelectedEventArgs e)
         {
             int position = e.Position;
-            if (position >= 0 && position < _selectables.Count)
+
+            if (_floatingActionButton.IsShown)
             {
-                _selectables[position].OnSelect();
+                _floatingActionButton.Hide();
             }
-            if (position >= 0 && position < _fabManagers.Count)
-            {
-                _fabManagers[position].Manage(_floatingActionButton);
-            }
+
+            Fragment current = _fragmentAdapter.GetItem(position);
+
+            (current as IFabManager)?.ManageFab(_floatingActionButton);
+            (current as ISelectable)?.OnSelect();
         }
 
         #endregion

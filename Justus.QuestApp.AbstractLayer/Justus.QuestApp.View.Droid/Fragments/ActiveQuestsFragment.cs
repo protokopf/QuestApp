@@ -21,8 +21,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// Fragment, that contains list of active quests.
     /// </summary>
     public class ActiveQuestsFragment : BaseTraverseQuestsFragment<ActiveQuestListViewModel, ActiveQuestViewHolder>, 
-        IViewHolderClickManager<ActiveQuestViewHolder>,
-        IFabManager
+        IViewHolderClickManager<ActiveQuestViewHolder>
     {
         //private IntervalAbstractService _intervalService;
 
@@ -92,20 +91,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
         }
 
         #endregion
-
-        #region IFabManager implementation
-
-        ///<inheritdoc/>
-        public void Manage(FloatingActionButton fab)
-        {
-            if (fab != null)
-            {
-                fab.Visibility = ViewStates.Gone;
-            }
-        }
-
-        #endregion
-
 
         #region Handlers
 

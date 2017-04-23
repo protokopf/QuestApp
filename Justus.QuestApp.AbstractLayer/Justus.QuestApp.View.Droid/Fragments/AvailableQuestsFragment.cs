@@ -19,22 +19,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// </summary>
     public class AvailableQuestsFragment : BaseTraverseQuestsFragment<AvailableQuestListViewModel, AvailableQuestViewHolder>,
         IViewHolderClickManager<AvailableQuestViewHolder>,
-        IFabManager
+        IFabDecorator
     {
         private FloatingActionButton _fab = null;
+        private int _count = 0;
 
         #region BaseTraverseQuestsFragment overriding
-
-        ///<inheritdoc/>
-        public override void OnDestroyView()
-        {            
-            if (_fab != null)
-            {
-                _fab.Click -= FabHandler;
-                _fab = null;
-            }
-            base.OnDestroyView();
-        }
 
         ///<inehritdoc/>
         protected override RecyclerView HandleRecyclerView(Android.Views.View fragmentView)
@@ -57,6 +47,17 @@ namespace Justus.QuestApp.View.Droid.Fragments
             return Resource.Layout.QuestListFragmentLayout;
         }
 
+        ///<inheritdoc/>
+        public override void OnUnselect()
+        {
+            if (_fab != null)
+            {
+                _fab.Click -= FabOnClick;
+                _fab = null;
+            }
+            base.OnUnselect();
+        }
+
         #endregion
 
         #region IViewHolderClickManager implementation
@@ -65,10 +66,10 @@ namespace Justus.QuestApp.View.Droid.Fragments
         public void BindClickListeners(AvailableQuestViewHolder holder)
         {
             holder.ItemView.Click += (sender, e) => holder.Toggle();
-            holder.DeleteButton.Click += (o, eventArgs) => { DeleteHandler(holder.ItemPosition); };
-            holder.ChildrenButton.Click += (o, eventArgs) => { ChildrenHandler(holder.ItemPosition); };
-            holder.StartButton.Click += (o, eventArgs) => { StartHandler(holder.ItemPosition); };
-            holder.EditButton.Click += (o, eventArgs) => { EditHandler(holder.ItemPosition); };
+            holder.DeleteButton.Click += (o, eventArgs) =>  DeleteHandler(holder.ItemPosition);
+            holder.ChildrenButton.Click += (o, eventArgs) => ChildrenHandler(holder.ItemPosition); 
+            holder.StartButton.Click += (o, eventArgs) => StartHandler(holder.ItemPosition); 
+            holder.EditButton.Click += (o, eventArgs) => EditHandler(holder.ItemPosition);
         }
 
         ///<inheritdoc/>
@@ -79,27 +80,28 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #endregion
 
-        #region IFabClickListener implementation
+        #region IFabDecorator implementation
 
         ///<inheritdoc/>
-        public void ManageFab(FloatingActionButton fab)
+        public void Decorate(FloatingActionButton fab)
         {
             if (fab != null)
             {
                 _fab = fab;
-                _fab.Click += FabHandler;
+                _fab.Click += FabOnClick;
                 _fab.Show();
             }
+        }
+
+        private void FabOnClick(object sender, EventArgs eventArgs)
+        {
+            Toast.MakeText(this.Context, $"Fab click {_count}.", ToastLength.Short).Show();
+            ++_count;
         }
 
         #endregion
 
         #region Handlers
-
-        private void FabHandler(object sender, EventArgs e)
-        {
-            Toast.MakeText(this.Context, $"Fab click from AvailableQuestsFragment!", ToastLength.Short).Show();
-        }
 
         private void EditHandler(int itemPosition)
         {

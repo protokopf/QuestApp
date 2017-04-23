@@ -6,8 +6,13 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
     public interface ISelectable
     {
         /// <summary>
-        /// Updates.
+        /// Fires, when implementation is selected.
         /// </summary>
         void OnSelect();
+
+        /// <summary>
+        /// Fires, when implementation is unselected.
+        /// </summary>
+        void OnUnselect();
     }
 }

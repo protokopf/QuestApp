@@ -53,9 +53,9 @@ namespace Justus.QuestApp.View.Droid.Fragments
         }
 
         ///<inheritdoc/>
-        public override void OnPause()
+        public override void OnStop()
         {
-            base.OnPause();
+            base.OnStop();
             //_intervalService.Stop();       
         }
 

@@ -16,13 +16,13 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
     /// <summary>
     /// Represents interface for types, which manages FAB.
     /// </summary>
-    public interface IFabManager
+    public interface IFabDecorator
     {
         /// <summary>
         /// Manages given FAB.
         /// </summary>
         /// <param name="fab"></param>
-        void ManageFab(FloatingActionButton fab);
+        void Decorate(FloatingActionButton fab);
     }
 
 }

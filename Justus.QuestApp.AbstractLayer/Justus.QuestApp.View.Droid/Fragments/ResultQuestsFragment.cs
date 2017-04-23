@@ -67,7 +67,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #endregion
 
-        #region IFabManager implementation
+        #region IFabDecorator implementation
 
         ///<inheritdoc/>
         public void Manage(FloatingActionButton fab)

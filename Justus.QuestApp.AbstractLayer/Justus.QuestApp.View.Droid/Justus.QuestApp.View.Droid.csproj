@@ -114,7 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\Activities\BaseTabbedActivity.cs" />
-    <Compile Include="Abstract\Fragments\IFabManager.cs" />
+    <Compile Include="Abstract\Fragments\IFabDecorator.cs" />
     <Compile Include="Abstract\ViewHoldersClickManagers\IViewHolderClickManager.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
     <Compile Include="Activities\StartScreenActivity.cs" />

@@ -46,7 +46,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         }
 
         ///<inheritdoc/>
-        public override void OnPause()
+        public override void OnStop()
         {
             base.OnPause();
             ViewModel.IsBusyChanged -= OnIsBusyChanged;

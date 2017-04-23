@@ -26,6 +26,8 @@ namespace Justus.QuestApp.View.Droid.Activities
         private CoordinatorLayout _coordinatorLayout;
         private FloatingActionButton _floatingActionButton;
 
+        private ISelectable _lastSelected = null;
+
         #region BaseTabbedActivity overriding
 
         ///<inheritdoc/>
@@ -120,7 +122,9 @@ namespace Justus.QuestApp.View.Droid.Activities
         }
 
         private void PageChanged(object sender, ViewPager.PageSelectedEventArgs e)
-        {
+        { 
+            _lastSelected?.OnUnselect();
+
             int position = e.Position;
 
             if (_floatingActionButton.IsShown)
@@ -130,8 +134,8 @@ namespace Justus.QuestApp.View.Droid.Activities
 
             Fragment current = _fragmentAdapter.GetItem(position);
 
-            (current as IFabManager)?.ManageFab(_floatingActionButton);
-            (current as ISelectable)?.OnSelect();
+            (current as IFabDecorator)?.Decorate(_floatingActionButton);
+            (_lastSelected = current as ISelectable)?.OnSelect();
         }
 
         #endregion

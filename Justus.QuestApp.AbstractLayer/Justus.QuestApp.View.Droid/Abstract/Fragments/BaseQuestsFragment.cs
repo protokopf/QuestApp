@@ -30,7 +30,13 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         public virtual void OnSelect()
         {
             RedrawQuests();
-        } 
+        }
+
+        ///<inheritdoc/>
+        public virtual void OnUnselect()
+        {
+            
+        }
 
         #endregion
 

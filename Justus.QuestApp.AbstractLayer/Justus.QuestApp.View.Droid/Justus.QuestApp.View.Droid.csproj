@@ -113,9 +113,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\Activities\AbstractFragmentActivity.cs" />
     <Compile Include="Abstract\Activities\BaseTabbedActivity.cs" />
     <Compile Include="Abstract\Fragments\IFabDecorator.cs" />
     <Compile Include="Abstract\ViewHoldersClickManagers\IViewHolderClickManager.cs" />
+    <Compile Include="Activities\QuestInfoActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
     <Compile Include="Activities\StartScreenActivity.cs" />
     <Compile Include="Adapters\Quests\AvailableQuestsAdapter.cs" />
@@ -127,6 +129,7 @@
     <Compile Include="Abstract\Fragments\ISelectable.cs" />
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\BaseQuestsFragment.cs" />
+    <Compile Include="Fragments\QuestInfoFragment.cs" />
     <Compile Include="Services\ViewServices\SimpleQuestExpireService.cs" />
     <Compile Include="StubServices\StubWebStringProvider.cs" />
     <Compile Include="Abstract\ViewHolders\ToggledViewHolder.cs" />
@@ -182,6 +185,12 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\LoadingScreenLayout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\AbstractFragmentActivityLayout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\QuestInfoFragmentLayout.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

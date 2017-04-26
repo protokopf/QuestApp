@@ -70,7 +70,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
             {
                 TraverseToRoot();
             }
-            base.OnSelect();
+            RedrawQuests();
         }
 
         #endregion

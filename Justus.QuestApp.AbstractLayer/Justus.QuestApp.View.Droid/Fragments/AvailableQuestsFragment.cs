@@ -1,13 +1,16 @@
 using System;
+using Android.Content;
 using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Support.Design.Widget;
+using Android.Support.V4.App;
 using Android.Support.V4.Content.Res;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
+using Justus.QuestApp.View.Droid.Activities;
 using Justus.QuestApp.View.Droid.Adapters.Quests;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
@@ -22,9 +25,14 @@ namespace Justus.QuestApp.View.Droid.Fragments
         IFabDecorator
     {
         private FloatingActionButton _fab = null;
-        private int _count = 0;
 
         #region BaseTraverseQuestsFragment overriding
+
+        public override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            _fab = null;
+        }
 
         ///<inehritdoc/>
         protected override RecyclerView HandleRecyclerView(Android.Views.View fragmentView)
@@ -95,8 +103,11 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void FabOnClick(object sender, EventArgs eventArgs)
         {
-            Toast.MakeText(this.Context, $"Fab click {_count}.", ToastLength.Short).Show();
-            ++_count;
+            FragmentActivity activity = this.Activity;
+            if (activity != null)
+            {
+                activity.StartActivity(typeof(QuestInfoActivity));
+            }
         }
 
         #endregion

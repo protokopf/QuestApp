@@ -4,6 +4,9 @@
   <string name="LoadingActivityLabel">Quest application</string>
   <string name="LoadingActivityText">Loading...</string>
   
+  <!---Quest info activity-->
+  <string name="QuestInfoActivityLabel">Quest info</string>
+  
   
    <!--TabHostActivity-->
   <string name="MainActivityLabel">Quest application</string>

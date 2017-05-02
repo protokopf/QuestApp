@@ -8,8 +8,11 @@ using Android.Support.V4.View;
 using Android.Views;
 using Justus.QuestApp.View.Droid.Abstract.Activities;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
+using Justus.QuestApp.View.Droid.Abstract.Fragments.Factories;
 using Justus.QuestApp.View.Droid.Adapters;
+using Justus.QuestApp.View.Droid.Adapters.Fragments;
 using Justus.QuestApp.View.Droid.Fragments;
+using Justus.QuestApp.View.Droid.Fragments.Factories;
 using Fragment = Android.Support.V4.App.Fragment;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 
@@ -19,10 +22,9 @@ namespace Justus.QuestApp.View.Droid.Activities
     /// <summary>
     /// Main activity, that hosts fragments in separates tabs.
     /// </summary>
-    [Activity(Label = "@string/MainActivityLabel"/*, MainLauncher = true*/)]
+    [Activity(Label = "@string/MainActivityLabel")]
     public class MainTabbedActivity : BaseTabbedActivity
     {
-        private FragmentViewPagerAdapter _fragmentAdapter;
         private CoordinatorLayout _coordinatorLayout;
         private FloatingActionButton _floatingActionButton;
 
@@ -86,8 +88,7 @@ namespace Justus.QuestApp.View.Droid.Activities
         {
             ViewPager viewPager = FindViewById<ViewPager>(Resource.Id.mainActivityViewPager);
 
-            SetupViewPager(viewPager);
-
+            viewPager.Adapter = new GenericFragmentPagerAdapter(SupportFragmentManager, GetFragmentFactories());
             viewPager.PageSelected += PageChanged;
 
             return viewPager;
@@ -106,19 +107,17 @@ namespace Justus.QuestApp.View.Droid.Activities
 
         #region Private methods
 
-        private void SetupViewPager(ViewPager viewPager)
+        private IList<IFragmentFactory> GetFragmentFactories()
         {
-            _fragmentAdapter = new FragmentViewPagerAdapter(SupportFragmentManager);
-
-            ActiveQuestsFragment active = new ActiveQuestsFragment();
-            ResultQuestsFragment result = new ResultQuestsFragment();
-            AvailableQuestsFragment available = new AvailableQuestsFragment();
-
-            _fragmentAdapter.AddFragment(active,  Resources.GetString(Resource.String.ActiveQuestsLabel));
-            _fragmentAdapter.AddFragment(result, Resources.GetString(Resource.String.ResultQuestsLabel));
-            _fragmentAdapter.AddFragment(available, Resources.GetString(Resource.String.IdleQuestsLabel));
-
-            viewPager.Adapter = _fragmentAdapter;
+            return new List<IFragmentFactory>
+            {
+                new ParametrizedFragmentFactory(() => new ActiveQuestsFragment(),
+                    Resources.GetString(Resource.String.ActiveQuestsLabel)),
+                new ParametrizedFragmentFactory(() => new ResultQuestsFragment(),
+                    Resources.GetString(Resource.String.ResultQuestsLabel)),
+                new ParametrizedFragmentFactory(() => new AvailableQuestsFragment(),
+                    Resources.GetString(Resource.String.IdleQuestsLabel))
+            };
         }
 
         private void PageChanged(object sender, ViewPager.PageSelectedEventArgs e)
@@ -132,7 +131,7 @@ namespace Justus.QuestApp.View.Droid.Activities
                 _floatingActionButton.Hide();
             }
 
-            Fragment current = _fragmentAdapter.GetItem(position);
+            Fragment current = SupportFragmentManager.Fragments[position];
 
             (current as IFabDecorator)?.Decorate(_floatingActionButton);
             (_lastSelected = current as ISelectable)?.OnSelect();

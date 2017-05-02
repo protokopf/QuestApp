@@ -115,20 +115,22 @@
   <ItemGroup>
     <Compile Include="Abstract\Activities\AbstractFragmentActivity.cs" />
     <Compile Include="Abstract\Activities\BaseTabbedActivity.cs" />
+    <Compile Include="Abstract\Fragments\Factories\IFragmentFactory.cs" />
     <Compile Include="Abstract\Fragments\IFabDecorator.cs" />
     <Compile Include="Abstract\ViewHoldersClickManagers\IViewHolderClickManager.cs" />
     <Compile Include="Activities\QuestInfoActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
     <Compile Include="Activities\StartScreenActivity.cs" />
+    <Compile Include="Adapters\Fragments\GenericFragmentPagerAdapter.cs" />
     <Compile Include="Adapters\Quests\AvailableQuestsAdapter.cs" />
     <Compile Include="Abstract\Adapters\BaseQuestsAdapter.cs" />
     <Compile Include="Adapters\Quests\ActiveQuestsAdapter.cs" />
-    <Compile Include="Adapters\FragmentViewPagerAdapter.cs" />
     <Compile Include="Adapters\Quests\ResultQuestsAdapter.cs" />
     <Compile Include="Abstract\Fragments\BaseTraverseQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\ISelectable.cs" />
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\BaseQuestsFragment.cs" />
+    <Compile Include="Fragments\Factories\ParametrizedFragmentFactory.cs" />
     <Compile Include="Fragments\QuestInfoFragment.cs" />
     <Compile Include="Services\ViewServices\SimpleQuestExpireService.cs" />
     <Compile Include="StubServices\StubWebStringProvider.cs" />

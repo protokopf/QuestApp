@@ -6,6 +6,8 @@
   
   <!---Quest info activity-->
   <string name="QuestInfoActivityLabel">Quest info</string>
+  <string name="cancelCreateButtonLabel">Cancel</string>
+  <string name="saveCreateButtonLabel">Save</string>
   
   
    <!--TabHostActivity-->

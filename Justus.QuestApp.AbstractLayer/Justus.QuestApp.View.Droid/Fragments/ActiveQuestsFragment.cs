@@ -30,7 +30,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         ///<inheritdoc/>
         protected override RecyclerView HandleRecyclerView(Android.Views.View fragmentView)
         {
-            RecyclerView recView = fragmentView.FindViewById<Android.Support.V7.Widget.RecyclerView>(Resource.Id.questRecyclerViewRefId);
+            RecyclerView recView = fragmentView.FindViewById<RecyclerView>(Resource.Id.questRecyclerViewRefId);
             
             recView.SetLayoutManager(new LinearLayoutManager(this.Context));
             recView.SetAdapter(QuestsAdapter = new ActiveQuestsAdapter(this.Activity, ViewModel, this));

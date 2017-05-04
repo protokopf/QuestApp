@@ -11,5 +11,6 @@
   <dimen name="custom_tab_layout_height">72dp</dimen>
   <dimen name="quest_item_margin">10dp</dimen>
   <dimen name="quest_item_padding">10dp</dimen>
+  <dimen name="quest_info_fragment_margin">16dp</dimen>
   
 </resources>

@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/stubLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Quest info fragment"
-      android:textSize="40dp"
-      android:textStyle="bold"
-      android:layout_centerInParent="true" />
-</RelativeLayout>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:text="Stub quest info"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:layout_weight="99" />
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginRight="@dimen/quest_info_fragment_margin"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="right">
+        <Button
+            android:id="@+id/cancelCreateButton"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/cancelCreateButtonLabel"
+            android:layout_gravity="right"
+            android:gravity="center" />
+        <Button
+            android:id="@+id/saveCreateButton"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/saveCreateButtonLabel"
+            android:layout_gravity="right"
+            android:gravity="center" />
+    </LinearLayout>
+</LinearLayout>

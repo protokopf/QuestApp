@@ -1,10 +1,12 @@
 using System;
+using Android.App;
 using Android.Content;
 using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 using Android.Support.V4.Content.Res;
+using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
@@ -12,6 +14,7 @@ using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.Activities;
 using Justus.QuestApp.View.Droid.Adapters.Quests;
+using Justus.QuestApp.View.Droid.Helpers;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -28,10 +31,22 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #region BaseTraverseQuestsFragment overriding
 
-        public override void OnCreate(Bundle savedInstanceState)
+        ///<inheritdoc/>
+        public override void OnActivityResult(int requestCode, int resultCode, Intent data)
         {
-            base.OnCreate(savedInstanceState);
-            _fab = null;
+            base.OnActivityResult(requestCode, resultCode, data);
+            if (requestCode == ActivityRequestCodes.OK_CANCEL_REQUEST)
+            {
+                switch (resultCode)
+                {
+                    case (int)Result.Ok:
+                        Toast.MakeText(this.Context, "Save quest!", ToastLength.Short).Show();
+                        break;
+                    case (int)Result.Canceled:
+                        Toast.MakeText(this.Context, "Cancel creating quest!", ToastLength.Short).Show();
+                        break;
+                }
+            }
         }
 
         ///<inehritdoc/>
@@ -106,7 +121,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
             FragmentActivity activity = this.Activity;
             if (activity != null)
             {
-                activity.StartActivity(typeof(QuestInfoActivity));
+                Intent startQuestInfo = new Intent(this.Context, typeof(QuestInfoActivity));
+                this.StartActivityForResult(startQuestInfo, ActivityRequestCodes.OK_CANCEL_REQUEST);
             }
         }
 

@@ -132,6 +132,7 @@
     <Compile Include="Abstract\Fragments\BaseQuestsFragment.cs" />
     <Compile Include="Fragments\Factories\ParametrizedFragmentFactory.cs" />
     <Compile Include="Fragments\QuestInfoFragment.cs" />
+    <Compile Include="Helpers\ActivityRequestCodes.cs" />
     <Compile Include="Services\ViewServices\SimpleQuestExpireService.cs" />
     <Compile Include="StubServices\StubWebStringProvider.cs" />
     <Compile Include="Abstract\ViewHolders\ToggledViewHolder.cs" />

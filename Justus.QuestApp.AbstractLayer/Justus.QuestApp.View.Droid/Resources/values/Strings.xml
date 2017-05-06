@@ -4,10 +4,12 @@
   <string name="LoadingActivityLabel">Quest application</string>
   <string name="LoadingActivityText">Loading...</string>
   
-  <!---Quest info activity-->
+  <!---Quest info fragment-->
   <string name="QuestInfoActivityLabel">Quest info</string>
   <string name="cancelCreateButtonLabel">Cancel</string>
   <string name="saveCreateButtonLabel">Save</string>
+  <string name="QuestInfoTitleHint">Quest title</string>
+  <string name="QuestInfoDescriptionHint">Quest description</string>
   
   
    <!--TabHostActivity-->

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_height="match_parent"
+  android:layout_width="match_parent">
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical">
+ 
+    <LinearLayout 
+      android:id="@+id/stubLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"> 
+  
+      <android.support.design.widget.TextInputLayout
+        android:id="@+id/questTitleInputLayout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp">
+        <EditText
+          android:id="@+id/questTitleEditText"
+          android:layout_height="wrap_content"
+          android:layout_width="match_parent"         
+          android:hint="@string/QuestCreateTitleHint" />
+      </android.support.design.widget.TextInputLayout>
+
+      <android.support.design.widget.TextInputLayout
+        android:id="@+id/questDescriptionInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp">
+        <EditText
+          android:id="@+id/questDescriptionEditText"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:hint="@string/QuestCreateDescriptionHint">      
+        </EditText>
+    
+      </android.support.design.widget.TextInputLayout>
+
+      <CheckBox
+        android:id="@+id/questCreateImportantCheckbox"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/QuestCreateImportant"
+        />
+      
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp">      
+        <CheckBox
+          android:id="@+id/startCheckbox"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content"
+          android:text="@string/QuestCreateStartCheckBoxTitle"
+          />
+        <Button
+          android:id="@+id/startDateButton"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content"
+          android:text="@string/QuestCreateDateTitle"
+          android:visibility="invisible"
+          />  
+        <Button
+          android:id="@+id/startTimeButton"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content"
+          android:text="@string/QuestCreateTimeTitle"
+          android:visibility="invisible"
+          />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp">      
+        <CheckBox
+          android:id="@+id/deadlineCheckbox"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content"
+          android:text="@string/QuestCreateDeadlineCheckBoxTitle"
+          />
+        <Button
+          android:id="@+id/deadlineDateButton"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content"
+          android:text="@string/QuestCreateDateTitle"
+          android:visibility="invisible"
+          />  
+        <Button
+          android:id="@+id/deadlineTimeButton"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content"
+          android:text="@string/QuestCreateTimeTitle"
+          android:visibility="invisible"
+          />
+      </LinearLayout>
+    </LinearLayout>
+  
+  </ScrollView>
+  
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/questCreateSaveButton"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_margin="@dimen/fab_margin"
+    android:src="@drawable/save_button"/>
+  
+</android.support.design.widget.CoordinatorLayout>

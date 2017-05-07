@@ -131,7 +131,7 @@
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\BaseQuestsFragment.cs" />
     <Compile Include="Fragments\Factories\ParametrizedFragmentFactory.cs" />
-    <Compile Include="Fragments\QuestInfoFragment.cs" />
+    <Compile Include="Fragments\QuestCreateFragment.cs" />
     <Compile Include="Helpers\ActivityRequestCodes.cs" />
     <Compile Include="Services\ViewServices\SimpleQuestExpireService.cs" />
     <Compile Include="StubServices\StubWebStringProvider.cs" />
@@ -193,7 +193,7 @@
     <AndroidResource Include="Resources\layout\AbstractFragmentActivityLayout.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\QuestInfoFragmentLayout.axml">
+    <AndroidResource Include="Resources\layout\QuestCreateFragmentLayout.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
@@ -261,6 +261,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\add_button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\save_button.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

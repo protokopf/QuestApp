@@ -102,14 +102,14 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void HandleStartTimeSection(bool selectEnable)
         {
-            _selectStartDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
-            _selectStartTimeButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
+            _selectStartDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Gone;
+            _selectStartTimeButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Gone;
         }
 
         private void HandleDeadlineSection(bool selectEnable)
         {
-            _selectDeadlineDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
-            _selectDeadlineTimeButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
+            _selectDeadlineDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Gone;
+            _selectDeadlineTimeButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Gone;
         }
 
         #endregion

@@ -11,17 +11,17 @@
           android:id="@+id/stubLayout"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:columnCount="3">
+          android:columnCount="2">
           <android.support.design.widget.TextInputLayout
               android:id="@+id/questTitleInputLayout"
               android:layout_height="wrap_content"
               android:layout_width="match_parent"
               android:layout_row="0"
               android:layout_column="0"
-              android:layout_columnSpan="3"
-              android:layout_marginLeft="16dp"
-              android:layout_marginRight="16dp"
-              android:layout_marginTop="16dp">
+              android:layout_columnSpan="2"
+              android:layout_marginLeft="@dimen/quest_info_fragment_margin"
+              android:layout_marginRight="@dimen/quest_info_fragment_margin"
+              android:layout_marginTop="@dimen/quest_info_fragment_margin">
               <EditText
                   android:id="@+id/questTitleEditText"
                   android:layout_height="wrap_content"
@@ -34,10 +34,10 @@
               android:layout_height="wrap_content"
               android:layout_row="1"
               android:layout_column="0"
-              android:layout_columnSpan="3"
-              android:layout_marginLeft="16dp"
-              android:layout_marginRight="16dp"
-              android:layout_marginTop="16dp">
+              android:layout_columnSpan="2"
+              android:layout_marginLeft="@dimen/quest_info_fragment_margin"
+              android:layout_marginRight="@dimen/quest_info_fragment_margin"
+              android:layout_marginTop="@dimen/quest_info_fragment_margin">
               <EditText
                   android:id="@+id/questDescriptionEditText"
                   android:layout_width="match_parent"
@@ -50,14 +50,19 @@
               android:layout_width="match_parent"
               android:layout_row="2"
               android:layout_column="0"
-              android:layout_columnSpan="3"
-              android:text="@string/QuestCreateImportant" />
+              android:layout_columnSpan="2"
+              android:text="@string/QuestCreateImportant"
+              android:layout_marginLeft="@dimen/quest_info_fragment_margin"
+              android:layout_marginRight="@dimen/quest_info_fragment_margin"
+              android:layout_marginTop="@dimen/quest_info_fragment_margin"/>
           <CheckBox
               android:id="@+id/startCheckbox"
               android:layout_height="wrap_content"
               android:layout_width="wrap_content"
               android:layout_row="3"
               android:layout_column="0"
+              android:layout_marginLeft="@dimen/quest_info_fragment_margin"
+              android:layout_marginRight="@dimen/quest_info_fragment_margin"
               android:text="@string/QuestCreateStartCheckBoxTitle" />
           <Button
               android:id="@+id/startDateButton"
@@ -66,21 +71,15 @@
               android:layout_row="3"
               android:layout_column="1"
               android:text="@string/QuestCreateDateTitle"
-              android:visibility="gone" />
-          <Button
-              android:id="@+id/startTimeButton"
-              android:layout_height="wrap_content"
-              android:layout_width="wrap_content"
-              android:layout_row="3"
-              android:layout_column="2"
-              android:text="@string/QuestCreateTimeTitle"
-              android:visibility="gone" />
+              android:visibility="invisible" />
           <CheckBox
               android:id="@+id/deadlineCheckbox"
               android:layout_height="wrap_content"
               android:layout_width="wrap_content"
               android:layout_row="4"
               android:layout_column="0"
+              android:layout_marginLeft="@dimen/quest_info_fragment_margin"
+              android:layout_marginRight="@dimen/quest_info_fragment_margin"
               android:text="@string/QuestCreateDeadlineCheckBoxTitle" />
           <Button
               android:id="@+id/deadlineDateButton"
@@ -89,15 +88,7 @@
               android:layout_row="4"
               android:layout_column="1"
               android:text="@string/QuestCreateDateTitle"
-              android:visibility="gone" />
-          <Button
-              android:id="@+id/deadlineTimeButton"
-              android:layout_height="wrap_content"
-              android:layout_width="wrap_content"
-              android:layout_row="4"
-              android:layout_column="2"
-              android:text="@string/QuestCreateTimeTitle"
-              android:visibility="gone" />
+              android:visibility="invisible" />
       </GridLayout>
     </ScrollView>
     <android.support.design.widget.FloatingActionButton

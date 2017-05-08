@@ -54,6 +54,7 @@ namespace Justus.QuestApp.View.Droid
             ServiceLocator.Register(() => new ActiveQuestListViewModel());
             ServiceLocator.Register(() => new ResultsQuestListViewModel());
             ServiceLocator.Register(() => new AvailableQuestListViewModel());
+            ServiceLocator.Register(() => new QuestCreateViewModel());
         }
 
     }

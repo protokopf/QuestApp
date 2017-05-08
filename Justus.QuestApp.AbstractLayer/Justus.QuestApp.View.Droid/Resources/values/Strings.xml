@@ -4,19 +4,7 @@
   <string name="LoadingActivityLabel">Quest application</string>
   <string name="LoadingActivityText">Loading...</string>
   
-  <!---Quest create fragment-->
-  <string name="QuestCreateActivityLabel">Quest info</string>
-  <string name="cancelCreateButtonLabel">Cancel</string>
-  <string name="saveCreateButtonLabel">Save</string>
-  <string name="QuestCreateTitleHint">Quest title</string>
-  <string name="QuestCreateDescriptionHint">Quest description</string>
-  <string name="QuestCreateStartCheckBoxTitle">Start by time...</string>
-  <string name="QuestCreateDeadlineCheckBoxTitle">Deadline</string>
-  <string name="QuestCreateImportant">Is important</string>
-  <string name="QuestCreateDateTitle">Select date...</string>
-  <string name="QuestCreateTimeTitle">Select time...</string>
-  
-  
+    
    <!--TabHostActivity-->
   <string name="MainActivityLabel">Quest application</string>
   <string name="ActiveQuestsLabel">Active</string>
@@ -59,4 +47,19 @@
   <string name="StartTimeLabel">Start time:</string>
   <string name="DeadlineLabel">Deadline: </string>
   <string name="HyphenLabel">-</string>
+
+  <!---Quest create fragment-->
+  <string name="QuestCreateActivityLabel">Quest info</string>
+  <string name="cancelCreateButtonLabel">Cancel</string>
+  <string name="saveCreateButtonLabel">Save</string>
+  <string name="QuestCreateTitleHint">Quest title</string>
+  <string name="QuestCreateDescriptionHint">Quest description</string>
+  <string name="QuestCreateStartCheckBoxTitle">Start by time</string>
+  <string name="QuestCreateDeadlineCheckBoxTitle">Deadline</string>
+  <string name="QuestCreateImportant">Is important</string>
+  <string name="QuestCreateDateTitle">Select...</string>
+  
+  <!--Date picker fragment-->
+  <string name="DatePickerTitle">Choose date and time:</string>
+  
 </resources>

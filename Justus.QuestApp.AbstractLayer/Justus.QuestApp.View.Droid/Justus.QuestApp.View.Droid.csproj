@@ -130,6 +130,7 @@
     <Compile Include="Abstract\Fragments\ISelectable.cs" />
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\BaseQuestsFragment.cs" />
+    <Compile Include="Fragments\Dialogs\DateTimePickerFragment.cs" />
     <Compile Include="Fragments\Factories\ParametrizedFragmentFactory.cs" />
     <Compile Include="Fragments\QuestCreateFragment.cs" />
     <Compile Include="Helpers\ActivityRequestCodes.cs" />
@@ -194,6 +195,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\QuestCreateFragmentLayout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\DateTimePicker.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

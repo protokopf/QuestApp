@@ -121,7 +121,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             FragmentActivity activity = this.Activity;
             if (activity != null)
             {
-                Intent startQuestInfo = new Intent(this.Context, typeof(QuestInfoActivity));
+                Intent startQuestInfo = new Intent(this.Context, typeof(QuestCreateActivity));
                 this.StartActivityForResult(startQuestInfo, ActivityRequestCodes.OK_CANCEL_REQUEST);
             }
         }

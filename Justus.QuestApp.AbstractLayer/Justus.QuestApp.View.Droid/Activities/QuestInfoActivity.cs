@@ -20,7 +20,7 @@ namespace Justus.QuestApp.View.Droid.Activities
     /// Activity for creating quest.
     /// </summary>
     [Activity(Label= "@string/QuestCreateActivityLabel")]
-    public class QuestInfoActivity : AbstractFragmentActivity
+    public class QuestCreateActivity : AbstractFragmentActivity
     {
         #region AbstractFragmentActivity overriding
 

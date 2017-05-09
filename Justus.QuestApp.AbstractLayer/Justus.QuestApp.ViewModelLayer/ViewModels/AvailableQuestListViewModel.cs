@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Model;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
@@ -9,6 +11,21 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// </summary>
     public class AvailableQuestListViewModel : QuestListViewModel
     {
+        /// <summary>
+        /// Receives references to repository, stateCommands and repositoryCommands factories.
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="stateCommandsFactory"></param>
+        /// <param name="repositoryCommandsFactory"></param>
+        public AvailableQuestListViewModel(
+            IQuestRepository repository,
+            IStateCommandsFactory stateCommandsFactory,
+            IRepositoryCommandsFactory repositoryCommandsFactory) : 
+            base(repository, stateCommandsFactory, repositoryCommandsFactory)
+        {
+
+        }
+
         #region QuestListViewModel overriding
 
         ///<inheritdoc/>

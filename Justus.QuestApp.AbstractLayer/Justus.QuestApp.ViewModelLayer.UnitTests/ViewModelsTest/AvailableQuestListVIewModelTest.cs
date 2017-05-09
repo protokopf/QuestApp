@@ -15,18 +15,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
     [TestFixture]
     class AvailableQuestListVIewModelTest
     {
-        [TearDown]
-        public void ReleaseLocator()
-        {
-            ServiceLocator.ReleaseAll();
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>());
-        }
-
         [Test]
         public void FilterOnTopLevelQuests()
         {
@@ -42,14 +30,11 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 
             repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
 
-            ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
 
-            ServiceLocator.Register(() => repository);
-            ServiceLocator.Register(() => comManager);
-            ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
-            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
+            AvailableQuestListViewModel viewModel = new AvailableQuestListViewModel(repository, stateCommands, repoCommands);
 
-            QuestListViewModel viewModel = new AvailableQuestListViewModel();
 
             //Act
             List<Quest> quests = viewModel.Leaves;
@@ -85,14 +70,10 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 
             repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
 
-            ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
 
-            ServiceLocator.Register(() => repository);
-            ServiceLocator.Register(() => comManager);
-            ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
-            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
-
-            QuestListViewModel viewModel = new AvailableQuestListViewModel();
+            AvailableQuestListViewModel viewModel = new AvailableQuestListViewModel(repository, stateCommands, repoCommands);
 
             //Act
             List<Quest> quests = viewModel.Leaves;

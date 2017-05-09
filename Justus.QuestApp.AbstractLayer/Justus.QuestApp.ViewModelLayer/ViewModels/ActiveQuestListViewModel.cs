@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
@@ -15,9 +16,17 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     {
         private readonly IQuestProgressCounter _progressCounter;
 
-        public ActiveQuestListViewModel()
+        public ActiveQuestListViewModel(IQuestRepository repository,
+            IStateCommandsFactory stateCommandsFactory,
+            IRepositoryCommandsFactory repositoryCommandsFactory,
+            IQuestProgressCounter questProgressCounter) : 
+            base(repository, stateCommandsFactory,repositoryCommandsFactory)
         {
-            _progressCounter = ServiceLocator.Resolve<IQuestProgressCounter>();
+            if (questProgressCounter == null)
+            {
+                throw new ArgumentNullException(nameof(questProgressCounter));
+            }
+            _progressCounter = questProgressCounter;
         }
 
         #region QuestListViewModel overriding

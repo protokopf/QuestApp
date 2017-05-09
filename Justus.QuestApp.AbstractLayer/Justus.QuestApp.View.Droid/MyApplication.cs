@@ -51,9 +51,23 @@ namespace Justus.QuestApp.View.Droid
 
         private void InitializeViewModelServices()
         {
-            ServiceLocator.Register(() => new ActiveQuestListViewModel());
-            ServiceLocator.Register(() => new ResultsQuestListViewModel());
-            ServiceLocator.Register(() => new AvailableQuestListViewModel());
+            ServiceLocator.Register(() => new ActiveQuestListViewModel(
+                ServiceLocator.Resolve<IQuestRepository>(),
+                ServiceLocator.Resolve<IStateCommandsFactory>(),
+                ServiceLocator.Resolve<IRepositoryCommandsFactory>(),
+                ServiceLocator.Resolve<IQuestProgressCounter>()
+                ));
+
+            ServiceLocator.Register(() => new ResultsQuestListViewModel(
+                ServiceLocator.Resolve<IQuestRepository>(),
+                ServiceLocator.Resolve<IStateCommandsFactory>(),
+                ServiceLocator.Resolve<IRepositoryCommandsFactory>()));
+
+            ServiceLocator.Register(() => new AvailableQuestListViewModel(
+                ServiceLocator.Resolve<IQuestRepository>(),
+                ServiceLocator.Resolve<IStateCommandsFactory>(),
+                ServiceLocator.Resolve<IRepositoryCommandsFactory>()));
+
             ServiceLocator.Register(() => new QuestCreateViewModel());
         }
 

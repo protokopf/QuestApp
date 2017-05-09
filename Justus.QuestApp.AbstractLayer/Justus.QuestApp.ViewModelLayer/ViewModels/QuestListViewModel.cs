@@ -30,11 +30,27 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <summary>
         /// Default constructor. Resolves references to quest repository and command manager.
         /// </summary>
-        public QuestListViewModel()
+        public QuestListViewModel(
+            IQuestRepository repository, 
+            IStateCommandsFactory stateCommandsFactory, 
+            IRepositoryCommandsFactory repositoryCommandsFactory)
         {
-            QuestRepository = ServiceLocator.Resolve<IQuestRepository>();
-            StateCommads = ServiceLocator.Resolve<IStateCommandsFactory>();
-            RepositoryCommands = ServiceLocator.Resolve<IRepositoryCommandsFactory>();
+            if (repository == null)
+            {
+                throw new ArgumentNullException(nameof(repository));
+            }
+            if (stateCommandsFactory == null)
+            {
+                throw new ArgumentNullException(nameof(stateCommandsFactory));
+            }
+            if (repositoryCommandsFactory == null)
+            {
+                throw new ArgumentNullException(nameof(repositoryCommandsFactory));
+            }
+
+            QuestRepository = repository;
+            StateCommads = stateCommandsFactory;
+            RepositoryCommands = repositoryCommandsFactory;
             _emptyList = new List<Quest>();
             _currentChildren = new List<Quest>();
 

@@ -17,19 +17,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
     [TestFixture]
     class ActiveQuestListViewModelTest
     {
-        [TearDown]
-        public void TearDown()
-        {
-            ServiceLocator.ReleaseAll();
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>());
-        }
-
-
         [Test]
         public void FilterQuest()
         {
@@ -45,14 +32,12 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 
             repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
 
-            ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
+            IQuestProgressCounter counter = MockRepository.GenerateStrictMock<IQuestProgressCounter>();
 
-            ServiceLocator.Register(() => repository);
-            ServiceLocator.Register(() => comManager);
-            ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
-            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
-            QuestListViewModel viewModel = new ActiveQuestListViewModel();
+            QuestListViewModel viewModel = new ActiveQuestListViewModel(repository, stateCommands, repoCommands, counter);
 
             //Act
             List<Quest> quests = viewModel.Leaves;
@@ -88,14 +73,12 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 
             repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
 
-            ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
+            IQuestProgressCounter counter = MockRepository.GenerateStrictMock<IQuestProgressCounter>();
 
-            ServiceLocator.Register(() => repository);
-            ServiceLocator.Register(() => comManager);
-            ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
-            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
-            QuestListViewModel viewModel = new ActiveQuestListViewModel();
+            QuestListViewModel viewModel = new ActiveQuestListViewModel(repository, stateCommands, repoCommands, counter);
 
             //Act
             List<Quest> quests = viewModel.Leaves;
@@ -128,12 +111,13 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
                 Total = 10
             });
 
-            ServiceLocator.Register(() => counter);
-            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IQuestRepository>());
-            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<ICommandManager>());
-            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
+            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
 
-            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel();
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(repository, stateCommands, repoCommands, counter);
+
 
             //Act
             int progress = viewModel.CountProgress(new Quest());
@@ -147,12 +131,13 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void CountProgressNullException()
         {
             //Arrange
-            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
-            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IQuestRepository>());
-            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<ICommandManager>());
-            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
+            IQuestProgressCounter counter = MockRepository.GenerateStrictMock<IQuestProgressCounter>();
+            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
 
-            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel();
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(repository, stateCommands, repoCommands, counter);
 
             //Act
             ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => viewModel.CountProgress(null));

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -24,6 +25,9 @@ namespace Justus.QuestApp.View.Droid.Fragments
     public class QuestCreateFragment : BaseFragment<QuestCreateViewModel>
     {
         private const string DateTimePickerId = "DateTimePickerId";
+
+        private const int DateTimePickerStartRequestCode = 0;
+        private const int DateTimePickerDeadlineRequestCode = 1;
 
         private EditText _titleEditText;
 
@@ -72,6 +76,26 @@ namespace Justus.QuestApp.View.Droid.Fragments
             return mainView;
         }
 
+        ///<inheritdoc/>
+        public override void OnActivityResult(int requestCode, int resultCode, Intent data)
+        {
+            if (resultCode == (int) Result.Ok)
+            {
+                DateTime receivedDateTime = DateTimePickerFragment.GetItsDateTime(data.Extras);
+
+                switch (requestCode)
+                {
+                    case DateTimePickerStartRequestCode:
+                        ViewModel.StartTime = receivedDateTime;
+                        _startDateButton.Text = receivedDateTime.ToString(CultureInfo.CurrentUICulture);
+                        break;
+                    case DateTimePickerDeadlineRequestCode:
+                        ViewModel.Deadline = receivedDateTime;
+                        _deadlineDateButton.Text = receivedDateTime.ToString(CultureInfo.CurrentUICulture);
+                        break;
+                }
+            }
+        }
 
         ///<inheritdoc/>
         public override void OnDestroy()
@@ -98,7 +122,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void StartDateButtonOnClick(object sender, EventArgs e)
         {
-            ShowDateTimePickerFragment();
+            ShowDateTimePickerFragment(DateTimePickerStartRequestCode);
         }
 
         private void DeadlineCheckboxOnClick(object sender, EventArgs eventArgs)
@@ -108,7 +132,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void DeadlineDateButtonOnClick(object sender, EventArgs eventArgs)
         {
-            ShowDateTimePickerFragment();
+            ShowDateTimePickerFragment(DateTimePickerDeadlineRequestCode);
         }
 
         private void SaveButtonOnClick(object sender, EventArgs eventArgs)
@@ -119,20 +143,23 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #endregion
 
-        private void ShowDateTimePickerFragment()
+        private void ShowDateTimePickerFragment(int requestCode)
         {
             DateTimePickerFragment fragment = DateTimePickerFragment.NewInstance(DateTime.Now - new TimeSpan(1,1,1));
+            fragment.SetTargetFragment(this, requestCode);
             fragment.Show(FragmentManager, DateTimePickerId);
         }
 
         private void HandleStartTimeSection(bool selectEnable)
         {
             _startDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
+            ViewModel.UseStartTime = selectEnable;
         }
 
         private void HandleDeadlineSection(bool selectEnable)
         {
             _deadlineDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
+            ViewModel.UseDeadline = selectEnable;
         }
 
         #endregion

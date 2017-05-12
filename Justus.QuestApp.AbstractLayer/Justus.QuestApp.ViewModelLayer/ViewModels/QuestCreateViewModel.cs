@@ -8,7 +8,6 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// </summary>
     public class QuestCreateViewModel : BaseViewModel
     {
-        private readonly IDataKeeper _dataKeeper;
         private readonly DateTime _defaultDateTime;
 
         private bool _useStartTime;
@@ -18,9 +17,8 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         private DateTime _deadline;
 
         /// <summary>
-        /// Receives reference to IDataKeeper implementation.
+        /// Default constructor.
         /// </summary>
-        /// <param name="dataKeeper"></param>
         public QuestCreateViewModel()
         {
             _defaultDateTime = DateTime.MinValue;

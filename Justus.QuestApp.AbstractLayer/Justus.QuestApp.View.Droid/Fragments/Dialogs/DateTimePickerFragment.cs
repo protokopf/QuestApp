@@ -24,20 +24,51 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         /// <summary>
         /// Id fot identifying value of datetime picker.
         /// </summary>
-        public static readonly string DateTimeValueId =
+        private static readonly string DateTimeValueId =
             "Justus.QuestApp.View.Droid.Fragments.Dialogs.DateTimePickerFragment.DateTimeValueId";
 
         private DatePicker _datePicker;
         private TimePicker _timePicker;
+        private TimeSpan _currentTime;
 
+        #region Public static members
+
+        /// <summary>
+        /// Creates new instance of DateTimePickerFragment
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
         public static DateTimePickerFragment NewInstance(DateTime dateTime)
         {
             DateTimePickerFragment fragment = new DateTimePickerFragment();
             Bundle arguments = new Bundle();
-            arguments.PutString(DateTimeValueId, dateTime.ToString(GetParsingCulture()));
+            PutItsDateTime(arguments, dateTime);
             fragment.Arguments = arguments;
             return fragment;
         }
+
+        /// <summary>
+        /// Tries to retrieve date time, that was placed there by instance this class.
+        /// </summary>
+        /// <param name="bundle"></param>
+        /// <returns></returns>
+        public static DateTime GetItsDateTime(Bundle bundle)
+        {
+            DateTime dt = DateTime.MinValue;
+
+            if (bundle != null)
+            {
+                string dateTimeString = bundle.GetString(DateTimeValueId);
+
+                if (!string.IsNullOrWhiteSpace(dateTimeString))
+                {
+                    DateTime.TryParse(dateTimeString, ParsingCulture, DateTimeStyles.None, out dt);
+                }
+            }
+            return dt;
+        }
+
+        #endregion
 
         #region DialogFragment overriding
 
@@ -48,13 +79,10 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
             _datePicker = dialogView.FindViewById<DatePicker>(Resource.Id.datePicker);
             _timePicker = dialogView.FindViewById<TimePicker>(Resource.Id.timePicker);
 
-            if (Arguments != null)
-            {
-                DateTime dateTime = TryGetDateTime(Arguments);
-                HandleDatePicker(_datePicker, dateTime);
-                HandleTimePicker(_timePicker, dateTime);
-            }
-
+            DateTime dateTime = DateTimePickerFragment.GetItsDateTime(Arguments);
+            HandleDatePicker(_datePicker, dateTime);
+            HandleTimePicker(_timePicker, dateTime);
+            
             return new Android.Support.V7.App.AlertDialog.
                     Builder(Activity).
                 SetTitle(Resource.String.DatePickerTitle).
@@ -63,31 +91,24 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
                 Create();
         }
 
+        public override void OnDestroy()
+        {
+            _timePicker.TimeChanged -= TimePickerOnTimeChanged;
+            base.OnDestroy();
+        }
 
         #endregion
 
         #region Private methods
 
-        private DateTime TryGetDateTime(Bundle bundle)
-        {
-            string dateTimeString = bundle.GetString(DateTimeValueId);
-
-            DateTime dt = DateTime.MinValue;
-
-            if (!string.IsNullOrWhiteSpace(dateTimeString))
-            {
-                DateTime.TryParse(dateTimeString, GetParsingCulture(), DateTimeStyles.None, out dt);
-            }
-            return dt;
-        }
-
         private void HandleTimePicker(TimePicker timePicker, DateTime dateTime)
         {
+            _timePicker.TimeChanged += TimePickerOnTimeChanged;
             if (dateTime != DateTime.MinValue)
             {
                 timePicker.CurrentHour = new Integer(dateTime.Hour);
                 timePicker.CurrentMinute = new Integer(dateTime.Minute);
-            }
+            }            
         }
 
         private void HandleDatePicker(DatePicker datePicker, DateTime dateTime)
@@ -98,12 +119,9 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
             }
         }
 
-        private static CultureInfo GetParsingCulture()
-        {
-            return CultureInfo.CurrentUICulture;;
-        }
+        private static CultureInfo ParsingCulture => CultureInfo.CurrentUICulture;
 
-        #region Handlers
+        #region Event handlers
 
         /// <summary>
         /// Handles date pickers ok click.
@@ -112,10 +130,40 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         /// <param name="e"></param>
         private void DatePickerOkHandler(object sender, DialogClickEventArgs e)
         {
+            if (TargetFragment != null)
+            {
+                DateTime currentDateTime = _datePicker.DateTime.Add(_currentTime);
+
+                Bundle bundle = new Bundle();
+                PutItsDateTime(bundle, currentDateTime);
+
+                Intent intent = new Intent();
+                intent.PutExtras(bundle);
+
+                TargetFragment.OnActivityResult(TargetRequestCode, (int)Result.Ok, intent);
+            }
+        }
+
+        /// <summary>
+        /// Fires, when time from time picker is changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="timeChangedEventArgs"></param>
+        private void TimePickerOnTimeChanged(object sender, TimePicker.TimeChangedEventArgs timeChangedEventArgs)
+        {
+            _currentTime = new TimeSpan(timeChangedEventArgs.HourOfDay, timeChangedEventArgs.Minute,0);
         }
 
         #endregion
 
+        #region Static methods
+
+        private static void PutItsDateTime(Bundle bundle, DateTime dateTime)
+        {
+            bundle?.PutString(DateTimeValueId, dateTime.ToString(ParsingCulture));
+        }
+
+        #endregion
 
         #endregion
     }

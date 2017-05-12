@@ -121,7 +121,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void ShowDateTimePickerFragment()
         {
-            DateTimePickerFragment fragment = new DateTimePickerFragment();
+            DateTimePickerFragment fragment = DateTimePickerFragment.NewInstance(DateTime.Now - new TimeSpan(1,1,1));
             fragment.Show(FragmentManager, DateTimePickerId);
         }
 

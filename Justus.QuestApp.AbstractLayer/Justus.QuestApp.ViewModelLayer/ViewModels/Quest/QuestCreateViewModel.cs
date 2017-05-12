@@ -1,7 +1,7 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Helpers;
 
-namespace Justus.QuestApp.ViewModelLayer.ViewModels
+namespace Justus.QuestApp.ViewModelLayer.ViewModels.Quest
 {
     /// <summary>
     /// View model for creating quest.
@@ -21,8 +21,13 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Receives reference to IDataKeeper implementation.
         /// </summary>
         /// <param name="dataKeeper"></param>
-        public QuestCreateViewModel()
+        public QuestCreateViewModel(IDataKeeper dataKeeper)
         {
+            if (dataKeeper == null)
+            {
+                throw new ArgumentNullException(nameof(dataKeeper));
+            }
+            _dataKeeper = dataKeeper;
             _defaultDateTime = DateTime.MinValue;
         }
 

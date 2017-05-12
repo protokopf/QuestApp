@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\FakeQuest.cs" />
     <Compile Include="ViewModelsTest\ActiveQuestListViewModelTest.cs" />
+    <Compile Include="ViewModelsTest\QuestCreateViewModelTest.cs" />
     <Compile Include="ViewModelsTest\QuestListViewModelTest.cs" />
     <Compile Include="ViewModelsTest\BaseViewModelTest.cs" />
     <Compile Include="ViewModelsTest\AvailableQuestListVIewModelTest.cs" />

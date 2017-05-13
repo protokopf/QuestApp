@@ -11,20 +11,32 @@ namespace Justus.QuestApp.ModelLayer.Helpers
     public static class ServiceLocator
     {
         private static readonly Dictionary<Type,Lazy<object>> Services = new Dictionary<Type, Lazy<object>>();
+        private static readonly Dictionary<Type, Func<object>> ServicesFactories = new Dictionary<Type, Func<object>>();
 
         /// <summary>
         /// Register service.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="initializer"></param>
-        public static bool Register<T>(Func<T> initializer)
+        /// <param name="preserveInstance"></param>
+        public static bool Register<T>(Func<T> initializer, bool preserveInstance = true) where T : class
         {
-            if(!Services.ContainsKey(typeof(T)))
+            Type currentType = typeof(T);
+            if (Services.ContainsKey(currentType) || ServicesFactories.ContainsKey(currentType))
             {
-                Services[typeof(T)] = new Lazy<object>(() => initializer());
+                return false;
+            }
+
+            if (preserveInstance)
+            {
+                Services[currentType] = new Lazy<object>(initializer);
                 return true;
             }
-            return false;
+            else
+            {
+                ServicesFactories[currentType] = initializer;
+                return true;
+            }
         }
 
         /// <summary>
@@ -32,7 +44,7 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T Resolve<T>()
+        public static T Resolve<T>(bool preserved = true) where T : class
         {
             return (T)ResolveAssignable(typeof(T));
         }
@@ -42,7 +54,7 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> ResolveAll<T>()
+        public static IEnumerable<T> ResolveAll<T>() where T : class
         {
             return ResolveAllAssignable(typeof(T)).OfType<T>();
         }
@@ -53,6 +65,7 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         public static void ReleaseAll()
         {
             Services.Clear();
+            ServicesFactories.Clear();
         }
 
         /// <summary>
@@ -62,16 +75,28 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         /// <returns></returns>
         private static object ResolveAssignable(Type type)
         {
+            TypeInfo paramInfo = type.GetTypeInfo();
+
             foreach (var pair in Services)
             {
                 TypeInfo currentInfo = pair.Key.GetTypeInfo();
-                TypeInfo paramInfo = type.GetTypeInfo();
-
+                
                 if(paramInfo.IsAssignableFrom(currentInfo))
                 {
                     return pair.Value.Value;
                 }
             }
+
+            foreach (var pair in ServicesFactories)
+            {
+                TypeInfo currentInfo = pair.Key.GetTypeInfo();
+
+                if (paramInfo.IsAssignableFrom(currentInfo))
+                {
+                    return pair.Value.Invoke();
+                }
+            }
+
             throw new InvalidOperationException($"Service {type} not found!");
         }
 
@@ -83,9 +108,13 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         private static IEnumerable<object> ResolveAllAssignable(Type type)
         {
             TypeInfo typeInfo = type.GetTypeInfo();
-            return from serv in Services
-                where typeInfo.IsAssignableFrom(serv.Key.GetTypeInfo())
-                select serv.Value.Value;
+
+            return Services.
+                Where(pair => typeInfo.IsAssignableFrom(pair.Key.GetTypeInfo())).
+                Select(pair => pair.Value.Value).
+                Union(ServicesFactories.
+                            Where(factPair => typeInfo.IsAssignableFrom(factPair.Key.GetTypeInfo())).
+                            Select(factPair => factPair.Value()));
         }
     }
 }

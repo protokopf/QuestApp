@@ -238,5 +238,76 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
             Assert.IsNotNull(implementations);
             Assert.IsEmpty(implementations);
         }
+
+        [Test]
+        public void RegisterWithNoPreservationReturnsDifferentInstancesEachResolveTest()
+        {
+            //Arrange
+            ServiceLocator.Register(() => new FakeOne(), false);
+
+            //Act
+            FakeOne first = ServiceLocator.Resolve<FakeOne>();
+            FakeOne second = ServiceLocator.Resolve<FakeOne>();
+
+            //Assert
+            Assert.AreNotEqual(first, second);
+        }
+
+        [Test]
+        public void RegisterWithPreservationReturnsSameInstancesEachResolveTest()
+        {
+            //Arrange
+            ServiceLocator.Register(() => new FakeOne(), true);
+
+            //Act
+            FakeOne first = ServiceLocator.Resolve<FakeOne>();
+            FakeOne second = ServiceLocator.Resolve<FakeOne>();
+
+            //Assert
+            Assert.AreEqual(first, second);
+        }
+
+        [Test]
+        public void CannotRegisterPreservedIfNoPreservedRegisteredAlreadyTest()
+        {
+            //Arrange && Act
+            bool preservedRegistered = ServiceLocator.Register(() => new FakeOne(), true);
+            bool noPreservedRegistered = ServiceLocator.Register(() => new FakeOne(), false);
+
+            //Assert
+            Assert.IsTrue(preservedRegistered);
+            Assert.IsFalse(noPreservedRegistered);
+        }
+
+
+        [Test]
+        public void CannotRegisterNoPreservedIfPreservedRegisteredAlreadyTest()
+        {
+            //Arrange && Act
+            bool preservedRegistered = ServiceLocator.Register(() => new FakeOne(), false);
+            bool noPreservedRegistered = ServiceLocator.Register(() => new FakeOne(), true);
+
+            //Assert
+            Assert.IsTrue(preservedRegistered);
+            Assert.IsFalse(noPreservedRegistered);
+        }
+
+        [Test]
+        public void BothPreservedAndNoPreservedResolvedWhenResolveAllTest()
+        {
+            //Arrange
+            ServiceLocator.Register(() => new FakeCommon(), true);
+            ServiceLocator.Register(() => new AnotherFakeCommon(), false);
+
+            //Act
+            List<ICommon> implementations = ServiceLocator.ResolveAll<ICommon>().ToList();
+
+            //Assert
+            Assert.IsNotNull(implementations);
+            Assert.AreEqual(2, implementations.Count);
+
+            Assert.IsTrue(implementations.Any(x => x.GetType() == typeof(FakeCommon)));
+            Assert.IsTrue(implementations.Any(x => x.GetType() == typeof(AnotherFakeCommon)));
+        }
     }
 }

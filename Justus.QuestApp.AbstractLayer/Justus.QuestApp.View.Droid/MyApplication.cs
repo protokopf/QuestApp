@@ -4,9 +4,11 @@ using Android.Runtime;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Data;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Factories;
 using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
+using Justus.QuestApp.ModelLayer.Factories;
 using Justus.QuestApp.ModelLayer.Model;
 using Justus.QuestApp.ServiceLayer.DataServices;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
@@ -42,6 +44,7 @@ namespace Justus.QuestApp.View.Droid
                 ServiceLocator.Resolve<IDataAccessInterface<Quest>>(),
                 "some connection string"
                 ));
+            ServiceLocator.Register(() => new SqliteQuestCreator());
             //ServiceLocator.Register<IQuestRepository>(() => new RecursiveQuestRepository(
             //    new RestDataStorage(), "http://192.168.0.104/api/Quests"));
             ServiceLocator.Register(() => new RecursiveQuestProgressCounter());
@@ -68,7 +71,9 @@ namespace Justus.QuestApp.View.Droid
                 ServiceLocator.Resolve<IStateCommandsFactory>(),
                 ServiceLocator.Resolve<IRepositoryCommandsFactory>()));
 
-            ServiceLocator.Register(() => new QuestCreateViewModel());
+            ServiceLocator.Register(() => new QuestCreateViewModel(
+                ServiceLocator.Resolve<IQuestCreator>(),
+                ServiceLocator.Resolve<IRepositoryCommandsFactory>()));
         }
 
     }

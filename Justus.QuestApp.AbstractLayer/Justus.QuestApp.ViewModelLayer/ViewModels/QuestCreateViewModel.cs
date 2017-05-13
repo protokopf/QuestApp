@@ -1,4 +1,6 @@
 ﻿using System;
+using Justus.QuestApp.AbstractLayer.Commands.Factories;
+using Justus.QuestApp.AbstractLayer.Factories;
 using Justus.QuestApp.AbstractLayer.Helpers;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
@@ -8,88 +10,73 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// </summary>
     public class QuestCreateViewModel : BaseViewModel
     {
-        private readonly DateTime _defaultDateTime;
-
-        private bool _useStartTime;
-        private bool _useDeadline;
-
-        private DateTime _startTime;
-        private DateTime _deadline;
+        private readonly IQuestCreator _questCreator;
+        private readonly IRepositoryCommandsFactory _commandsFactory;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public QuestCreateViewModel()
+        public QuestCreateViewModel(IQuestCreator questCreator, IRepositoryCommandsFactory repCommandsFactory)
         {
-            _defaultDateTime = DateTime.MinValue;
+            if (questCreator == null)
+            {
+                throw new ArgumentNullException(nameof(questCreator));
+            }
+            if (repCommandsFactory == null)
+            {
+                throw new ArgumentNullException(nameof(repCommandsFactory));
+            }
+            _questCreator = questCreator;
+            _commandsFactory = repCommandsFactory;
         }
+
+        /// <summary>
+        /// Title of current quest.
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Description of current quest.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Points, whether current quest important or not.
+        /// </summary>
+        public bool IsImportant { get; set; }
 
         /// <summary>
         /// Points, whether start time should be used.
         /// </summary>
-        public bool UseStartTime
-        {
-            get
-            {
-                return _useStartTime;
-            }
-            set
-            {
-                _useStartTime = value;
-                if (!_useStartTime)
-                {
-                    StartTime = _defaultDateTime;
-                }
-            }
-        }
+        public bool UseStartTime { get; set; }
 
         /// <summary>
         /// Start time.
         /// </summary>
-        public DateTime StartTime
-        {
-            get
-            {
-                return _startTime;
-            }
-            set
-            {
-                _startTime = UseStartTime ? value : _defaultDateTime;
-            }
-        }
+        public DateTime StartTime { get; set; }
 
         /// <summary>
         /// Points, whether deadline should be used.
         /// </summary>
-        public bool UseDeadline
-        {
-            get
-            {
-                return _useDeadline;
-            }
-            set
-            {
-                _useDeadline = value;
-                if (!_useDeadline)
-                {
-                    Deadline = _defaultDateTime;
-                }
-            }
-        }
-
+        public bool UseDeadline { get; set; }
+        
         /// <summary>
         /// Deadline.
         /// </summary>
-        public DateTime Deadline
+        public DateTime Deadline { get; set; }
+
+        /// <summary>
+        /// Resets view model state.
+        /// </summary>
+        public void Reset()
         {
-            get
-            {
-                return _deadline;
-            }
-            set
-            {
-                _deadline = UseDeadline ? value : _defaultDateTime;
-            }
+            Title = String.Empty;
+            Description = String.Empty;
+            IsImportant = false;
+            UseDeadline = false;
+            UseStartTime = false;
+            StartTime = DateTime.MinValue;
+            Deadline = DateTime.MinValue;
         }
     }
 }

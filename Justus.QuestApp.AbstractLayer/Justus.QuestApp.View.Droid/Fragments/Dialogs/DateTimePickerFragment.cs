@@ -13,6 +13,7 @@ using Android.Views;
 using Android.Widget;
 using Java.Lang;
 using DialogFragment = Android.Support.V4.App.DialogFragment;
+using Fragment = Android.Support.V4.App.Fragment;
 
 namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
 {
@@ -37,13 +38,23 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         /// Creates new instance of DateTimePickerFragment
         /// </summary>
         /// <param name="dateTime"></param>
+        /// <param name="targetFragment">Fragment, that will receive date after ok click.</param>
+        /// <param name="requestCode">Request code, used to identify result.</param>
         /// <returns></returns>
-        public static DateTimePickerFragment NewInstance(DateTime dateTime)
+        public static DateTimePickerFragment NewInstance(DateTime dateTime, Fragment targetFragment, int requestCode)
         {
+            if (targetFragment == null)
+            {
+                throw new ArgumentNullException(nameof(targetFragment));
+            }
+
             DateTimePickerFragment fragment = new DateTimePickerFragment();
+            fragment.SetTargetFragment(targetFragment, requestCode);
+
             Bundle arguments = new Bundle();
             PutItsDateTime(arguments, dateTime);
             fragment.Arguments = arguments;
+
             return fragment;
         }
 

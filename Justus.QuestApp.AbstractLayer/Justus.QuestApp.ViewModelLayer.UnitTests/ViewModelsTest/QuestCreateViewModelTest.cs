@@ -1,4 +1,6 @@
 ﻿using System;
+using Justus.QuestApp.AbstractLayer.Commands.Factories;
+using Justus.QuestApp.AbstractLayer.Factories;
 using Justus.QuestApp.AbstractLayer.Helpers;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 using NUnit.Framework;
@@ -14,8 +16,10 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void UseStartTimeFalseDropsDeadlineDateTimeTest()
         {
             //Arrange
+            IQuestCreator creator = MockRepository.GenerateStrictMock<IQuestCreator>();
+            IRepositoryCommandsFactory factory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
 
-            QuestCreateViewModel viewModel = new QuestCreateViewModel();
+            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory);
 
             DateTime dateTime = DateTime.Now;
 
@@ -34,8 +38,10 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void UseDeadlineFalseDropsDeadlineDateTimeTest()
         {
             //Arrange
+            IQuestCreator creator = MockRepository.GenerateStrictMock<IQuestCreator>();
+            IRepositoryCommandsFactory factory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
 
-            QuestCreateViewModel viewModel = new QuestCreateViewModel();
+            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory);
 
             DateTime dateTime = DateTime.Now;
 
@@ -54,8 +60,10 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void StartTimeWontBeAssignedIfUseStartTimeFalseTest()
         {
             //Arrange
+            IQuestCreator creator = MockRepository.GenerateStrictMock<IQuestCreator>();
+            IRepositoryCommandsFactory factory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
 
-            QuestCreateViewModel viewModel = new QuestCreateViewModel();
+            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory);
 
             DateTime dateTime = DateTime.Now;
 
@@ -77,7 +85,10 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void DeadlineWontBeAssignedIfUseDeadlineFalseTest()
         {
             //Arrange
-            QuestCreateViewModel viewModel = new QuestCreateViewModel();
+            IQuestCreator creator = MockRepository.GenerateStrictMock<IQuestCreator>();
+            IRepositoryCommandsFactory factory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
+
+            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory);
 
             DateTime dateTime = DateTime.Now;
 

@@ -18,8 +18,8 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="initializer"></param>
-        /// <param name="preserveInstance"></param>
-        public static bool Register<T>(Func<T> initializer, bool preserveInstance = true) where T : class
+        /// <param name="useLikeFactory"></param>
+        public static bool Register<T>(Func<T> initializer, bool useLikeFactory = false) where T : class
         {
             Type currentType = typeof(T);
             if (Services.ContainsKey(currentType) || ServicesFactories.ContainsKey(currentType))
@@ -27,7 +27,7 @@ namespace Justus.QuestApp.ModelLayer.Helpers
                 return false;
             }
 
-            if (preserveInstance)
+            if (!useLikeFactory)
             {
                 Services[currentType] = new Lazy<object>(initializer);
                 return true;

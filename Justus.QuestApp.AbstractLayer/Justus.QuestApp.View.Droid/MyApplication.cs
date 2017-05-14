@@ -80,7 +80,7 @@ namespace Justus.QuestApp.View.Droid
 
         private void InitializeApplicationServices()
         {
-            ServiceLocator.Register(() => new DateTimeStateHandler());
+            ServiceLocator.Register(() => new DateTimeStateHandler(), useLikeFactory: true);
         }
 
     }

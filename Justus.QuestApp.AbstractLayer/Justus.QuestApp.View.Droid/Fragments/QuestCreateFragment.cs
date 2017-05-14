@@ -41,7 +41,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private const int DateTimePickerStartRequestCode = 0;
         private const int DateTimePickerDeadlineRequestCode = 1;
 
-        private IEntityStateHandler<DateTime> _dateTimeHandler;
+        private readonly IEntityStateHandler<DateTime> _dateTimeHandler;
+        private readonly DateTime _defaultDateTime = DateTime.MinValue;
 
         private EditText _titleEditText;
         private EditText _descriptionEditText;
@@ -154,10 +155,10 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #region Private methods
 
-        private void ShowDateTimePickerFragment(int requestCode)
+        private void ShowDateTimePickerFragment(int requestCode, DateTime startDateTime)
         {
             DateTimePickerFragment fragment = DateTimePickerFragment.NewInstance(
-                DateTime.Now - new TimeSpan(1, 1, 1),
+                startDateTime == _defaultDateTime ? DateTime.Now : startDateTime,
                 this,
                 requestCode);
             fragment.Show(FragmentManager, DateTimePickerId);
@@ -179,7 +180,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void StartDateButtonOnClick(object sender, EventArgs e)
         {
-            ShowDateTimePickerFragment(DateTimePickerStartRequestCode);
+            ShowDateTimePickerFragment(DateTimePickerStartRequestCode, ViewModel.StartTime);
         }
 
         private void DeadlineCheckboxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs eventArgs)
@@ -191,7 +192,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void DeadlineDateButtonOnClick(object sender, EventArgs eventArgs)
         {
-            ShowDateTimePickerFragment(DateTimePickerDeadlineRequestCode);
+            ShowDateTimePickerFragment(DateTimePickerDeadlineRequestCode, ViewModel.Deadline);
         }
 
         private void SaveButtonOnClick(object sender, EventArgs eventArgs)
@@ -209,7 +210,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             if (ViewModel.UseDeadline)
             {
                 deadlineDateButton.Visibility = ViewStates.Visible;
-                if (ViewModel.Deadline != DateTime.MinValue)
+                if (ViewModel.Deadline != _defaultDateTime)
                 {
                     deadlineDateButton.Text = StringifyDateTime(ViewModel.Deadline);
                 }
@@ -221,7 +222,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             if (ViewModel.UseStartTime)
             {
                 startDateButton.Visibility = ViewStates.Visible;
-                if (ViewModel.StartTime != DateTime.MinValue)
+                if (ViewModel.StartTime != _defaultDateTime)
                 {
                     startDateButton.Text = StringifyDateTime(ViewModel.StartTime);
                 }
@@ -274,7 +275,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         /// <returns></returns>
         private DateTime ParseDateTimeString(string dateTimeString)
         {
-            DateTime dt = DateTime.MinValue;
+            DateTime dt = _defaultDateTime;
             if (!string.IsNullOrWhiteSpace(dateTimeString))
             {
                 DateTime.TryParse(dateTimeString, DateTimeCulture, DateTimeStyles.None, out dt);

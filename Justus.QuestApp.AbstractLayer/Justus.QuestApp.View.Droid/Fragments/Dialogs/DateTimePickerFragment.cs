@@ -12,6 +12,9 @@ using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 using Java.Lang;
+using Justus.QuestApp.ModelLayer.Helpers;
+using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
+using Justus.QuestApp.View.Droid.EntityStateHandlers;
 using DialogFragment = Android.Support.V4.App.DialogFragment;
 using Fragment = Android.Support.V4.App.Fragment;
 
@@ -32,6 +35,15 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         private TimePicker _timePicker;
         private TimeSpan _currentTime;
 
+        private static readonly IEntityStateHandler<DateTime> DateTimeHandler = new DateTimeStateHandler();
+
+        public DateTimePickerFragment(DateTime dateTime)
+        {
+            Bundle arguments = new Bundle();
+            PutItsDateTime(arguments, dateTime);
+            Arguments = arguments;
+        }
+
         #region Public static members
 
         /// <summary>
@@ -47,14 +59,8 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
             {
                 throw new ArgumentNullException(nameof(targetFragment));
             }
-
-            DateTimePickerFragment fragment = new DateTimePickerFragment();
+            DateTimePickerFragment fragment = new DateTimePickerFragment(dateTime);
             fragment.SetTargetFragment(targetFragment, requestCode);
-
-            Bundle arguments = new Bundle();
-            PutItsDateTime(arguments, dateTime);
-            fragment.Arguments = arguments;
-
             return fragment;
         }
 
@@ -65,24 +71,14 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         /// <returns></returns>
         public static DateTime GetItsDateTime(Bundle bundle)
         {
-            DateTime dt = DateTime.MinValue;
-
-            if (bundle != null)
-            {
-                string dateTimeString = bundle.GetString(DateTimeValueId);
-
-                if (!string.IsNullOrWhiteSpace(dateTimeString))
-                {
-                    DateTime.TryParse(dateTimeString, ParsingCulture, DateTimeStyles.None, out dt);
-                }
-            }
-            return dt;
+            return DateTimeHandler.Extract(DateTimeValueId, bundle);
         }
 
         #endregion
 
         #region DialogFragment overriding
 
+        ///<inheritdoc/>
         public override Dialog OnCreateDialog(Bundle savedInstanceState)
         {
             Android.Views.View dialogView = LayoutInflater.From(Activity).Inflate(Resource.Layout.DateTimePicker,null);
@@ -90,7 +86,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
             _datePicker = dialogView.FindViewById<DatePicker>(Resource.Id.datePicker);
             _timePicker = dialogView.FindViewById<TimePicker>(Resource.Id.timePicker);
 
-            DateTime dateTime = DateTimePickerFragment.GetItsDateTime(Arguments);
+            DateTime dateTime = GetItsDateTime(Arguments);
             HandleDatePicker(_datePicker, dateTime);
             HandleTimePicker(_timePicker, dateTime);
             
@@ -102,10 +98,11 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
                 Create();
         }
 
-        public override void OnDestroy()
+        ///<inheritdoc/>
+        public override void OnDestroyView()
         {
             _timePicker.TimeChanged -= TimePickerOnTimeChanged;
-            base.OnDestroy();
+            base.OnDestroyView();
         }
 
         #endregion
@@ -129,8 +126,6 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
                 datePicker.DateTime = dateTime;
             }
         }
-
-        private static CultureInfo ParsingCulture => CultureInfo.CurrentUICulture;
 
         #region Event handlers
 
@@ -169,9 +164,9 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
 
         #region Static methods
 
-        private static void PutItsDateTime(Bundle bundle, DateTime dateTime)
+        private void PutItsDateTime(Bundle bundle, DateTime dateTime)
         {
-            bundle?.PutString(DateTimeValueId, dateTime.ToString(ParsingCulture));
+            DateTimeHandler.Save(DateTimeValueId, dateTime, bundle);
         }
 
         #endregion

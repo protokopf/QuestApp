@@ -240,10 +240,10 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
         }
 
         [Test]
-        public void RegisterWithNoPreservationReturnsDifferentInstancesEachResolveTest()
+        public void RegisterLikeFactoryReturnsDifferentInstancesEachResolveTest()
         {
             //Arrange
-            ServiceLocator.Register(() => new FakeOne(), false);
+            ServiceLocator.Register(() => new FakeOne(), true);
 
             //Act
             FakeOne first = ServiceLocator.Resolve<FakeOne>();
@@ -254,10 +254,10 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
         }
 
         [Test]
-        public void RegisterWithPreservationReturnsSameInstancesEachResolveTest()
+        public void RegisterNotLikeFactoryReturnsSameInstancesEachResolveTest()
         {
             //Arrange
-            ServiceLocator.Register(() => new FakeOne(), true);
+            ServiceLocator.Register(() => new FakeOne(), false);
 
             //Act
             FakeOne first = ServiceLocator.Resolve<FakeOne>();

@@ -11,7 +11,9 @@ using Justus.QuestApp.ModelLayer.Commands.Factories;
 using Justus.QuestApp.ModelLayer.Factories;
 using Justus.QuestApp.ModelLayer.Model;
 using Justus.QuestApp.ServiceLayer.DataServices;
+using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.EntityStateHandlers;
+using Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 using Justus.QuestApp.View.Droid.StubServices;
 
@@ -81,6 +83,8 @@ namespace Justus.QuestApp.View.Droid
         private void InitializeApplicationServices()
         {
             ServiceLocator.Register(() => new DateTimeStateHandler(), useLikeFactory: true);
+            ServiceLocator.Register(() => new QuestCreateViewModelStateHandler(
+                ServiceLocator.Resolve<IEntityStateHandler<DateTime>>()));
         }
 
     }

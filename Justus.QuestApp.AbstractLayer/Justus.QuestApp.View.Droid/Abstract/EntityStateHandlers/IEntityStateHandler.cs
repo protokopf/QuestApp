@@ -6,7 +6,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers
     /// Used for saving/extraction entity from bundles.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    internal interface IEntityStateHandler<TEntity>
+    public interface IEntityStateHandler<TEntity>
     {
         /// <summary>
         /// Saves entity in bundle.
@@ -21,7 +21,8 @@ namespace Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers
         /// </summary>
         /// <param name="key"></param>
         /// <param name="bundle"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        TEntity Extract(string key, Bundle bundle);
+        bool Extract(string key, Bundle bundle, ref TEntity entity);
     }
 }

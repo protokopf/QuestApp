@@ -31,17 +31,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private static readonly CultureInfo DateTimeCulture = CultureInfo.CurrentUICulture;
 
         private const string DateTimePickerId = "DateTimePickerId";
-
-        private const string DeadlineDateTimeKey = "DeadlineDateTimeKey";
-        private const string StartDateTimeKey = "StartDateTimeKey";
-        private const string UseDeadlineKey = "UseDeadlineKey";
-        private const string UseStartKey = "UseStartKey";
-        private const string IsImportantKey = "IsImportantKey";
+        private const string ViewModelKey = "QuestCreateViewModel.Key";
 
         private const int DateTimePickerStartRequestCode = 0;
         private const int DateTimePickerDeadlineRequestCode = 1;
 
-        private readonly IEntityStateHandler<DateTime> _dateTimeHandler;
+        private readonly IEntityStateHandler<QuestCreateViewModel> _viewModelStateHandler;
         private readonly DateTime _defaultDateTime = DateTime.MinValue;
 
         private EditText _titleEditText;
@@ -59,7 +54,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         public QuestCreateFragment()
         {
-            _dateTimeHandler = ServiceLocator.Resolve<IEntityStateHandler<DateTime>>();
+            _viewModelStateHandler = ServiceLocator.Resolve<IEntityStateHandler<QuestCreateViewModel>>();
         }
 
         #region Fragment overriding
@@ -235,27 +230,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void SaveViewModelState(Bundle bundle)
         {
-            if (bundle != null)
-            {
-                _dateTimeHandler.Save(StartDateTimeKey, ViewModel.StartTime, bundle);
-                _dateTimeHandler.Save(DeadlineDateTimeKey, ViewModel.Deadline, bundle);
-
-                bundle.PutBoolean(UseStartKey, ViewModel.UseStartTime);
-                bundle.PutBoolean(UseDeadlineKey, ViewModel.UseDeadline);
-                bundle.PutBoolean(IsImportantKey, ViewModel.IsImportant);
-            }
+            _viewModelStateHandler.Save(ViewModelKey, ViewModel, bundle);
         }
 
         private void ExtractViewModelState(Bundle bundle)
         {
-            if (bundle != null)
-            {
-                ViewModel.StartTime = _dateTimeHandler.Extract(StartDateTimeKey, bundle);
-                ViewModel.Deadline = _dateTimeHandler.Extract(DeadlineDateTimeKey, bundle);
-                ViewModel.UseStartTime = bundle.GetBoolean(UseStartKey);
-                ViewModel.UseDeadline = bundle.GetBoolean(UseDeadlineKey);
-                ViewModel.IsImportant = bundle.GetBoolean(IsImportantKey);
-            }
+            _viewModelStateHandler.Extract(ViewModelKey, bundle, ref ViewModel);
         }
 
         /// <summary>
@@ -266,44 +246,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private string StringifyDateTime(DateTime dateTime)
         {
             return dateTime.ToString(DateTimeCulture);
-        }
-
-        /// <summary>
-        /// Try parse string to dateTime.
-        /// </summary>
-        /// <param name="dateTimeString"></param>
-        /// <returns></returns>
-        private DateTime ParseDateTimeString(string dateTimeString)
-        {
-            DateTime dt = _defaultDateTime;
-            if (!string.IsNullOrWhiteSpace(dateTimeString))
-            {
-                DateTime.TryParse(dateTimeString, DateTimeCulture, DateTimeStyles.None, out dt);
-            }
-            return dt;
-        }
-
-        /// <summary>
-        /// Puts dateTime to bundle under specific key.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="dateTime"></param>
-        /// <param name="bundle"></param>
-        private void PutDateTimeToBundle(string key, DateTime dateTime, Bundle bundle)
-        {
-            bundle.PutString(key, StringifyDateTime(dateTime));
-        }
-
-        /// <summary>
-        /// Get dateTime from bundle using specific key.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="bundle"></param>
-        /// <returns></returns>
-        private DateTime GetDateTimeFromBundle(string key, Bundle bundle)
-        {
-            string dateTimeString = bundle.GetString(key);       
-            return ParseDateTimeString(dateTimeString); ;
         }
 
         #endregion

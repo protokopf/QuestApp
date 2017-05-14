@@ -130,6 +130,7 @@
     <Compile Include="Abstract\Fragments\BaseTraverseQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\ISelectable.cs" />
     <Compile Include="EntityStateHandlers\DateTimeStateHandler.cs" />
+    <Compile Include="EntityStateHandlers\VIewModels\QuestCreateViewModelStateHandler.cs" />
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\BaseQuestsFragment.cs" />
     <Compile Include="Fragments\Dialogs\DateTimePickerFragment.cs" />

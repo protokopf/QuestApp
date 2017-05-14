@@ -71,7 +71,9 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         /// <returns></returns>
         public static DateTime GetItsDateTime(Bundle bundle)
         {
-            return DateTimeHandler.Extract(DateTimeValueId, bundle);
+            DateTime dateTime = DateTime.MinValue;
+            DateTimeHandler.Extract(DateTimeValueId, bundle, ref dateTime);
+            return dateTime;
         }
 
         #endregion

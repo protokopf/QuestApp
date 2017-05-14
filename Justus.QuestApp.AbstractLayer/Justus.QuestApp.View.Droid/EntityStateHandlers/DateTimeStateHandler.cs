@@ -35,15 +35,15 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers
         }
 
         ///<inheritdoc/>
-        public DateTime Extract(string key, Bundle bundle)
+        public bool Extract(string key, Bundle bundle, ref DateTime entity)
         {
-            DateTime dateTime = DateTime.MinValue;
             if (bundle != null && !string.IsNullOrWhiteSpace(key))
             {
                 string dateTimeString = bundle.GetString(key);
-                dateTime = ParseDateTimeString(dateTimeString);
+                entity = ParseDateTimeString(dateTimeString);
+                return true;
             }
-            return dateTime;
+            return false;
         }
 
         #endregion

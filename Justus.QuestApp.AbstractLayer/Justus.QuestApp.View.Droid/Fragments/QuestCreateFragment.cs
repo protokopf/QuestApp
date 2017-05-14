@@ -26,64 +26,72 @@ namespace Justus.QuestApp.View.Droid.Fragments
     /// </summary>
     public class QuestCreateFragment : BaseFragment<QuestCreateViewModel>
     {
+        private static readonly CultureInfo DateTimeCulture = CultureInfo.CurrentUICulture;
+
         private const string DateTimePickerId = "DateTimePickerId";
+
+        private const string DeadlineDateTimeKey = "DeadlineDateTimeKey";
+        private const string StartDateTimeKey = "StartDateTimeKey";
+        private const string UseDeadlineKey = "UseDeadlineKey";
+        private const string UseStartKey = "UseStartKey";
+        private const string IsImportantKey = "IsImportantKey";
 
         private const int DateTimePickerStartRequestCode = 0;
         private const int DateTimePickerDeadlineRequestCode = 1;
 
         private EditText _titleEditText;
-
         private EditText _descriptionEditText;
 
         private CheckBox _importanceCheckBox;
 
-        private FloatingActionButton _saveButton;
-
         private CheckBox _startDateTimeCheckbox;
-
         private Button _startDateButton;
 
         private CheckBox _deadlineCheckbox;
-
         private Button _deadlineDateButton;
 
-        public QuestCreateFragment()
-        {
-            _titleEditText = null;
-        }
+        private FloatingActionButton _saveButton;
 
         #region Fragment overriding
+
+        ///<inheritdoc/>
+        public override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            ExtractViewModelState(savedInstanceState);
+        }
 
         ///<inheritdoc/>
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             this.Activity.Window.SetSoftInputMode(SoftInput.StateAlwaysHidden);
-
+            
             Android.Views.View mainView = inflater.Inflate(Resource.Layout.QuestCreateFragmentLayout, container, false);
 
             _titleEditText = mainView.FindViewById<EditText>(Resource.Id.questTitleEditText);
-            HandleTitleEditText(_titleEditText);
-
             _descriptionEditText = mainView.FindViewById<EditText>(Resource.Id.questDescriptionEditText);
-            HandleDescriptionEditText(_descriptionEditText);
 
             _importanceCheckBox = mainView.FindViewById<CheckBox>(Resource.Id.questCreateImportantCheckbox);
+            _importanceCheckBox.CheckedChange += ImportanceCheckBoxOnCheckedChange;
 
             _startDateTimeCheckbox = mainView.FindViewById<CheckBox>(Resource.Id.startCheckbox);
             _startDateButton = mainView.FindViewById<Button>(Resource.Id.startDateButton);
-
+            
             _deadlineCheckbox = mainView.FindViewById<CheckBox>(Resource.Id.deadlineCheckbox);
             _deadlineDateButton = mainView.FindViewById<Button>(Resource.Id.deadlineDateButton);
-
+            
             _saveButton = mainView.FindViewById<FloatingActionButton>(Resource.Id.questCreateSaveButton);
 
-            _startDateTimeCheckbox.Click += StartDateTimeCheckboxOnClick;
-            HandleStartDateButton(_startDateButton);
+            _startDateTimeCheckbox.CheckedChange += StartDateTimeCheckboxOnCheckedChange;
+            _startDateButton.Click += StartDateButtonOnClick;
 
-            _deadlineCheckbox.Click += DeadlineCheckboxOnClick;
-            HandleDeadlineDateButton(_deadlineDateButton);
+            _deadlineCheckbox.CheckedChange += DeadlineCheckboxOnCheckedChange;
+            _deadlineDateButton.Click += DeadlineDateButtonOnClick;
 
             _saveButton.Click += SaveButtonOnClick;
+
+            HandleStartDateButton(_startDateButton);
+            HandleDeadlineDateButton(_deadlineDateButton);
 
             return mainView;
         }
@@ -111,28 +119,53 @@ namespace Justus.QuestApp.View.Droid.Fragments
         }
 
         ///<inheritdoc/>
-        public override void OnDestroy()
+        public override void OnDestroyView()
         {
             _saveButton.Click -= SaveButtonOnClick;
 
-            _startDateTimeCheckbox.Click -= StartDateTimeCheckboxOnClick;
+            _startDateTimeCheckbox.CheckedChange -= StartDateTimeCheckboxOnCheckedChange;
             _startDateButton.Click -= StartDateButtonOnClick;
 
-            _deadlineCheckbox.Click -= DeadlineCheckboxOnClick;
+            _deadlineCheckbox.CheckedChange -= DeadlineCheckboxOnCheckedChange;
             _deadlineDateButton.Click -= DeadlineDateButtonOnClick;
 
+            _importanceCheckBox.CheckedChange -= ImportanceCheckBoxOnCheckedChange;
+
             base.OnDestroy();
+        }
+
+        ///<inheritdoc/>
+        public override void OnSaveInstanceState(Bundle outState)
+        {
+            base.OnSaveInstanceState(outState);
+            SaveViewModelState(outState);
         }
 
         #endregion
 
         #region Private methods
 
+        private void ShowDateTimePickerFragment(int requestCode)
+        {
+            DateTimePickerFragment fragment = DateTimePickerFragment.NewInstance(
+                DateTime.Now - new TimeSpan(1, 1, 1),
+                this,
+                requestCode);
+            fragment.Show(FragmentManager, DateTimePickerId);
+        }
+
         #region Event handlers
 
-        private void StartDateTimeCheckboxOnClick(object sender, EventArgs eventArgs)
+        private void ImportanceCheckBoxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs checkedChangeEventArgs)
         {
-            HandleStartTimeSection(_startDateTimeCheckbox.Checked);
+            ViewModel.IsImportant = checkedChangeEventArgs.IsChecked;
+        }
+
+        private void StartDateTimeCheckboxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs eventArgs)
+        {
+            bool selectEnable = eventArgs.IsChecked;
+            _startDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
+            ViewModel.UseStartTime = selectEnable;
         }
 
         private void StartDateButtonOnClick(object sender, EventArgs e)
@@ -140,9 +173,11 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ShowDateTimePickerFragment(DateTimePickerStartRequestCode);
         }
 
-        private void DeadlineCheckboxOnClick(object sender, EventArgs eventArgs)
+        private void DeadlineCheckboxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs eventArgs)
         {
-            HandleDeadlineSection(_deadlineCheckbox.Checked);
+            bool selectEnable = eventArgs.IsChecked;
+            _deadlineDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
+            ViewModel.UseDeadline = selectEnable;
         }
 
         private void DeadlineDateButtonOnClick(object sender, EventArgs eventArgs)
@@ -152,10 +187,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void SaveButtonOnClick(object sender, EventArgs eventArgs)
         {
-            ViewModel.Title = _titleEditText.Text;
-            ViewModel.Description = _descriptionEditText.Text;
-            ViewModel.IsImportant = _importanceCheckBox.Checked;
-
             this.Activity.SetResult(Result.Ok);
             this.Activity.Finish();
         }
@@ -164,19 +195,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #region UI control handlers
 
-        private void HandleTitleEditText(EditText title)
-        {
-            title.Text = ViewModel.Title;
-        }
-
-        private void HandleDescriptionEditText(EditText description)
-        {
-            description.Text = ViewModel.Description;
-        }
-
         private void HandleDeadlineDateButton(Button deadlineDateButton)
         {
-            deadlineDateButton.Click += DeadlineDateButtonOnClick;
             if (ViewModel.UseDeadline)
             {
                 deadlineDateButton.Visibility = ViewStates.Visible;
@@ -189,7 +209,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void HandleStartDateButton(Button startDateButton)
         {
-            startDateButton.Click += StartDateButtonOnClick;
             if (ViewModel.UseStartTime)
             {
                 startDateButton.Visibility = ViewStates.Visible;
@@ -202,31 +221,81 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #endregion
 
-        private void ShowDateTimePickerFragment(int requestCode)
+        #region Saving state methods
+
+        private void SaveViewModelState(Bundle bundle)
         {
-            DateTimePickerFragment fragment = DateTimePickerFragment.NewInstance(
-                DateTime.Now - new TimeSpan(1,1,1), 
-                this, 
-                requestCode);
-            fragment.Show(FragmentManager, DateTimePickerId);
+            if (bundle != null)
+            {
+                PutDateTimeToBundle(StartDateTimeKey, ViewModel.StartTime, bundle);
+                PutDateTimeToBundle(DeadlineDateTimeKey, ViewModel.Deadline, bundle);
+                bundle.PutBoolean(UseStartKey, ViewModel.UseStartTime);
+                bundle.PutBoolean(UseDeadlineKey, ViewModel.UseDeadline);
+                bundle.PutBoolean(IsImportantKey, ViewModel.IsImportant);
+            }
         }
 
-        private void HandleStartTimeSection(bool selectEnable)
+        private void ExtractViewModelState(Bundle bundle)
         {
-            _startDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
-            ViewModel.UseStartTime = selectEnable;
+            if (bundle != null)
+            {
+                ViewModel.StartTime = GetDateTimeFromBundle(StartDateTimeKey, bundle);
+                ViewModel.Deadline = GetDateTimeFromBundle(DeadlineDateTimeKey, bundle);
+                ViewModel.UseStartTime = bundle.GetBoolean(UseStartKey);
+                ViewModel.UseDeadline = bundle.GetBoolean(UseDeadlineKey);
+                ViewModel.IsImportant = bundle.GetBoolean(IsImportantKey);
+            }
         }
 
-        private void HandleDeadlineSection(bool selectEnable)
-        {
-            _deadlineDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
-            ViewModel.UseDeadline = selectEnable;
-        }
-
+        /// <summary>
+        /// Stringify dateTime to string.
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
         private string StringifyDateTime(DateTime dateTime)
         {
-            return dateTime.ToString(CultureInfo.CurrentUICulture);
+            return dateTime.ToString(DateTimeCulture);
         }
+
+        /// <summary>
+        /// Try parse string to dateTime.
+        /// </summary>
+        /// <param name="dateTimeString"></param>
+        /// <returns></returns>
+        private DateTime ParseDateTimeString(string dateTimeString)
+        {
+            DateTime dt = DateTime.MinValue;
+            if (!string.IsNullOrWhiteSpace(dateTimeString))
+            {
+                DateTime.TryParse(dateTimeString, DateTimeCulture, DateTimeStyles.None, out dt);
+            }
+            return dt;
+        }
+
+        /// <summary>
+        /// Puts dateTime to bundle under specific key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="dateTime"></param>
+        /// <param name="bundle"></param>
+        private void PutDateTimeToBundle(string key, DateTime dateTime, Bundle bundle)
+        {
+            bundle.PutString(key, StringifyDateTime(dateTime));
+        }
+
+        /// <summary>
+        /// Get dateTime from bundle using specific key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="bundle"></param>
+        /// <returns></returns>
+        private DateTime GetDateTimeFromBundle(string key, Bundle bundle)
+        {
+            string dateTimeString = bundle.GetString(key);       
+            return ParseDateTimeString(dateTimeString); ;
+        }
+
+        #endregion
 
         #endregion
     }

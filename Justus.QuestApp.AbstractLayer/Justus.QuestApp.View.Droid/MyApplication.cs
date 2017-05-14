@@ -73,7 +73,7 @@ namespace Justus.QuestApp.View.Droid
 
             ServiceLocator.Register(() => new QuestCreateViewModel(
                 ServiceLocator.Resolve<IQuestCreator>(),
-                ServiceLocator.Resolve<IRepositoryCommandsFactory>()));
+                ServiceLocator.Resolve<IRepositoryCommandsFactory>()), false);
         }
 
     }

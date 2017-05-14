@@ -49,7 +49,7 @@
   <string name="HyphenLabel">-</string>
 
   <!---Quest create fragment-->
-  <string name="QuestCreateActivityLabel">Quest info</string>
+  <string name="QuestCreateActivityLabel">Create quest</string>
   <string name="cancelCreateButtonLabel">Cancel</string>
   <string name="saveCreateButtonLabel">Save</string>
   <string name="QuestCreateTitleHint">Quest title</string>

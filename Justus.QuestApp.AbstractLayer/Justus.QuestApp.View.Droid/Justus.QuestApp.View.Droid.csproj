@@ -118,7 +118,7 @@
     <Compile Include="Abstract\Fragments\Factories\IFragmentFactory.cs" />
     <Compile Include="Abstract\Fragments\IFabDecorator.cs" />
     <Compile Include="Abstract\ViewHoldersClickManagers\IViewHolderClickManager.cs" />
-    <Compile Include="Activities\QuestInfoActivity.cs" />
+    <Compile Include="Activities\QuestCreateActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
     <Compile Include="Activities\StartScreenActivity.cs" />
     <Compile Include="Adapters\Fragments\GenericFragmentPagerAdapter.cs" />

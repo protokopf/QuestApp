@@ -12,6 +12,7 @@ using Android.Views;
 using Android.Widget;
 using Fragment = Android.Support.V4.App.Fragment;
 using FragmentManager = Android.Support.V4.App.FragmentManager;
+using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace Justus.QuestApp.View.Droid.Abstract.Activities
 {
@@ -28,6 +29,9 @@ namespace Justus.QuestApp.View.Droid.Abstract.Activities
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.AbstractFragmentActivityLayout);
+
+            SetSupportActionBar(FindViewById<Toolbar>(Resource.Id.questCreateToolbar));
+
             FragmentManager manager = SupportFragmentManager;
             Fragment fragment = manager.FindFragmentById(Resource.Id.fragmentContainerId);
             if (fragment == null)

@@ -117,6 +117,7 @@
     <Compile Include="Abstract\Activities\BaseTabbedActivity.cs" />
     <Compile Include="Abstract\Fragments\Factories\IFragmentFactory.cs" />
     <Compile Include="Abstract\Fragments\IFabDecorator.cs" />
+    <Compile Include="Abstract\EntityStateHandlers\IEntityStateHandler.cs" />
     <Compile Include="Abstract\ViewHoldersClickManagers\IViewHolderClickManager.cs" />
     <Compile Include="Activities\QuestCreateActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Adapters\Quests\ResultQuestsAdapter.cs" />
     <Compile Include="Abstract\Fragments\BaseTraverseQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\ISelectable.cs" />
+    <Compile Include="EntityStateHandlers\DateTimeStateHandler.cs" />
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\BaseQuestsFragment.cs" />
     <Compile Include="Fragments\Dialogs\DateTimePickerFragment.cs" />
@@ -269,6 +271,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\save_button.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

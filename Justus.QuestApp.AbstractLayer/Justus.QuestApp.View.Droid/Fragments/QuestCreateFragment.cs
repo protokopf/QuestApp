@@ -13,6 +13,8 @@ using Android.Support.Design.Widget;
 using Android.Text;
 using Android.Views;
 using Android.Widget;
+using Justus.QuestApp.ModelLayer.Helpers;
+using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Fragments.Dialogs;
 using Justus.QuestApp.View.Droid.Helpers;
@@ -39,6 +41,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private const int DateTimePickerStartRequestCode = 0;
         private const int DateTimePickerDeadlineRequestCode = 1;
 
+        private IEntityStateHandler<DateTime> _dateTimeHandler;
+
         private EditText _titleEditText;
         private EditText _descriptionEditText;
 
@@ -51,6 +55,11 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private Button _deadlineDateButton;
 
         private FloatingActionButton _saveButton;
+
+        public QuestCreateFragment()
+        {
+            _dateTimeHandler = ServiceLocator.Resolve<IEntityStateHandler<DateTime>>();
+        }
 
         #region Fragment overriding
 
@@ -227,8 +236,9 @@ namespace Justus.QuestApp.View.Droid.Fragments
         {
             if (bundle != null)
             {
-                PutDateTimeToBundle(StartDateTimeKey, ViewModel.StartTime, bundle);
-                PutDateTimeToBundle(DeadlineDateTimeKey, ViewModel.Deadline, bundle);
+                _dateTimeHandler.Save(StartDateTimeKey, ViewModel.StartTime, bundle);
+                _dateTimeHandler.Save(DeadlineDateTimeKey, ViewModel.Deadline, bundle);
+
                 bundle.PutBoolean(UseStartKey, ViewModel.UseStartTime);
                 bundle.PutBoolean(UseDeadlineKey, ViewModel.UseDeadline);
                 bundle.PutBoolean(IsImportantKey, ViewModel.IsImportant);
@@ -239,8 +249,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
         {
             if (bundle != null)
             {
-                ViewModel.StartTime = GetDateTimeFromBundle(StartDateTimeKey, bundle);
-                ViewModel.Deadline = GetDateTimeFromBundle(DeadlineDateTimeKey, bundle);
+                ViewModel.StartTime = _dateTimeHandler.Extract(StartDateTimeKey, bundle);
+                ViewModel.Deadline = _dateTimeHandler.Extract(DeadlineDateTimeKey, bundle);
                 ViewModel.UseStartTime = bundle.GetBoolean(UseStartKey);
                 ViewModel.UseDeadline = bundle.GetBoolean(UseDeadlineKey);
                 ViewModel.IsImportant = bundle.GetBoolean(IsImportantKey);

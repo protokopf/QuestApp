@@ -136,7 +136,6 @@
     <Compile Include="Fragments\Dialogs\DateTimePickerFragment.cs" />
     <Compile Include="Fragments\Factories\ParametrizedFragmentFactory.cs" />
     <Compile Include="Fragments\QuestCreateFragment.cs" />
-    <Compile Include="Helpers\ActivityRequestCodes.cs" />
     <Compile Include="Services\ViewServices\SimpleQuestExpireService.cs" />
     <Compile Include="StubServices\StubWebStringProvider.cs" />
     <Compile Include="Abstract\ViewHolders\ToggledViewHolder.cs" />
@@ -272,7 +271,9 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\save_button.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

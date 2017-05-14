@@ -1,25 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
-using Android.Content.Res;
 using Android.OS;
-using Android.Runtime;
 using Android.Support.Design.Widget;
-using Android.Text;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Fragments.Dialogs;
-using Justus.QuestApp.View.Droid.Helpers;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
-using Fragment = Android.Support.V4.App.Fragment;
 
 namespace Justus.QuestApp.View.Droid.Fragments
 {
@@ -30,6 +21,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
     {
         private static readonly CultureInfo DateTimeCulture = CultureInfo.CurrentUICulture;
 
+        private const string ParentIdKey = "ParentIdKey";
         private const string DateTimePickerId = "DateTimePickerId";
         private const string ViewModelKey = "QuestCreateViewModel.Key";
 
@@ -52,10 +44,33 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private FloatingActionButton _saveButton;
 
+        /// <summary>
+        /// Default constructor. Resolves dependency on view model state handler.
+        /// </summary>
         public QuestCreateFragment()
         {
             _viewModelStateHandler = ServiceLocator.Resolve<IEntityStateHandler<QuestCreateViewModel>>();
         }
+
+        #region Public static methods
+
+        /// <summary>
+        /// Creates instance of QuestCrateFragment.
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <returns></returns>
+        public static QuestCreateFragment NewInstance(int parentId)
+        {
+            QuestCreateFragment fragment = new QuestCreateFragment();
+            Bundle arguments = new Bundle();
+            arguments.PutInt(ParentIdKey, parentId);
+
+            fragment.Arguments = arguments;
+
+            return fragment;
+        }
+
+        #endregion
 
         #region Fragment overriding
 
@@ -63,7 +78,14 @@ namespace Justus.QuestApp.View.Droid.Fragments
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            ExtractViewModelState(savedInstanceState);
+            if (savedInstanceState != null)
+            {
+                ExtractViewModelState(savedInstanceState);
+            }
+            else
+            {
+                ExtractViewModelStateFromArguments(Arguments);
+            }
         }
 
         ///<inheritdoc/>
@@ -227,6 +249,19 @@ namespace Justus.QuestApp.View.Droid.Fragments
         #endregion
 
         #region Saving state methods
+
+        /// <summary>
+        /// Tries extract some state from fragment arguments.
+        /// </summary>
+        /// <param name="arguments"></param>
+        private void ExtractViewModelStateFromArguments(Bundle arguments)
+        {
+            if (arguments != null)
+            {
+                int parentId = arguments.GetInt(ParentIdKey);
+                ViewModel.ParentId = parentId;
+            }
+        }
 
         private void SaveViewModelState(Bundle bundle)
         {

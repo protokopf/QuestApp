@@ -145,6 +145,11 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         public bool InRoot => Root == null;
 
         /// <summary>
+        /// Returns id of root quest. Otherwise returns 0.
+        /// </summary>
+        public int RootId => InRoot ? 0 : Root.Id;
+
+        /// <summary>
         /// Undo last made command.
         /// </summary>
         public void UndoLastCommand()

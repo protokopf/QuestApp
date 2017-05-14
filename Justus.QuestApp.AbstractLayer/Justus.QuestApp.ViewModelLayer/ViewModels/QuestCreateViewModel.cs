@@ -1,5 +1,6 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
+using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Factories;
 using Justus.QuestApp.AbstractLayer.Helpers;
 
@@ -29,6 +30,11 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             _questCreator = questCreator;
             _commandsFactory = repCommandsFactory;
         }
+
+        /// <summary>
+        /// Id of parent quest.
+        /// </summary>
+        public int ParentId { get; set; }
 
         /// <summary>
         /// Title of current quest.
@@ -68,15 +74,9 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <summary>
         /// Resets view model state.
         /// </summary>
-        public void Reset()
+        public void Save()
         {
-            Title = String.Empty;
-            Description = String.Empty;
-            IsImportant = false;
-            UseDeadline = false;
-            UseStartTime = false;
-            StartTime = DateTime.MinValue;
-            Deadline = DateTime.MinValue;
+            Quest quest = _questCreator.Create();
         }
     }
 }

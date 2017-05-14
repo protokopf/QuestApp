@@ -14,7 +14,6 @@ using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.Activities;
 using Justus.QuestApp.View.Droid.Adapters.Quests;
-using Justus.QuestApp.View.Droid.Helpers;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -27,15 +26,17 @@ namespace Justus.QuestApp.View.Droid.Fragments
         IViewHolderClickManager<AvailableQuestViewHolder>,
         IFabDecorator
     {
-        private FloatingActionButton _fab = null;
+        private const int OkCancelRequestCode = 0;
 
+        private FloatingActionButton _fab = null;
+        
         #region BaseTraverseQuestsFragment overriding
 
         ///<inheritdoc/>
         public override void OnActivityResult(int requestCode, int resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
-            if (requestCode == ActivityRequestCodes.OK_CANCEL_REQUEST)
+            if (requestCode == OkCancelRequestCode)
             {
                 switch (resultCode)
                 {
@@ -121,8 +122,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
             FragmentActivity activity = this.Activity;
             if (activity != null)
             {
-                Intent startQuestInfo = new Intent(this.Context, typeof(QuestCreateActivity));
-                this.StartActivityForResult(startQuestInfo, ActivityRequestCodes.OK_CANCEL_REQUEST);
+                Intent startQuestInfo = QuestCreateActivity.GetStartIntent(ViewModel.RootId, Context);
+                this.StartActivityForResult(startQuestInfo, OkCancelRequestCode);
             }
         }
 

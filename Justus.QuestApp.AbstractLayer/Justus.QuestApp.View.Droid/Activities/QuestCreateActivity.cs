@@ -22,12 +22,30 @@ namespace Justus.QuestApp.View.Droid.Activities
     [Activity(Label= "@string/QuestCreateActivityLabel")]
     public class QuestCreateActivity : AbstractFragmentActivity
     {
+        private static readonly string ParentIdKey = "QuestCreateActivity.ParentIdKey";
+
+        /// <summary>
+        /// Returns start intent for this activity.
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static Intent GetStartIntent(int parentId, Context context)
+        {
+            Intent intent = new Intent(context, typeof(QuestCreateActivity));
+            Bundle bundle = new Bundle();
+            bundle.PutInt(ParentIdKey, parentId);
+            intent.PutExtras(bundle);
+            return intent;
+        }
+
         #region AbstractFragmentActivity overriding
 
         ///<inhertidoc/>
         protected override Fragment CreateFragment()
         {
-            return new QuestCreateFragment();
+            int parentId = this.Intent.GetIntExtra(ParentIdKey, 0);
+            return QuestCreateFragment.NewInstance(parentId);
         }
 
         #endregion

@@ -49,6 +49,8 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
 
             TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
 
+            TitleTextView.Text = ViewModel.InRoot ? TitleTextDefault : ViewModel.QuestsListTitle;
+
             BackButton.Enabled = !ViewModel.InRoot;
             BackButton.Click += BackButtonHandler;
 
@@ -62,14 +64,14 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         ///<inheritdoc/>
         public override void OnSelect()
         {
-            if (ViewModel.InRoot)
-            {
+            //if (ViewModel.InRoot)
+            //{
                 ViewModel.ResetChildren();
-            }
-            else
-            {
-                TraverseToRoot();
-            }
+            //}
+            //else
+            //{
+            //    TraverseToRoot();
+            //}
             RedrawQuests();
         }
 

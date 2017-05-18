@@ -68,6 +68,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
             ProgressDialogRef = new ProgressDialog(Activity);
             ProgressDialogRef.SetProgressStyle(ProgressDialogStyle.Spinner);
             ProgressDialogRef.SetCancelable(false);
+            ProgressDialogRef.SetCanceledOnTouchOutside(false);
             ProgressDialogRef.SetTitle(Resource.String.ProgressDialogTitle);
             ProgressDialogRef.Window.SetGravity(GravityFlags.CenterVertical | GravityFlags.CenterHorizontal);
         }

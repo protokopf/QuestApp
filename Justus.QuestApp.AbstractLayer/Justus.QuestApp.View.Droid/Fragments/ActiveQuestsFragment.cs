@@ -105,19 +105,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void DoneHandler(int viewPosition)
         {
             ViewModel.DoneQuest(ViewModel.Leaves[viewPosition]);
-            if (ViewModel.InRoot)
-            {
-                //If we are in the root of quests hierarchy, quest will be removed after marked as done 
-                //(moved to another category), so we need notify adapter about removing item.
-                QuestsAdapter.NotifyItemRemoved(viewPosition);
-                QuestsAdapter.NotifyItemRangeChanged(viewPosition, QuestsAdapter.ItemCount);
-            }
-            else
-            {
-                //In other cases quest should be just changed, about what we are notifying
-                //adapter.
-                QuestsAdapter.NotifyItemChanged(viewPosition);
-            }          
+            ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
         }
 
         private void Undo(Android.Views.View view)
@@ -128,19 +116,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void FailHandler(int viewPosition)
         {
             ViewModel.FailQuest(ViewModel.Leaves[viewPosition]);
-            if (ViewModel.InRoot)
-            {
-                //If we are in the root of quests hierarchy, quest will be removed after marked as failed 
-                //(moved to another category), so we need notify adapter about removing item.
-                QuestsAdapter.NotifyItemRemoved(viewPosition);
-                QuestsAdapter.NotifyItemRangeChanged(viewPosition, QuestsAdapter.ItemCount);
-            }
-            else
-            {
-                //In other cases quest should be just changed, about what we are notifying
-                //adapter.
-                QuestsAdapter.NotifyItemChanged(viewPosition);
-            }
+            ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
         }
 
         private void ChildrenClickHandler(int viewPosition)
@@ -151,16 +127,20 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private async void CancelHandler(int viewPosition)
         {
             await ViewModel.CancelQuest(ViewModel.Leaves[viewPosition]);
+            ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
+        }
+
+        private void ReactOnChangeItemThatRemovedOnlyFromRoot(int position)
+        {
             if (ViewModel.InRoot)
             {
-                QuestsAdapter.NotifyItemRemoved(viewPosition);
-                QuestsAdapter.NotifyItemRangeChanged(viewPosition, QuestsAdapter.ItemCount);
+                QuestsAdapter.NotifyItemRemoved(position);
+                QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
             }
             else
             {
-                QuestsAdapter.NotifyItemChanged(viewPosition);
+                QuestsAdapter.NotifyItemChanged(position);
             }
-            
         }
 
         #endregion

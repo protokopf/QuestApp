@@ -36,7 +36,7 @@
   <string name="QuestDefaultStatus">Status</string>
 
   <!---QuestListHeaderStrings-->
-  <string name="QuestListTitle">Root</string>
+  <string name="QuestListTitle">Declared quests</string>
   <string name="QuestListBack">back</string>
   <string name="SyncButtonText">Sync</string>
   

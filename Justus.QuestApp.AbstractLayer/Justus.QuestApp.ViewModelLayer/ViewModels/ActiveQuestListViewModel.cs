@@ -82,15 +82,18 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Cancels given quest.
         /// </summary>
         /// <param name="quest"></param>
-        public Task CancelQuest(Quest quest)
+        public async Task CancelQuest(Quest quest)
         {
             LastCommand = StateCommads.CancelQuest(quest);
-            return Task.Run(() =>
+            IsBusy = true;
+            await Task.Run(() =>
             {
                 LastCommand.Execute();
                 QuestRepository.Save();
                 ResetChildren();
+
             });
+            IsBusy = false;
         }
 
         /// <summary>

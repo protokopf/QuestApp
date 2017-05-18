@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
@@ -81,11 +82,15 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Cancels given quest.
         /// </summary>
         /// <param name="quest"></param>
-        public void CancelQuest(Quest quest)
+        public Task CancelQuest(Quest quest)
         {
             LastCommand = StateCommads.CancelQuest(quest);
-            LastCommand.Execute();
-            ResetChildren();
+            return Task.Run(() =>
+            {
+                LastCommand.Execute();
+                QuestRepository.Save();
+                ResetChildren();
+            });
         }
 
         /// <summary>

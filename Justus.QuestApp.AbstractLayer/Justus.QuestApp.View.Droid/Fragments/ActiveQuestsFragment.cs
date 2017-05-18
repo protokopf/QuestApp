@@ -148,11 +148,19 @@ namespace Justus.QuestApp.View.Droid.Fragments
             this.TraverseToChild(viewPosition);
         }
 
-        private void CancelHandler(int viewPosition)
+        private async void CancelHandler(int viewPosition)
         {
-            ViewModel.CancelQuest(ViewModel.Leaves[viewPosition]);
-            QuestsAdapter.NotifyItemRemoved(viewPosition);
-            QuestsAdapter.NotifyItemRangeChanged(viewPosition, QuestsAdapter.ItemCount);
+            await ViewModel.CancelQuest(ViewModel.Leaves[viewPosition]);
+            if (ViewModel.InRoot)
+            {
+                QuestsAdapter.NotifyItemRemoved(viewPosition);
+                QuestsAdapter.NotifyItemRangeChanged(viewPosition, QuestsAdapter.ItemCount);
+            }
+            else
+            {
+                QuestsAdapter.NotifyItemChanged(viewPosition);
+            }
+            
         }
 
         #endregion

@@ -113,7 +113,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             Quest toDelete = repositoryCache[0].Children[0];
             int deletedId = toDelete.Id;
 
-            repository.Expect(rep => rep.GetAll()).Return(repositoryCache).Repeat.Never();
+            repository.Expect(rep => rep.GetAll(null)).IgnoreArguments().Return(repositoryCache).Repeat.Never();
             repository.Expect(rep => rep.Delete(null)).IgnoreArguments().Repeat.Never();
             repository.Expect(rep => rep.RevertDelete(null)).IgnoreArguments().Return(true).Repeat.Never();
 

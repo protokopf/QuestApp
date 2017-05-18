@@ -32,9 +32,9 @@ namespace Justus.QuestApp.ModelLayer.Model
         private readonly object _dataLocker = new object();
 
         /// <summary>
-        /// Inner quest cache.
+        /// All quests.
         /// </summary>
-        private List<Quest> _questList;
+        private List<Quest> _allQuests;
 
         private readonly HashSet<int> _toDelete;
         private readonly List<Quest> _toUpdate;
@@ -66,7 +66,7 @@ namespace Justus.QuestApp.ModelLayer.Model
             _toUpdate = new List<Quest>();
             _toInsert = new List<Quest>();
 
-            _questList = new List<Quest>();
+            _allQuests = new List<Quest>();
             _currentId = 1;
         }
 
@@ -91,7 +91,7 @@ namespace Justus.QuestApp.ModelLayer.Model
                     RecursiveInsert(quest.Children);
                 }
 
-                _questList.Add(quest);
+                _allQuests.Add(quest);
             }
         }
 
@@ -105,7 +105,7 @@ namespace Justus.QuestApp.ModelLayer.Model
                     throw new ArgumentNullException(nameof(quests));
                 }
                 RecursiveInsert(quests);
-                _questList.AddRange(quests);
+                _allQuests.AddRange(quests);
             }
         }
 
@@ -154,20 +154,20 @@ namespace Justus.QuestApp.ModelLayer.Model
         }
 
         ///<inheritdoc/>
-        public Quest Get(int id)
+        public Quest Get(Predicate<Quest> questPredicate)
         {
             lock (_dataLocker)
             {
-                return _questList.Find(quest => quest.Id == id);
+                return _allQuests.Find(questPredicate);
             }
         }
 
         ///<inheritdoc/>
-        public List<Quest> GetAll()
+        public List<Quest> GetAll(Predicate<Quest> questPredicate)
         {
             lock (_dataLocker)
             {
-                return _questList;
+                return _allQuests.FindAll(questPredicate);
             }
         }
 
@@ -180,15 +180,9 @@ namespace Justus.QuestApp.ModelLayer.Model
                 {
                     throw new ArgumentNullException(nameof(quest));
                 }
+                _allQuests.Remove(quest);
                 Quest parentOfDeleted = quest.Parent;
-                if (parentOfDeleted == null)
-                {
-                    _questList.Remove(quest);
-                }
-                else
-                {
-                    parentOfDeleted.Children.Remove(quest);
-                }
+                parentOfDeleted?.Children.Remove(quest);
                 _toDelete.Add(quest.Id);
             }
         }
@@ -271,18 +265,17 @@ namespace Justus.QuestApp.ModelLayer.Model
                 using (_dataStorage)
                 {
                     _dataStorage.Open(_connectionString);
-                    _questList = _dataStorage.GetAll();
+                    _allQuests = _dataStorage.GetAll();
                 }
 
-                if (_questList == null)
+                if (_allQuests == null)
                 {
-                    _questList = new List<Quest>();
+                    _allQuests = new List<Quest>();
                 }
 
-                InitializeId(_questList);
+                InitializeId(_allQuests);
 
-                CycleBinding(_questList);
-                _questList.RemoveAll(quest => quest.Parent != null);
+                CycleBinding(_allQuests);
             }
         }
 

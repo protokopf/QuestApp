@@ -37,6 +37,11 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
 
         private static readonly IEntityStateHandler<DateTime> DateTimeHandler = new DateTimeStateHandler();
 
+        public DateTimePickerFragment()
+        {
+            
+        }
+
         public DateTimePickerFragment(DateTime dateTime)
         {
             Bundle arguments = new Bundle();

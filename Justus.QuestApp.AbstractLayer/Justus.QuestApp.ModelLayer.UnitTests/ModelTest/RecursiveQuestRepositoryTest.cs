@@ -450,7 +450,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.Initialize();
-            Quest found = repository.Get(1);
+            Quest found = repository.Get(quest => quest.Parent == null && quest.Id == 1);
 
             //Assert
             Assert.IsNotNull(found);
@@ -472,15 +472,37 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
         {
             //Arrange
             FakeQuestStorage fakeStorage = new FakeQuestStorage();
-            fakeStorage.QuestStorage = QuestHelper.CreateCompositeQuestFromBelow(1, 5, 1);
+            fakeStorage.QuestStorage = QuestHelper.CreateCompositeQuestFromBelow(3, 5, 1);
 
-            IQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
+            RecursiveQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
 
             //Act
-            Quest found = repository.Get(100);
+            repository.Initialize();
+            Quest found = repository.Get(quest => quest.Id == 100);
 
             //Assert
             Assert.IsNull(found);
+        }
+
+        [Test]
+        public void GetReturnChildElementFromRootQuestsTest()
+        {
+            //Arrange
+            FakeQuestStorage fakeStorage = new FakeQuestStorage();
+            fakeStorage.QuestStorage = QuestHelper.CreateCompositeQuestFromBelow(3, 3);
+
+            Quest questToFind = fakeStorage.QuestStorage.FirstOrDefault(qt => qt.ParentId != 0);
+            int idToFind = questToFind.Id;
+
+            RecursiveQuestRepository repository = new RecursiveQuestRepository(fakeStorage, "no matter");
+            repository.Initialize();
+
+            //Act
+            Quest found = repository.Get(quest => quest.Id == idToFind);
+
+            //Assert
+            Assert.IsNotNull(found);
+            Assert.AreEqual(questToFind, found);
         }
 
         [Test]
@@ -498,7 +520,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.Initialize();
-            List<Quest> founds = repository.GetAll();
+            List<Quest> founds = repository.GetAll(quest => quest.Parent == null);
 
             //Assert
             Assert.IsNotNull(founds);
@@ -529,8 +551,8 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.Initialize();
-            List<Quest> founds = repository.GetAll();
-            repository.GetAll();
+            List<Quest> founds = repository.GetAll(quest => quest.Parent == null);
+            repository.GetAll(quest => quest.Parent == null);
 
             //Assert
             Assert.IsNotNull(founds);
@@ -619,7 +641,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
             repository.Save();
 
             //Assert
-            List<Quest> all = repository.GetAll();
+            List<Quest> all = repository.GetAll(quest => quest.Parent == null);
 
             int deletedId = (int)innerStorage.GetArgumentsForCallsMadeOn(rep => rep.Delete(Arg<int>.Is.Anything))[0][0];
 
@@ -730,7 +752,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.Initialize();
-            repository.GetAll();
+            repository.GetAll(quest => quest.Parent == null);
 
             //Assert
             fakeStorage.VerifyAllExpectations();
@@ -747,7 +769,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.Initialize();
-            List<Quest> all = repository.GetAll();
+            List<Quest> all = repository.GetAll(quest => quest.Parent == null);
 
             //Assert
             Assert.IsNotNull(all);
@@ -776,9 +798,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest
 
             //Act
             repository.InsertAll(quests);
-            int countBeforePushQuests = repository.GetAll().Count;
+            int countBeforePushQuests = repository.GetAll(quest => quest.Parent == null).Count;
             repository.Save();
-            int countAfterPushQuests = repository.GetAll().Count;
+            int countAfterPushQuests = repository.GetAll(quest => quest.Parent == null).Count;
 
             List<Quest> storedItems = fakeStorage.QuestStorage;
 

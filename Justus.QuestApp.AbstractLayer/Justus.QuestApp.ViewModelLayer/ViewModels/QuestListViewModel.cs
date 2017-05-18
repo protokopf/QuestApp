@@ -71,7 +71,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
                 {
                     _shouldResetChildren = false;
 
-                    List<Quest> children = InRoot ? QuestRepository.GetAll() : Root.Children;
+                    List<Quest> children = InRoot ? QuestRepository.GetAll(quest => quest.Parent == null) : Root.Children;
                     
                     if (children == null || children.Count == 0)
                     {

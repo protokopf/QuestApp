@@ -77,7 +77,8 @@ namespace Justus.QuestApp.View.Droid
 
             ServiceLocator.Register(() => new QuestCreateViewModel(
                 ServiceLocator.Resolve<IQuestCreator>(),
-                ServiceLocator.Resolve<IRepositoryCommandsFactory>()), useLikeFactory: true);
+                ServiceLocator.Resolve<IRepositoryCommandsFactory>(),
+                ServiceLocator.Resolve<IQuestRepository>()), useLikeFactory: true);
         }
 
         private void InitializeApplicationServices()

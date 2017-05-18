@@ -2567,8 +2567,8 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f0b001a
 			public const int dark = 2131427354;
 			
-			// aapt resource value: 0x7f0b0097
-			public const int datePicker = 2131427479;
+			// aapt resource value: 0x7f0b0098
+			public const int datePicker = 2131427480;
 			
 			// aapt resource value: 0x7f0b00ca
 			public const int deadlineCheckbox = 2131427530;
@@ -3020,8 +3020,8 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f0b00b6
 			public const int time = 2131427510;
 			
-			// aapt resource value: 0x7f0b0098
-			public const int timePicker = 2131427480;
+			// aapt resource value: 0x7f0b0097
+			public const int timePicker = 2131427479;
 			
 			// aapt resource value: 0x7f0b0054
 			public const int title = 2131427412;

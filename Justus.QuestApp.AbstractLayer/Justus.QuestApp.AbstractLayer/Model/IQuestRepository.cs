@@ -48,22 +48,22 @@ namespace Justus.QuestApp.AbstractLayer.Model
         bool RevertUpdate(Quest quest);
 
         /// <summary>
-        /// Returns quest by id.
+        /// Returns quest by predicate.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="questPredicate"></param>
         /// <returns></returns>
-        Quest Get(int id);
+        Quest Get(Predicate<Quest> questPredicate);
 
         /// <summary>
         /// Returns all quests.
         /// </summary>
         /// <returns></returns>
-        List<Quest> GetAll();
+        List<Quest> GetAll(Predicate<Quest> questPredicate);
 
         /// <summary>
         /// Deletes quest.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="quest"></param>
         void Delete(Quest quest);
 
         /// <summary>

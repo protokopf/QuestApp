@@ -30,7 +30,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
                 new FakeQuest {CurrentState = QuestState.Progress}
             };
 
-            repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
+            repository.Expect(rep => rep.GetAll(Arg<Predicate<Quest>>.Is.NotNull)).Repeat.Once().Return(fromRepository);
 
             IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
             IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
@@ -71,7 +71,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
                 new FakeQuest {CurrentState = QuestState.Progress , Parent = parent}
             };
 
-            repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
+            repository.Expect(rep => rep.GetAll(Arg<Predicate<Quest>>.Is.NotNull)).Repeat.Once().Return(fromRepository);
 
             IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
             IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();

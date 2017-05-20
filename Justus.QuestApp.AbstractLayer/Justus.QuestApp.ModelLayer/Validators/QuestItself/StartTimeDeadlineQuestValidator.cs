@@ -13,55 +13,44 @@ namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
     /// <summary>
     /// Validates startTime and deadline of quests.
     /// </summary>
-    public class StartTimeDeadlineQuestValidator : IQuestValidator<ClarifiedResponse<string>>
+    public class StartTimeDeadlineQuestValidator : IQuestValidator<ClarifiedResponse<QuestValidationErrorCode>>
     {
         private readonly DateTime _defaultDateTime = default(DateTime);
 
         #region IQuestValidator implementation
 
         ///<inheritdoc/>
-        public ClarifiedResponse<string> Validate(Quest quest)
+        public ClarifiedResponse<QuestValidationErrorCode> Validate(Quest quest)
         {
             if (quest == null)
             {
                 throw new ArgumentNullException(nameof(quest));
             }
             
-            ClarifiedResponse<string> response  = new ClarifiedResponse<string>();
+            ClarifiedResponse<QuestValidationErrorCode> response  = new ClarifiedResponse<QuestValidationErrorCode>();
 
             DateTime start = quest.StartTime;
             DateTime deadline = quest.Deadline;
 
-            if (start == _defaultDateTime && deadline == _defaultDateTime)
+
+            if (deadline < DateTime.Now && deadline != _defaultDateTime)
             {
-                //Ok situation.
-            }
-            else if (start == _defaultDateTime)
-            {
-                if (deadline > DateTime.Now)
+                response.Errors.Add(new ClarifiedError<QuestValidationErrorCode>
                 {
-                    response.Errors.Add(new ClarifiedError<string>
-                    {
-                        Error = "0",
-                        Clarification = "0_CL"
-                    });
-                }
+                    Error = QuestValidationErrorCode.DeadlineLessThanNow,
+                    Clarification = QuestValidationErrorCode.DeadlineLessThanNowClar
+                });
             }
-            else if (deadline == _defaultDateTime)
+            
+            if (start > deadline && deadline != _defaultDateTime)
             {
-                //Ok situation.
-            }
-            else
-            {
-                if (start > deadline)
+                response.Errors.Add(new ClarifiedError<QuestValidationErrorCode>()
                 {
-                    response.Errors.Add(new ClarifiedError<string>()
-                    {
-                        Error = "1",
-                        Clarification = "1_CL"
-                    });
-                }
+                    Error = QuestValidationErrorCode.StartTimeMoreThanDeadline,
+                    Clarification = QuestValidationErrorCode.StartTimeMoreThanDeadlineClar
+                });
             }
+            
             return response;
         }
 

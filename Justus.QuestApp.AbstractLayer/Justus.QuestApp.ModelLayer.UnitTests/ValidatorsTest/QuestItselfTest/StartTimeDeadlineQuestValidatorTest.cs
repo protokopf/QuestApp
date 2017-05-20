@@ -7,6 +7,7 @@ using Justus.QuestApp.AbstractLayer.Entities.Errors;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
+using Justus.QuestApp.ModelLayer.Validators;
 using Justus.QuestApp.ModelLayer.Validators.QuestItself;
 using NUnit.Framework;
 
@@ -41,7 +42,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
             };
 
             //Act
-            ClarifiedResponse<string> response = validator.Validate(quest);
+            ClarifiedResponse<QuestValidationErrorCode> response = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(response);
@@ -61,7 +62,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
             };
 
             //Act
-            ClarifiedResponse<string> response = validator.Validate(quest);
+            ClarifiedResponse<QuestValidationErrorCode> response = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(response);
@@ -81,12 +82,16 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
             };
 
             //Act
-            ClarifiedResponse<string> response = validator.Validate(quest);
+            ClarifiedResponse<QuestValidationErrorCode> response = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.IsTrue(response.IsSuccessful);
-            Assert.IsEmpty(response.Errors);
+            Assert.IsFalse(response.IsSuccessful);
+            Assert.AreEqual(1, response.Errors.Count);
+            ClarifiedError<QuestValidationErrorCode> error = response.Errors[0];
+            Assert.AreEqual(QuestValidationErrorCode.DeadlineLessThanNow, error.Error);
+            Assert.AreEqual(QuestValidationErrorCode.DeadlineLessThanNowClar, error.Clarification);
+
         }
 
         [Test]
@@ -101,15 +106,12 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
             };
 
             //Act
-            ClarifiedResponse<string> response = validator.Validate(quest);
+            ClarifiedResponse<QuestValidationErrorCode> response = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(response);
-            Assert.IsFalse(response.IsSuccessful);
-            Assert.AreEqual(1, response.Errors.Count);
-            ClarifiedError<string> error = response.Errors[0];
-            Assert.AreEqual("0", error.Error);
-            Assert.AreEqual("0_CL", error.Clarification);
+            Assert.IsTrue(response.IsSuccessful);
+            Assert.IsEmpty(response.Errors);
         }
 
         [Test]
@@ -127,7 +129,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
             };
 
             //Act
-            ClarifiedResponse<string> response = validator.Validate(quest);
+            ClarifiedResponse<QuestValidationErrorCode> response = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(response);
@@ -141,7 +143,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
             //Arrange
             StartTimeDeadlineQuestValidator validator = new StartTimeDeadlineQuestValidator();
 
-            DateTime current = DateTime.Now;
+            DateTime current = DateTime.Now + new TimeSpan(1,1,1);
 
             Quest quest = new FakeQuest()
             {
@@ -150,15 +152,41 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
             };
 
             //Act
-            ClarifiedResponse<string> response = validator.Validate(quest);
+            ClarifiedResponse<QuestValidationErrorCode> response = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(response);
             Assert.IsFalse(response.IsSuccessful);
             Assert.AreEqual(1, response.Errors.Count);
-            ClarifiedError<string> error = response.Errors[0];
-            Assert.AreEqual("1", error.Error);
-            Assert.AreEqual("1_CL", error.Clarification);
+            ClarifiedError<QuestValidationErrorCode> error = response.Errors[0];
+            Assert.AreEqual(QuestValidationErrorCode.StartTimeMoreThanDeadline, error.Error);
+            Assert.AreEqual(QuestValidationErrorCode.StartTimeMoreThanDeadlineClar, error.Clarification);
+        }
+
+        [Test]
+        public void DeadlineLessThanNowButMoreThanStartTimeTest()
+        {
+            //Arrange
+            StartTimeDeadlineQuestValidator validator = new StartTimeDeadlineQuestValidator();
+
+            DateTime current = DateTime.Now - new TimeSpan(1,1,1);
+
+            Quest quest = new FakeQuest()
+            {
+                StartTime = current - new TimeSpan(1,1,1),
+                Deadline = current
+            };
+
+            //Act
+            ClarifiedResponse<QuestValidationErrorCode> response = validator.Validate(quest);
+
+            //Assert
+            Assert.IsNotNull(response);
+            Assert.IsFalse(response.IsSuccessful);
+            Assert.AreEqual(1, response.Errors.Count);
+            ClarifiedError<QuestValidationErrorCode> error = response.Errors[0];
+            Assert.AreEqual(QuestValidationErrorCode.DeadlineLessThanNow, error.Error);
+            Assert.AreEqual(QuestValidationErrorCode.DeadlineLessThanNowClar, error.Clarification);
         }
     }
 }

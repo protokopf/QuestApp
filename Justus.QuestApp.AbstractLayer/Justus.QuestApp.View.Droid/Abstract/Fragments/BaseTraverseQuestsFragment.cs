@@ -49,9 +49,9 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
 
             TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
 
-            TitleTextView.Text = ViewModel.InRoot ? TitleTextDefault : ViewModel.QuestsListTitle;
+            TitleTextView.Text = ViewModel.InTopRoot ? TitleTextDefault : ViewModel.QuestsListTitle;
 
-            BackButton.Enabled = !ViewModel.InRoot;
+            BackButton.Enabled = !ViewModel.InTopRoot;
             BackButton.Click += BackButtonHandler;
 
             return view;
@@ -64,7 +64,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         ///<inheritdoc/>
         public override void OnSelect()
         {
-            //if (ViewModel.InRoot)
+            //if (ViewModel.InTopRoot)
             //{
                 ViewModel.ResetChildren();
             //}
@@ -82,7 +82,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         /// </summary>
         protected void TraverseToRoot()
         {
-            if (!ViewModel.InRoot)
+            if (!ViewModel.InTopRoot)
             {
                 ViewModel.TraverseToRoot();
                 TitleTextView.Text = TitleTextDefault;
@@ -96,11 +96,11 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         /// </summary>
         protected virtual void TraverseToParent()
         {
-            if (!ViewModel.InRoot)
+            if (!ViewModel.InTopRoot)
             {
                 ViewModel.TraverseToParent();
                 TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
-                BackButton.Enabled = !ViewModel.InRoot;
+                BackButton.Enabled = !ViewModel.InTopRoot;
                 RedrawQuests();
             }
         }
@@ -113,7 +113,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         {
             ViewModel.TraverseToLeaf(childPosition);
             TitleTextView.Text = ViewModel.QuestsListTitle ?? TitleTextDefault;
-            BackButton.Enabled = !ViewModel.InRoot;
+            BackButton.Enabled = !ViewModel.InTopRoot;
             RedrawQuests();
         }
 

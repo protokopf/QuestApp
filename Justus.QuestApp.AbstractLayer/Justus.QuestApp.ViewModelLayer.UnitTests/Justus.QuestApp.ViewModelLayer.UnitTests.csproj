@@ -65,6 +65,10 @@
       <Project>{9D27BB00-D325-4644-B1D2-B13196C4D8AC}</Project>
       <Name>Justus.QuestApp.AbstractLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Justus.QuestApp.ModelLayer.UnitTests\Justus.QuestApp.ModelLayer.UnitTests.csproj">
+      <Project>{8E6D973A-E1AE-46F6-B1BB-A8F10072C0A0}</Project>
+      <Name>Justus.QuestApp.ModelLayer.UnitTests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Justus.QuestApp.ModelLayer\Justus.QuestApp.ModelLayer.csproj">
       <Project>{72C61B17-7E0A-4C31-9AB4-2A5E0935166E}</Project>
       <Name>Justus.QuestApp.ModelLayer</Name>

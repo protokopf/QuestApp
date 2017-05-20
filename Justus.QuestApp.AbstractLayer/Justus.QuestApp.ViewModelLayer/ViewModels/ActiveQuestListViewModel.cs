@@ -41,6 +41,19 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         #endregion
 
         /// <summary>
+        /// Points, whether all quests are done or not.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsRootDone()
+        {
+            if (InTopRoot)
+            {
+                return false;
+            }
+            return Root.CurrentState == QuestState.Done;
+        }
+
+        /// <summary>
         /// Count progress of quest.
         /// </summary>
         /// <param name="quest"></param>
@@ -60,22 +73,34 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Fails given quest.
         /// </summary>
         /// <param name="quest"></param>
-        public void FailQuest(Quest quest)
+        public async Task FailQuest(Quest quest)
         {
             LastCommand = StateCommads.FailQuest(quest);
-            LastCommand.Execute();
-            ResetChildren();
+            IsBusy = true;
+            await Task.Run(() =>
+            {
+                LastCommand.Execute();
+                QuestRepository.Save();
+                ResetChildren();
+            });
+            IsBusy = false;
         }
 
         /// <summary>
         /// Make done given quest.
         /// </summary>
         /// <param name="quest"></param>
-        public void DoneQuest(Quest quest)
+        public async Task DoneQuest(Quest quest)
         {
             LastCommand = StateCommads.DoneQuest(quest);
-            LastCommand.Execute();
-            ResetChildren();
+            IsBusy = true;
+            await Task.Run(() =>
+            {
+                LastCommand.Execute();
+                QuestRepository.Save();
+                ResetChildren();
+            });
+            IsBusy = false;
         }
 
         /// <summary>
@@ -91,7 +116,6 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
                 LastCommand.Execute();
                 QuestRepository.Save();
                 ResetChildren();
-
             });
             IsBusy = false;
         }
@@ -100,10 +124,17 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Starts given quest.
         /// </summary>
         /// <param name="quest"></param>
-        public void StartQuest(Quest quest)
+        public async Task StartQuest(Quest quest)
         {
             LastCommand = StateCommads.StartQuest(quest);
-            LastCommand.Execute();
+            IsBusy = true;
+            await Task.Run(() =>
+            {
+                LastCommand.Execute();
+                QuestRepository.Save();
+            });
+            IsBusy = false;
+
         }
 
         #region Private methods

@@ -75,7 +75,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         {
             holder.ItemView.Click += (sender, e) => { holder.Toggle(); };
 
-            holder.ChildrenButton.Click += (o, eventArgs) => { ChildrenClickHandler(holder.ItemPosition); };
+            holder.ChildrenButton.Click += (o, eventArgs) => { TraverseToChild(holder.ItemPosition); };
 
             holder.StartButton.Click += (o, eventArgs) => { StartHandler(holder.ItemPosition); };
             holder.DoneButton.Click += (o, eventArgs) => { DoneHandler(holder.ItemPosition); };
@@ -95,17 +95,21 @@ namespace Justus.QuestApp.View.Droid.Fragments
         #region Handlers
 
 
-        private void StartHandler(int itemPosition)
+        private async void StartHandler(int itemPosition)
         {
-            ViewModel.StartQuest(ViewModel.Leaves[itemPosition]);
+            await ViewModel.StartQuest(ViewModel.Leaves[itemPosition]);
             //Staring quest won't removing it from sequence, so we just notifying adapter about changes.
             QuestsAdapter.NotifyItemChanged(itemPosition);
         }
 
-        private void DoneHandler(int viewPosition)
+        private async void DoneHandler(int viewPosition)
         {
-            ViewModel.DoneQuest(ViewModel.Leaves[viewPosition]);
+            await ViewModel.DoneQuest(ViewModel.Leaves[viewPosition]);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
+            while(ViewModel.IsRootDone())
+            {
+                TraverseToParent();
+            }
         }
 
         private void Undo(Android.Views.View view)
@@ -113,15 +117,10 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ViewModel.UndoLastCommand();
         }
 
-        private void FailHandler(int viewPosition)
+        private async void FailHandler(int viewPosition)
         {
-            ViewModel.FailQuest(ViewModel.Leaves[viewPosition]);
+            await ViewModel.FailQuest(ViewModel.Leaves[viewPosition]);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
-        }
-
-        private void ChildrenClickHandler(int viewPosition)
-        {
-            this.TraverseToChild(viewPosition);
         }
 
         private async void CancelHandler(int viewPosition)
@@ -132,7 +131,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void ReactOnChangeItemThatRemovedOnlyFromRoot(int position)
         {
-            if (ViewModel.InRoot)
+            if (ViewModel.InTopRoot)
             {
                 QuestsAdapter.NotifyItemRemoved(position);
                 QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);

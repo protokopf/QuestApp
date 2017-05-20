@@ -18,6 +18,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     public class QuestListViewModel : BaseViewModel, IQuestCompositeModel, ICompositeTraversing
     {
         private readonly List<Quest> _emptyList;
+
         private List<Quest> _currentChildren;
 
         private bool _shouldResetChildren;
@@ -52,6 +53,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             StateCommads = stateCommandsFactory;
             RepositoryCommands = repositoryCommandsFactory;
             _emptyList = new List<Quest>();
+
             _currentChildren = new List<Quest>();
 
             _shouldResetChildren = true;
@@ -71,7 +73,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
                 {
                     _shouldResetChildren = false;
 
-                    List<Quest> children = InRoot ? QuestRepository.GetAll(quest => quest.Parent == null) : Root.Children;
+                    List<Quest> children = InTopRoot ? QuestRepository.GetAll(quest => quest.Parent == null) : Root.Children;
                     
                     if (children == null || children.Count == 0)
                     {
@@ -94,7 +96,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         public bool TraverseToRoot()
         {
             bool atLeastOneTraverse = false;
-            while (!InRoot)
+            while (!InTopRoot)
             {
                 Root = Root.Parent;
                 atLeastOneTraverse = true;
@@ -111,7 +113,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// </summary>
         public bool TraverseToParent()
         {
-            if (!InRoot)
+            if (!InTopRoot)
             {
                 Root = Root.Parent;
                 ResetChildren();
@@ -126,13 +128,16 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <param name="leafNumber"></param>
         public bool TraverseToLeaf(int leafNumber)
         {
+            if (leafNumber < 0 || leafNumber > Leaves.Count - 1)
+            {
+                return false;
+            }
             Root = Leaves[leafNumber];
             ResetChildren();
             return true;
         }
 
         #endregion
-
 
         /// <summary>
         /// Get name of current parent quest.
@@ -142,12 +147,12 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <summary>
         /// Points, whether current quest hierarchy in root.
         /// </summary>
-        public bool InRoot => Root == null;
+        public bool InTopRoot => Root == null;
 
         /// <summary>
         /// Returns id of root quest. Otherwise returns 0.
         /// </summary>
-        public int RootId => InRoot ? 0 : Root.Id;
+        public int RootId => InTopRoot ? 0 : Root.Id;
 
         /// <summary>
         /// Undo last made command.

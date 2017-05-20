@@ -12,13 +12,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities;
+using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 
 namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 {
     [TestFixture]
     class QuestListViewModelTest
     {
-
         [Test]
         public void QuestsListTitleWhenCurrentQuestIsNullTest()
         {

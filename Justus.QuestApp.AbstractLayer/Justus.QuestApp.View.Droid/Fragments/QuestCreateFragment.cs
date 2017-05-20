@@ -183,6 +183,16 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #region Event handlers
 
+        private void StartDateButtonOnClick(object sender, EventArgs e)
+        {
+            ShowDateTimePickerFragment(DateTimePickerStartRequestCode, ViewModel.StartTime);
+        }
+
+        private void DeadlineDateButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            ShowDateTimePickerFragment(DateTimePickerDeadlineRequestCode, ViewModel.Deadline);
+        }
+
         private void ImportanceCheckBoxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs checkedChangeEventArgs)
         {
             ViewModel.IsImportant = checkedChangeEventArgs.IsChecked;
@@ -195,11 +205,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ViewModel.UseStartTime = selectEnable;
         }
 
-        private void StartDateButtonOnClick(object sender, EventArgs e)
-        {
-            ShowDateTimePickerFragment(DateTimePickerStartRequestCode, ViewModel.StartTime);
-        }
-
         private void DeadlineCheckboxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs eventArgs)
         {
             bool selectEnable = eventArgs.IsChecked;
@@ -207,13 +212,13 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ViewModel.UseDeadline = selectEnable;
         }
 
-        private void DeadlineDateButtonOnClick(object sender, EventArgs eventArgs)
-        {
-            ShowDateTimePickerFragment(DateTimePickerDeadlineRequestCode, ViewModel.Deadline);
-        }
+
 
         private void SaveButtonOnClick(object sender, EventArgs eventArgs)
         {
+            ViewModel.Title = _titleEditText.Text;
+            ViewModel.Description = _descriptionEditText.Text;
+            ViewModel.Save();
             this.Activity.SetResult(Result.Ok);
             this.Activity.Finish();
         }

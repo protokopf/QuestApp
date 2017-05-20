@@ -41,7 +41,9 @@ namespace Justus.QuestApp.View.Droid.Fragments
                 switch (resultCode)
                 {
                     case (int)Result.Ok:
-                        Toast.MakeText(this.Context, "Save quest!", ToastLength.Short).Show();
+                        ViewModel.ResetChildren();
+                        QuestsAdapter.NotifyDataSetChanged();
+                        Toast.MakeText(this.Context, "New quest has been saved!", ToastLength.Short).Show();
                         break;
                     case (int)Result.Canceled:
                         Toast.MakeText(this.Context, "Cancel creating quest!", ToastLength.Short).Show();

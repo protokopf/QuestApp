@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Justus.QuestApp.AbstractLayer.Data;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model;
 
 namespace Justus.QuestApp.ModelLayer.Model
@@ -19,7 +21,7 @@ namespace Justus.QuestApp.ModelLayer.Model
     /// <summary>
     /// Gives access to recursive quest repository.
     /// </summary>
-    public class RecursiveQuestRepository : IQuestRepository
+    public class RecursiveQuestRepository : IQuestRepository, IInitializable
     {
         /// <summary>
         /// Reference to data storage interface.
@@ -27,11 +29,12 @@ namespace Justus.QuestApp.ModelLayer.Model
         private readonly IDataAccessInterface<Quest> _dataStorage;
 
         private readonly string _connectionString;
+        private readonly object _dataLocker = new object();
 
         /// <summary>
-        /// Inner quest cache.
+        /// All quests.
         /// </summary>
-        private List<Quest> _questList;
+        private List<Quest> _allQuests;
 
         private readonly HashSet<int> _toDelete;
         private readonly List<Quest> _toUpdate;
@@ -63,7 +66,7 @@ namespace Justus.QuestApp.ModelLayer.Model
             _toUpdate = new List<Quest>();
             _toInsert = new List<Quest>();
 
-            _questList = new List<Quest>();
+            _allQuests = new List<Quest>();
             _currentId = 1;
         }
 
@@ -72,172 +75,208 @@ namespace Justus.QuestApp.ModelLayer.Model
         ///<inheritdoc/>
         public void Insert(Quest quest)
         {
-            if (quest == null)
+            lock (_dataLocker)
             {
-                throw new ArgumentNullException(nameof(quest));
+                if (quest == null)
+                {
+                    throw new ArgumentNullException(nameof(quest));
+                }
+
+                SetId(quest);
+
+                _toInsert.Add(quest);
+
+                if (quest.Children != null)
+                {
+                    RecursiveInsert(quest.Children);
+                }
+
+                _allQuests.Add(quest);
             }
-
-            SetId(quest);
-
-            _toInsert.Add(quest);
-
-            if (quest.Children != null)
-            {
-                RecursiveInsert(quest.Children);
-            }
-
-            _questList.Add(quest);
         }
 
         ///<inheritdoc/>
         public void InsertAll(List<Quest> quests)
         {
-            if (quests == null)
+            lock (_dataLocker)
             {
-                throw new ArgumentNullException(nameof(quests));
+                if (quests == null)
+                {
+                    throw new ArgumentNullException(nameof(quests));
+                }
+                RecursiveInsert(quests);
+                _allQuests.AddRange(quests);
             }
-            RecursiveInsert(quests);
-            _questList.AddRange(quests);
         }
 
         ///<inheritdoc/>
         public bool RevertInsert(Quest quest)
         {
-            return _toInsert.Remove(quest);
+            lock (_dataLocker)
+            {
+                return _toInsert.Remove(quest);
+            }
         }
 
         ///<inheritdoc/>
         public void Update(Quest quest)
         {
-            if (quest == null)
+            lock (_dataLocker)
             {
-                throw new ArgumentNullException(nameof(quest));
+                if (quest == null)
+                {
+                    throw new ArgumentNullException(nameof(quest));
+                }
+                _toUpdate.Add(quest);
             }
-            _toUpdate.Add(quest);
         }
 
         ///<inheritdoc/>
         public void UpdateAll(List<Quest> quests)
         {
-            if (quests == null)
+            lock (_dataLocker)
             {
-                throw new ArgumentNullException(nameof(quests));
+                if (quests == null)
+                {
+                    throw new ArgumentNullException(nameof(quests));
+                }
+                _toUpdate.AddRange(quests);
             }
-            _toUpdate.AddRange(quests);          
         }
 
         ///<inheritdoc/>
         public bool RevertUpdate(Quest quest)
         {
-            return _toUpdate.Remove(quest);
+            lock (_dataLocker)
+            {
+                return _toUpdate.Remove(quest);
+            }
         }
 
         ///<inheritdoc/>
-        public Quest Get(int id)
+        public Quest Get(Predicate<Quest> questPredicate)
         {
-            return _questList.Find(quest => quest.Id == id);
+            lock (_dataLocker)
+            {
+                return _allQuests.Find(questPredicate);
+            }
         }
 
         ///<inheritdoc/>
-        public List<Quest> GetAll()
+        public List<Quest> GetAll(Predicate<Quest> questPredicate)
         {
-            return _questList;
+            lock (_dataLocker)
+            {
+                return _allQuests.FindAll(questPredicate);
+            }
         }
 
         ///<inheritdoc/>
         public void Delete(Quest quest)
         {
-            if(quest == null)
+            lock (_dataLocker)
             {
-                throw new ArgumentNullException(nameof(quest));
+                if (quest == null)
+                {
+                    throw new ArgumentNullException(nameof(quest));
+                }
+                _allQuests.Remove(quest);
+                Quest parentOfDeleted = quest.Parent;
+                parentOfDeleted?.Children.Remove(quest);
+                _toDelete.Add(quest.Id);
             }
-            Quest parentOfDeleted = quest.Parent;
-            if (parentOfDeleted == null)
-            {
-                _questList.Remove(quest);
-            }
-            else
-            {
-                parentOfDeleted.Children.Remove(quest);
-            }
-            _toDelete.Add(quest.Id);
         }
 
         ///<inheritdoc/>
         public void DeleteAll()
         {
-            _shouldDeleteAll = true;
+            lock (_dataLocker)
+            {
+                _shouldDeleteAll = true;
+            }
         }
 
         ///<inheritdoc/>
         public bool RevertDelete(Quest quest)
         {
-            return _toDelete.Remove(quest.Id);
+            lock (_dataLocker)
+            {
+                return _toDelete.Remove(quest.Id);
+            }
         }
 
         ///<inheritdoc/>
-        public void PushQuests()
+        public void Save()
         {
-            int totalCount = _toDelete.Count + _toUpdate.Count + _toInsert.Count;
-            if (totalCount > 0 || _shouldDeleteAll)
+            lock (_dataLocker)
             {
-                using (_dataStorage)
+                int totalCount = _toDelete.Count + _toUpdate.Count + _toInsert.Count;
+                if (totalCount > 0 || _shouldDeleteAll)
                 {
-                    _dataStorage.Open(_connectionString);
+                    using (_dataStorage)
+                    {
+                        _dataStorage.Open(_connectionString);
 
-                    if (_toInsert.Count > 0)
-                    {
-                        _dataStorage.InsertAll(_toInsert);
-                        _toInsert.Clear();
-                    }
-
-                    if (_toUpdate.Count > 0)
-                    {
-                        _dataStorage.UpdateAll(_toUpdate);
-                        _toUpdate.Clear();
-                    }
-
-                    if (_shouldDeleteAll)
-                    {
-                        _dataStorage.DeleteAll();
-                        _shouldDeleteAll = false;
-                    }
-                    else
-                    {
-                        foreach (int questId in _toDelete)
+                        if (_toInsert.Count > 0)
                         {
-                            _dataStorage.Delete(questId);
+                            _dataStorage.InsertAll(_toInsert);
+                            _toInsert.Clear();
                         }
+
+                        if (_toUpdate.Count > 0)
+                        {
+                            _dataStorage.UpdateAll(_toUpdate);
+                            _toUpdate.Clear();
+                        }
+
+                        if (_shouldDeleteAll)
+                        {
+                            _dataStorage.DeleteAll();
+                            _shouldDeleteAll = false;
+                        }
+                        else
+                        {
+                            foreach (int questId in _toDelete)
+                            {
+                                _dataStorage.Delete(questId);
+                            }
+                        }
+                        _toDelete.Clear();
                     }
-                    _toDelete.Clear();
                 }
             }
         }
 
         ///<inheritdoc/>
-        public void PullQuests()
-        {
-            using (_dataStorage)
-            {
-                _dataStorage.Open(_connectionString);
-                _questList = _dataStorage.GetAll();
-            }
-                
-            if (_questList == null)
-            {
-                _questList = new List<Quest>();
-            }
-
-            InitializeId(_questList);
-
-            CycleBinding(_questList);
-            _questList.RemoveAll(quest => quest.Parent != null);
-        }
-
-        ///<inheritdoc/>
         public void Dispose()
         {
-            PushQuests();
+            Save();
+        }
+
+        #endregion
+
+        #region IInitializable implementation
+
+        ///<inheritdoc/>
+        public void Initialize()
+        {
+            lock (_dataLocker)
+            {
+                using (_dataStorage)
+                {
+                    _dataStorage.Open(_connectionString);
+                    _allQuests = _dataStorage.GetAll();
+                }
+
+                if (_allQuests == null)
+                {
+                    _allQuests = new List<Quest>();
+                }
+
+                InitializeId(_allQuests);
+
+                CycleBinding(_allQuests);
+            }
         }
 
         #endregion

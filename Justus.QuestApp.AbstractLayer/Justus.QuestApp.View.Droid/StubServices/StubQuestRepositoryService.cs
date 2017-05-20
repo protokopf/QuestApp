@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
+using Justus.QuestApp.AbstractLayer.Data;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
 
 namespace Justus.QuestApp.View.Droid.StubServices
 {
-    class StubQuestRepositoryService : IQuestRepository
+    class StubQuestRepositoryService : IDataAccessInterface<Quest>
     {
         private int _depth = 0;
         private int _child = 0;
@@ -24,22 +26,17 @@ namespace Justus.QuestApp.View.Droid.StubServices
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Insert(Quest quest)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void InsertAll(List<Quest> quests)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool RevertInsert(Quest quest)
-        {
-            throw new NotImplementedException();
+            
         }
 
         public void Update(Quest quest)
@@ -49,12 +46,7 @@ namespace Justus.QuestApp.View.Droid.StubServices
 
         public void UpdateAll(List<Quest> quests)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool RevertUpdate(Quest quest)
-        {
-            return true;
+            
         }
 
         public Quest Get(int id)
@@ -64,40 +56,22 @@ namespace Justus.QuestApp.View.Droid.StubServices
 
         public List<Quest> GetAll()
         {
-            return _quests ?? (_quests = GetQuests(_topCount));
+            return GetQuests(_topCount);
         }
 
-        public void Delete(Quest quest)
-        {
-            _quests.Remove(quest);
-        }
 
         public void DeleteAll()
         {
-            throw new NotImplementedException();
+            
         }
 
-        public bool RevertDelete(Quest quest)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PushQuests()
-        {
-            Thread.Sleep(2000);
-        }
-
-        public void PullQuests()
-        {
-            Thread.Sleep(2000);
-        }
 
         private List<Quest> GetQuests(int count)
         {
             List<Quest> quests = new List<Quest>();
             for (int i = 0; i < count; ++i)
             {
-                quests.Add(CreateCompositeQuestFromAbove(_depth, _child));
+                CreateCompositeQuestsWithIdRelations(0,_depth, _child, ref quests);
             }
             return quests;
         }
@@ -110,7 +84,7 @@ namespace Justus.QuestApp.View.Droid.StubServices
             {
                 Id = id,
                 Title = "Quest ¹ " + id,
-                Description = "Description " + id,
+                Description = /*GenerateDescription()*/ $"Desription {id}",
                 CurrentState = state,
                 Children = new List<Quest>(),
                 Deadline = GetDeadLine(id),
@@ -118,48 +92,68 @@ namespace Justus.QuestApp.View.Droid.StubServices
             };
         }
 
-        private Quest CreateCompositeQuestFromAbove(int compositionLevel, int childNumber)
+        private void CreateCompositeQuestsWithIdRelations(int parentId, int compositionLevel, int childNumber,
+            ref List<Quest> totalQuests)
         {
             Quest quest = CreateQuest(++_currentId);
+            quest.ParentId = parentId;
+
+            totalQuests.Add(quest);
+
             if (compositionLevel == 0 || childNumber == 0)
             {
-                return quest;
+                return;
             }
             for (int i = 0; i < childNumber; ++i)
             {
-                Quest child = CreateCompositeQuestFromAbove(compositionLevel - 1, childNumber);
-                child.Parent = quest;
-                quest.Children.Add(child);
+                CreateCompositeQuestsWithIdRelations(quest.Id, compositionLevel - 1, childNumber, ref totalQuests);
             }
-            return quest;
+            return;
         }
 
         private DateTime GetDeadLine(int id)
         {
             DateTime result = DateTime.MaxValue;
-            //if (id%2 == 0)
-            //{
-                result = DateTime.Now + new TimeSpan(0, 1, 60, 0);
-            //}
-            //else if (id%3 == 0)
-            //{
-            //    result = DateTime.Now -new TimeSpan(0, 12, 0, 0);
-            //}
+            result = DateTime.Now + new TimeSpan(0, 1, 60, 0);
             return result;
         }
 
         private DateTime GetStartDate(int id)
         {
             DateTime result = DateTime.MaxValue;
-            //if (id % 2 == 0)
-            //{
-                result = DateTime.Now - new TimeSpan(0, 0, 5, 0);
-            //}
-            //else if (id % 3 == 0)
-            //{
-            //    result = DateTime.Now - new TimeSpan(0, 12, 0, 0);
-            //}
+            result = DateTime.Now - new TimeSpan(0, 0, 5, 0);
             return result;
+        }
+
+        private string GenerateDescription()
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < 15; ++i)
+            {
+                builder.AppendLine(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+            }
+            return builder.ToString();
+        }
+
+        public void Open(string pathToStorage)
+        {
+            
+        }
+
+        public void Close()
+        {
+            
+        }
+
+        public bool IsClosed()
+        {
+            return false;
+        }
+
+        public void Delete(int id)
+        {
+            _quests?.RemoveAll(q => q.Id == id);
         }
     }
 

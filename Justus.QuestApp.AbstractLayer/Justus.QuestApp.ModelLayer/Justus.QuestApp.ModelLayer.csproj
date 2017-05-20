@@ -52,6 +52,7 @@
     <Compile Include="Commands\Abstracts\AbstractRepositoryCommand.cs" />
     <Compile Include="Commands\Repository\UpdateQuestCommand.cs" />
     <Compile Include="Factories\SqliteQuestCreator.cs" />
+    <Compile Include="Helpers\DefaultDataKeeper.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\AutoStartTaskWrapper.cs" />
     <Compile Include="Model\QuestTimeLeftCounter.cs" />

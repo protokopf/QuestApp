@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities;
+using Justus.QuestApp.AbstractLayer.Model.Composite;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
@@ -14,46 +15,57 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// <summary>
     /// Base type for view models, that works with quest items.
     /// </summary>
-    public class QuestListViewModel : BaseViewModel
+    public class QuestListViewModel : BaseViewModel, IQuestCompositeModel, ICompositeTraversing
     {
         private readonly List<Quest> _emptyList;
+
         private List<Quest> _currentChildren;
 
         private bool _shouldResetChildren;
-        private bool _areQuestsPulled;
 
         protected IQuestRepository QuestRepository;
-        protected IQuestProgressCounter ProgressCounter;
         protected IStateCommandsFactory StateCommads;
         protected IRepositoryCommandsFactory RepositoryCommands;
         protected Command LastCommand;
-        
 
         /// <summary>
         /// Default constructor. Resolves references to quest repository and command manager.
         /// </summary>
-        public QuestListViewModel()
+        public QuestListViewModel(
+            IQuestRepository repository, 
+            IStateCommandsFactory stateCommandsFactory, 
+            IRepositoryCommandsFactory repositoryCommandsFactory)
         {
-            QuestRepository = ServiceLocator.Resolve<IQuestRepository>();
-            ProgressCounter = ServiceLocator.Resolve<IQuestProgressCounter>();
-            StateCommads = ServiceLocator.Resolve<IStateCommandsFactory>();
-            RepositoryCommands = ServiceLocator.Resolve<IRepositoryCommandsFactory>();
+            if (repository == null)
+            {
+                throw new ArgumentNullException(nameof(repository));
+            }
+            if (stateCommandsFactory == null)
+            {
+                throw new ArgumentNullException(nameof(stateCommandsFactory));
+            }
+            if (repositoryCommandsFactory == null)
+            {
+                throw new ArgumentNullException(nameof(repositoryCommandsFactory));
+            }
+
+            QuestRepository = repository;
+            StateCommads = stateCommandsFactory;
+            RepositoryCommands = repositoryCommandsFactory;
             _emptyList = new List<Quest>();
+
             _currentChildren = new List<Quest>();
 
             _shouldResetChildren = true;
-            _areQuestsPulled = false;
         }
 
-        /// <summary>
-        /// Parent quest of current list.
-        /// </summary>
-        public Quest CurrentQuest { get; set; }
+        #region IQuestCompositeModel implementation
 
-        /// <summary>
-        /// Returns children of current quest. If quest is null - returns all top level quests from repository.
-        /// </summary>
-        public List<Quest> CurrentChildren
+        ///<inheritdoc/>
+        public Quest Root { get; set; }
+
+        ///<inheritdoc/>
+        public List<Quest> Leaves
         {
             get
             {
@@ -61,7 +73,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
                 {
                     _shouldResetChildren = false;
 
-                    List<Quest> children = InRoot ? QuestRepository.GetAll() : CurrentQuest.Children;
+                    List<Quest> children = InTopRoot ? QuestRepository.GetAll(quest => quest.Parent == null) : Root.Children;
                     
                     if (children == null || children.Count == 0)
                     {
@@ -74,31 +86,73 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             }
         }
 
+        #endregion
+
+        #region ICompositeTraversing implementation
+
+        /// <summary>
+        /// Traverse to root of current quest hierarchy.
+        /// </summary>
+        public bool TraverseToRoot()
+        {
+            bool atLeastOneTraverse = false;
+            while (!InTopRoot)
+            {
+                Root = Root.Parent;
+                atLeastOneTraverse = true;
+            }
+            if (atLeastOneTraverse)
+            {
+                ResetChildren();
+            }
+            return atLeastOneTraverse;
+        }
+
+        /// <summary>
+        /// Traverse to parent of current quest.
+        /// </summary>
+        public bool TraverseToParent()
+        {
+            if (!InTopRoot)
+            {
+                Root = Root.Parent;
+                ResetChildren();
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Traverse to 'childPosition' child of current quest.
+        /// </summary>
+        /// <param name="leafNumber"></param>
+        public bool TraverseToLeaf(int leafNumber)
+        {
+            if (leafNumber < 0 || leafNumber > Leaves.Count - 1)
+            {
+                return false;
+            }
+            Root = Leaves[leafNumber];
+            ResetChildren();
+            return true;
+        }
+
+        #endregion
+
         /// <summary>
         /// Get name of current parent quest.
         /// </summary>
-        public string QuestsListTitle => CurrentQuest?.Title;
+        public string QuestsListTitle => Root?.Title;
 
         /// <summary>
         /// Points, whether current quest hierarchy in root.
         /// </summary>
-        public bool InRoot => CurrentQuest == null;
+        public bool InTopRoot => Root == null;
 
         /// <summary>
-        /// Count progress of quest.
+        /// Returns id of root quest. Otherwise returns 0.
         /// </summary>
-        /// <param name="quest"></param>
-        /// <returns></returns>
-        public int CountProgress(Quest quest)
-        {
-            if (quest == null)
-            {
-                throw new ArgumentNullException(nameof(quest));
-            }
-            ProgressValue value = ProgressCounter.CountProgress(quest);
-            int result = (int)(value.Current / (double)value.Total * 100);
-            return result;
-        }
+        public int RootId => InTopRoot ? 0 : Root.Id;
 
         /// <summary>
         /// Undo last made command.
@@ -113,77 +167,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         }
 
         /// <summary>
-        /// Push all quests in async way.
-        /// </summary>
-        public async Task PushQuests()
-        {
-            IsBusy = true;
-            await Task.Run(() => QuestRepository.PushQuests());
-            IsBusy = false;
-        }
-
-        /// <summary>
-        /// Pull all changes in async way.
-        /// </summary>
-        public async Task PullQuests()
-        {
-            _areQuestsPulled = false;
-            IsBusy = true;
-            await Task.Run(() => QuestRepository.PullQuests());
-            IsBusy = false;
-            ResetChildren();
-        }
-
-        /// <summary>
-        /// Points, whether quests have been pulled.
-        /// </summary>
-        /// <returns></returns>
-        public bool AreQuestsPulled()
-        {
-            return _areQuestsPulled;
-        }
-
-        /// <summary>
-        /// Traverse to parent of current quest.
-        /// </summary>
-        public void TraverseToParent()
-        {
-            if (!InRoot)
-            {
-                CurrentQuest = CurrentQuest.Parent;
-                ResetChildren();
-            }
-        }
-
-        /// <summary>
-        /// Traverse to 'childPosition' child of current quest.
-        /// </summary>
-        /// <param name="childPosition"></param>
-        public void TraverseToChild(int childPosition)
-        {
-            CurrentQuest = CurrentChildren[childPosition];
-            ResetChildren();            
-        }
-
-        /// <summary>
-        /// Traverse to root of current quest hierarchy.
-        /// </summary>
-        public void TraverseToRoot()
-        {
-            bool atLeastOneTraverse = false;
-            while (!InRoot)
-            {
-                CurrentQuest = CurrentQuest.Parent;
-                atLeastOneTraverse = true;
-            }
-            if (atLeastOneTraverse)
-            {
-                ResetChildren();
-            }
-        }
-
-        /// <summary>
-        /// Makes view model reset children within next call CurrentChildren property.
+        /// Makes view model reset children within next call Leaves property.
         /// </summary>
         public void ResetChildren()
         {
@@ -196,12 +180,12 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <param name="position"></param>
         public Task DeleteQuest(int position)
         {
-            Quest quest = CurrentChildren[position];
+            Quest quest = Leaves[position];
             LastCommand = RepositoryCommands.DeleteQuest(quest);
             return Task.Run(() =>
             {
                 LastCommand.Execute();
-                QuestRepository.PushQuests();
+                QuestRepository.Save();
             });
         }
 

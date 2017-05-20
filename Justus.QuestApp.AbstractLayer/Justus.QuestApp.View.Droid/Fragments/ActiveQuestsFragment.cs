@@ -3,70 +3,79 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.AbstractLayer.Services;
-using Justus.QuestApp.View.Droid.Adapters.List;
-using Justus.QuestApp.View.Droid.Fragments.Abstracts;
 using Justus.QuestApp.View.Droid.Services.ViewServices;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 using System.Threading.Tasks;
+using Android.Graphics.Drawables;
+using Android.Support.Design.Widget;
+using Android.Support.V4.Content.Res;
+using Android.Support.V7.Widget;
+using Justus.QuestApp.View.Droid.Abstract.Fragments;
+using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
+using Justus.QuestApp.View.Droid.Adapters.Quests;
 
 namespace Justus.QuestApp.View.Droid.Fragments
 {
     /// <summary>
     /// Fragment, that contains list of active quests.
     /// </summary>
-    public class ActiveQuestsFragment : BaseTraverseQuestsFragment<ActiveQuestListViewModel, ActiveQuestItemViewHolder>
+    public class ActiveQuestsFragment : BaseTraverseQuestsFragment<ActiveQuestListViewModel, ActiveQuestViewHolder>, 
+        IViewHolderClickManager<ActiveQuestViewHolder>
     {
-        private IntervalAbstractService _intervalService;
+        //private IntervalAbstractService _intervalService;
 
         #region Fragment overriding
 
         ///<inheritdoc/>
-        public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        protected override RecyclerView HandleRecyclerView(Android.Views.View fragmentView)
         {
-            Android.Views.View view = inflater.Inflate(Resource.Layout.QuestListFragmentLayout, container, false);
+            RecyclerView recView = fragmentView.FindViewById<RecyclerView>(Resource.Id.questRecyclerViewRefId);
+            
+            recView.SetLayoutManager(new LinearLayoutManager(this.Context));
+            recView.SetAdapter(QuestsAdapter = new ActiveQuestsAdapter(this.Activity, ViewModel, this));
 
-            QuestListView = view.FindViewById<ListView>(Resource.Id.questListId);
-            TitleTextView = view.FindViewById<TextView>(Resource.Id.questsListTitle);          
-            BackButton = view.FindViewById<Button>(Resource.Id.questsListBack);
+            DividerItemDecoration decor = new DividerItemDecoration(this.Context, DividerItemDecoration.Vertical);
 
-            TitleTextDefault = Activity.GetString(Resource.String.QuestListTitle);
+            Drawable divider = ResourcesCompat.GetDrawable(Resources, Resource.Drawable.questItemDivider, null);
 
-            BackButton.Enabled = !ViewModel.InRoot;
-            BackButton.Click += BackButtonHandler;
+            decor.SetDrawable(divider);
 
-            QuestListView.Adapter = QuestListAdapter = new ActiveQuestListAdapter(this.Activity, ViewModel);
-            QuestListView.ItemClick += ItemClickHandler;
-            QuestListView.ChildViewAdded += QuestAddedHandler;
+            recView.AddItemDecoration(decor);
 
-            _intervalService = new SimpleQuestExpireService(1000, TaskScheduler.FromCurrentSynchronizationContext(),ViewModel, QuestListAdapter);
-
-            return view;
+            return recView;
         }
 
         ///<inheritdoc/>
-        public override void OnPause()
+        protected override int GetLayoutId()
         {
-            base.OnPause();
-            _intervalService.Stop();       
+            return Resource.Layout.QuestListFragmentLayout;
+        }
+
+        ///<inheritdoc/>
+        public override void OnStop()
+        {
+            base.OnStop();
+            //_intervalService.Stop();       
         }
 
         ///<inheritdoc/>
         public override void OnResume()
         {
             base.OnResume();
-            _intervalService.Start();
+            //_intervalService.Start();
         }
 
         #endregion
 
-        #region Handlers
+        #region IViewHolderClickManager implementation
 
-        private void QuestAddedHandler(object sender, ViewGroup.ChildViewAddedEventArgs args)
+        ///<inheritdoc/>
+        public void BindClickListeners(ActiveQuestViewHolder holder)
         {
-            ActiveQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(args.Child);
+            holder.ItemView.Click += (sender, e) => { holder.Toggle(); };
 
-            holder.ChildrenButton.Click += (o, eventArgs) => { ChildrenClickHandler(holder.ItemPosition); };
+            holder.ChildrenButton.Click += (o, eventArgs) => { TraverseToChild(holder.ItemPosition); };
 
             holder.StartButton.Click += (o, eventArgs) => { StartHandler(holder.ItemPosition); };
             holder.DoneButton.Click += (o, eventArgs) => { DoneHandler(holder.ItemPosition); };
@@ -75,27 +84,32 @@ namespace Justus.QuestApp.View.Droid.Fragments
             holder.CancelButton.Click += (o, eventArgs) => { CancelHandler(holder.ItemPosition); };
         }
 
-        private void StartHandler(int itemPosition)
+        ///<inheritdoc/>
+        public void UnbindClickListeners(ActiveQuestViewHolder holder)
         {
-            ViewModel.StartQuest(ViewModel.CurrentChildren[itemPosition]);
-            QuestListAdapter.NotifyDataSetChanged();
+            throw new NotImplementedException();
         }
 
-        private void ItemClickHandler(object sender, AdapterView.ItemClickEventArgs args)
+        #endregion
+
+        #region Handlers
+
+
+        private async void StartHandler(int itemPosition)
         {
-            ActiveQuestItemViewHolder holder = QuestListAdapter.GetViewHolderByView(args.View);
-            holder.ExpandDetails.Visibility = holder.ExpandDetails.Visibility == ViewStates.Visible ? ViewStates.Gone : ViewStates.Visible;
+            await ViewModel.StartQuest(ViewModel.Leaves[itemPosition]);
+            //Staring quest won't removing it from sequence, so we just notifying adapter about changes.
+            QuestsAdapter.NotifyItemChanged(itemPosition);
         }
 
-        private void BackButtonHandler(object sender, EventArgs e)
+        private async void DoneHandler(int viewPosition)
         {
-            this.TraverseToParent();
-        }
-
-        private void DoneHandler(int viewPosition)
-        {
-            ViewModel.DoneQuest(ViewModel.CurrentChildren[viewPosition]);
-            QuestListAdapter.NotifyDataSetChanged();
+            await ViewModel.DoneQuest(ViewModel.Leaves[viewPosition]);
+            ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
+            while(ViewModel.IsRootDone())
+            {
+                TraverseToParent();
+            }
         }
 
         private void Undo(Android.Views.View view)
@@ -103,33 +117,31 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ViewModel.UndoLastCommand();
         }
 
-        private void FailHandler(int viewPosition)
+        private async void FailHandler(int viewPosition)
         {
-            ViewModel.FailQuest(ViewModel.CurrentChildren[viewPosition]);
-            QuestListAdapter.NotifyDataSetChanged();
+            await ViewModel.FailQuest(ViewModel.Leaves[viewPosition]);
+            ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
         }
 
-        private void ChildrenClickHandler(int viewPosition)
+        private async void CancelHandler(int viewPosition)
         {
-            this.TraverseToChild(viewPosition);
+            await ViewModel.CancelQuest(ViewModel.Leaves[viewPosition]);
+            ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
         }
 
-        private void CancelHandler(int viewPosition)
+        private void ReactOnChangeItemThatRemovedOnlyFromRoot(int position)
         {
-            ViewModel.CancelQuest(ViewModel.CurrentChildren[viewPosition]);
-            QuestListAdapter.NotifyDataSetChanged();
+            if (ViewModel.InTopRoot)
+            {
+                QuestsAdapter.NotifyItemRemoved(position);
+                QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
+            }
+            else
+            {
+                QuestsAdapter.NotifyItemChanged(position);
+            }
         }
 
         #endregion
-
-        private async void PullQuests()
-        {
-            await ViewModel.PullQuests();
-        }
-
-        private async void PushQuests()
-        {
-            await ViewModel.PushQuests();
-        }
     }
 }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Services;
-using Justus.QuestApp.View.Droid.Adapters.List;
+using Justus.QuestApp.View.Droid.Abstract.Adapters;
+using Justus.QuestApp.View.Droid.Adapters.Quests;
 using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -13,12 +14,12 @@ namespace Justus.QuestApp.View.Droid.Services.ViewServices
     {
         private readonly TaskScheduler _sheduler;
         private readonly QuestListViewModel _viewModel;
-        private readonly BaseQuestListAdapter<ActiveQuestItemViewHolder> _adapter;
+        private readonly BaseQuestsAdapter<ActiveQuestViewHolder, ActiveQuestListViewModel> _adapter;
 
-        private HashSet<int> _toUpdate;
+        private readonly HashSet<int> _toUpdate;
 
-        public SimpleQuestExpireService(int intervalMilliseconds, TaskScheduler sheduler, QuestListViewModel vm,
-            BaseQuestListAdapter<ActiveQuestItemViewHolder> adapter) 
+        public SimpleQuestExpireService(int intervalMilliseconds, TaskScheduler sheduler, ActiveQuestListViewModel vm,
+            BaseQuestsAdapter<ActiveQuestViewHolder, ActiveQuestListViewModel> adapter) 
             : base(intervalMilliseconds)
         {
             _sheduler = sheduler;
@@ -34,10 +35,10 @@ namespace Justus.QuestApp.View.Droid.Services.ViewServices
 
         private void FindQuestsToUpdate()
         {
-            int length = _adapter.Count;
+            int length = _adapter.ItemCount;
             for (int i = 0; i < length; ++i)
             {
-                Quest currentQuest = _viewModel.CurrentChildren[i];
+                Quest currentQuest = _viewModel.Leaves[i];
                 if (currentQuest.Deadline > DateTime.Now && currentQuest.CurrentState == QuestState.Progress)
                 {
                     _toUpdate.Add(i);
@@ -47,15 +48,15 @@ namespace Justus.QuestApp.View.Droid.Services.ViewServices
 
         private void UpdateViews(Task task)
         {
-            int i = 0;
-            foreach (var viewHolder in _adapter.GetViewHolders())
-            {
-                if (_toUpdate.Contains(i))
-                {
-                    viewHolder.TimeLeft.Text = FormLeftTime(_viewModel.CurrentChildren[i].Deadline);
-                }
-            }
-            _toUpdate.Clear();
+            //int i = 0;
+            //foreach (var viewHolder in _adapter.GetViewHolders())
+            //{
+            //    if (_toUpdate.Contains(i))
+            //    {
+            //        viewHolder.TimeLeft.Text = FormLeftTime(_viewModel.Leaves[i].Deadline);
+            //    }
+            //}
+            //_toUpdate.Clear();
         }
 
         private string FormLeftTime(DateTime deadLine)

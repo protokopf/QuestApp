@@ -14,5 +14,5 @@
         android:text="@string/QuestListTitle"
         android:textAppearance="?android:attr/textAppearanceLarge"
         style="@style/WrapContent.QuestListTitle"
-        android:layout_weight="8" />
+        android:layout_weight="9" />
 </LinearLayout>

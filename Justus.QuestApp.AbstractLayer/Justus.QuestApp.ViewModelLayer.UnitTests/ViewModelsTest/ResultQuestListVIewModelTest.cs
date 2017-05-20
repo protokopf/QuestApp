@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
@@ -15,18 +16,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
     [TestFixture]
     class ResultQuestListVIewModelTest
     {
-        [TearDown]
-        public void ReleaseLocator()
-        {
-            ServiceLocator.ReleaseAll();
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            ServiceLocator.Register(() => MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>());
-        }
-
         [Test]
         public void FilterOnTopLevelQuests()
         {
@@ -40,20 +29,16 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
                 new FakeQuest {CurrentState = QuestState.Progress , Parent = null}
             };
 
-            repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
-            repository.Expect(rep => rep.PullQuests()).Repeat.Once();
+            repository.Expect(rep => rep.GetAll(Arg<Predicate<Quest>>.Is.NotNull)).Repeat.Once().Return(fromRepository);
 
-            ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
 
-            ServiceLocator.Register(() => repository);
-            ServiceLocator.Register(() => comManager);
-            ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
-            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
-            QuestListViewModel viewModel = new ResultsQuestListViewModel();
+            ResultsQuestListViewModel viewModel = new ResultsQuestListViewModel(repository, stateCommands, repoCommands);
 
             //Act
-            List<Quest> quests = viewModel.CurrentChildren;
+            List<Quest> quests = viewModel.Leaves;
 
             //Assert
             Assert.IsNotNull(quests);
@@ -85,20 +70,16 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
                 new FakeQuest {CurrentState = QuestState.Progress , Parent = parent}
             };
 
-            repository.Expect(rep => rep.GetAll()).Repeat.Once().Return(fromRepository);
-            repository.Expect(rep => rep.PullQuests()).Repeat.Once();
+            repository.Expect(rep => rep.GetAll(Arg<Predicate<Quest>>.Is.NotNull)).Repeat.Once().Return(fromRepository);
 
-            ICommandManager comManager = MockRepository.GenerateStrictMock<ICommandManager>();
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
 
-            ServiceLocator.Register(() => repository);
-            ServiceLocator.Register(() => comManager);
-            ServiceLocator.Register<IQuestProgressCounter>(() => MockRepository.GenerateStrictMock<IQuestProgressCounter>());
-            ServiceLocator.Register<IStateCommandsFactory>(() => MockRepository.GenerateStrictMock<IStateCommandsFactory>());
 
-            QuestListViewModel viewModel = new ResultsQuestListViewModel();
+            ResultsQuestListViewModel viewModel = new ResultsQuestListViewModel(repository, stateCommands, repoCommands);
 
             //Act
-            List<Quest> quests = viewModel.CurrentChildren;
+            List<Quest> quests = viewModel.Leaves;
 
             //Assert
             Assert.IsNotNull(quests);

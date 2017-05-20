@@ -8,7 +8,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
     /// <summary>
     /// Contains help methods for unit tests.
     /// </summary>
-    internal static class QuestHelper
+    public static class QuestHelper
     {
         public static Quest CreateQuest(QuestState state)
         {

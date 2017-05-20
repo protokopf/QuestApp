@@ -1,6 +1,8 @@
 ﻿using Justus.QuestApp.ModelLayer.Helpers;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
 {
@@ -9,21 +11,31 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
     {
         #region Help types
 
-        interface FakeInterface
+        interface IAnotherFake
+        {
+            void GetSomethingAnother();
+        }
+
+        interface IFake
         {
             string GetSomething();
         }
 
-        class FakeImplementationOne : FakeInterface
+        interface ICommon
+        {
+            void CommonAction();
+        }
+
+        class FakeOne : IFake
         {
             private string _str = string.Empty;
 
-            public FakeImplementationOne()
+            public FakeOne()
             {
 
             }
 
-            public FakeImplementationOne(string str)
+            public FakeOne(string str)
             {
                 _str = str;
             }
@@ -34,11 +46,37 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
             }
         }
 
-        class FakeImplementationTwo : FakeInterface
+        class FakeTwo : IFake
         {
             public string GetSomething()
             {
-                return "FakeImplementationTwo";
+                return "FakeTwo";
+            }
+        }
+
+        class FakeCommon : IFake, ICommon
+        {
+            public string GetSomething()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void CommonAction()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        class AnotherFakeCommon : IAnotherFake, ICommon
+        {
+            public void GetSomethingAnother()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void CommonAction()
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -54,38 +92,38 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
         public void RegisterAndResolveTest()
         {
             //Arrange
-            ServiceLocator.Register(() => new FakeImplementationOne());
+            ServiceLocator.Register(() => new FakeOne());
 
             //Act
-            FakeInterface impl1 = ServiceLocator.Resolve<FakeImplementationOne>();
+            IFake impl1 = ServiceLocator.Resolve<FakeOne>();
 
             //Assert
             Assert.IsNotNull(impl1);
-            Assert.IsTrue(impl1 is FakeImplementationOne);
+            Assert.IsTrue(impl1 is FakeOne);
         }
 
         [Test]
         public void RegisterAndResolveByInterfaceTest()
         {
             //Arrange
-            ServiceLocator.Register<FakeInterface>(() => new FakeImplementationOne());
+            ServiceLocator.Register<IFake>(() => new FakeOne());
 
             //Act
-            FakeInterface impl1 = ServiceLocator.Resolve<FakeInterface>();
+            IFake impl1 = ServiceLocator.Resolve<IFake>();
 
             //Assert
             Assert.IsNotNull(impl1);
-            Assert.IsTrue(impl1 is FakeImplementationOne);
+            Assert.IsTrue(impl1 is FakeOne);
         }
 
         [Test]
         public void RegisteredFuncReturnNullTest()
         {
             //Arrange
-            ServiceLocator.Register<FakeImplementationOne>(() => { return null; });
+            ServiceLocator.Register<FakeOne>(() => { return null; });
 
             //Act
-            FakeInterface impl1 = ServiceLocator.Resolve<FakeImplementationOne>();
+            IFake impl1 = ServiceLocator.Resolve<FakeOne>();
 
             //Assert
             Assert.IsNull(impl1);
@@ -95,12 +133,12 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
         public void RegisterTheSameTypeTwiceFailTest()
         {
             //Arrange
-            bool first = ServiceLocator.Register<FakeImplementationOne>(() => new FakeImplementationOne("first"));
-            bool second = ServiceLocator.Register<FakeImplementationOne>(() => new FakeImplementationOne("second"));
+            bool first = ServiceLocator.Register<FakeOne>(() => new FakeOne("first"));
+            bool second = ServiceLocator.Register<FakeOne>(() => new FakeOne("second"));
 
             //Act
-            FakeInterface impl1 = ServiceLocator.Resolve<FakeImplementationOne>();
-            FakeInterface impl2 = ServiceLocator.Resolve<FakeImplementationOne>();
+            IFake impl1 = ServiceLocator.Resolve<FakeOne>();
+            IFake impl2 = ServiceLocator.Resolve<FakeOne>();
 
             //Assert
             Assert.IsTrue(first);
@@ -109,8 +147,8 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
             Assert.IsNotNull(impl1);
             Assert.IsNotNull(impl2);
 
-            Assert.IsTrue(impl1 is FakeImplementationOne);
-            Assert.IsTrue(impl2 is FakeImplementationOne);
+            Assert.IsTrue(impl1 is FakeOne);
+            Assert.IsTrue(impl2 is FakeOne);
 
             Assert.AreEqual("first", impl1.GetSomething());
             Assert.AreEqual("first", impl2.GetSomething());
@@ -120,12 +158,12 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
         public void RegisterTwoDifferentImplementationTest()
         {
             //Arrange
-            bool first = ServiceLocator.Register<FakeInterface>(() => new FakeImplementationOne());
-            bool second = ServiceLocator.Register<FakeInterface>(() => new FakeImplementationTwo());
+            bool first = ServiceLocator.Register<IFake>(() => new FakeOne());
+            bool second = ServiceLocator.Register<IFake>(() => new FakeTwo());
 
             //Act
-            FakeInterface impl1 = ServiceLocator.Resolve<FakeInterface>();
-            FakeInterface impl2 = ServiceLocator.Resolve<FakeInterface>();
+            IFake impl1 = ServiceLocator.Resolve<IFake>();
+            IFake impl2 = ServiceLocator.Resolve<IFake>();
 
             //Assert
             Assert.IsTrue(first);
@@ -134,23 +172,23 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
             Assert.IsNotNull(impl1);
             Assert.IsNotNull(impl2);
 
-            Assert.IsTrue(impl1 is FakeImplementationOne);
-            Assert.IsTrue(impl2 is FakeImplementationOne);
+            Assert.IsTrue(impl1 is FakeOne);
+            Assert.IsTrue(impl2 is FakeOne);
         }
 
         [Test]
         public void ResolveByImplButRegisterByInterfaceFailTest()
         {
             //Arrange
-            ServiceLocator.Register<FakeInterface>(() => new FakeImplementationTwo());
+            ServiceLocator.Register<IFake>(() => new FakeTwo());
 
             //Act
             InvalidOperationException ex =
-                Assert.Throws<InvalidOperationException>(() => ServiceLocator.Resolve<FakeImplementationTwo>());
+                Assert.Throws<InvalidOperationException>(() => ServiceLocator.Resolve<FakeTwo>());
 
             //Assert
             Assert.IsNotNull(ex);
-            Assert.AreEqual($"Service {typeof(FakeImplementationTwo)} not found!", ex.Message);
+            Assert.AreEqual($"Service {typeof(FakeTwo)} not found!", ex.Message);
         }
 
         [Test]
@@ -160,11 +198,116 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.HelpersTest
 
             //Act
             InvalidOperationException ex =
-                Assert.Throws<InvalidOperationException>(() => ServiceLocator.Resolve<FakeImplementationOne>());
+                Assert.Throws<InvalidOperationException>(() => ServiceLocator.Resolve<FakeOne>());
 
             //Assert
             Assert.IsNotNull(ex);
-            Assert.AreEqual($"Service {typeof(FakeImplementationOne)} not found!", ex.Message);
+            Assert.AreEqual($"Service {typeof(FakeOne)} not found!", ex.Message);
+        }
+
+        [Test]
+        public void ResolveAllSuccessfulTest()
+        {
+            //Arrange
+            ServiceLocator.Register(() => new FakeCommon());
+            ServiceLocator.Register(() => new FakeOne());
+            ServiceLocator.Register(() => new AnotherFakeCommon());
+
+            //Act
+            List<ICommon> implementations = ServiceLocator.ResolveAll<ICommon>().ToList();
+
+            //Assert
+            Assert.IsNotNull(implementations);
+            Assert.AreEqual(2, implementations.Count);
+
+            Assert.IsTrue(implementations.Any(x => x.GetType() == typeof(FakeCommon)));
+            Assert.IsTrue(implementations.Any(x => x.GetType() == typeof(AnotherFakeCommon)));
+        }
+
+        [Test]
+        public void ResolveAllButNothingTest()
+        {
+            //Arrange
+            ServiceLocator.Register(() => new FakeTwo());
+            ServiceLocator.Register(() => new FakeOne());
+
+            //Act
+            List<ICommon> implementations = ServiceLocator.ResolveAll<ICommon>().ToList();
+
+            //Assert
+            Assert.IsNotNull(implementations);
+            Assert.IsEmpty(implementations);
+        }
+
+        [Test]
+        public void RegisterLikeFactoryReturnsDifferentInstancesEachResolveTest()
+        {
+            //Arrange
+            ServiceLocator.Register(() => new FakeOne(), true);
+
+            //Act
+            FakeOne first = ServiceLocator.Resolve<FakeOne>();
+            FakeOne second = ServiceLocator.Resolve<FakeOne>();
+
+            //Assert
+            Assert.AreNotEqual(first, second);
+        }
+
+        [Test]
+        public void RegisterNotLikeFactoryReturnsSameInstancesEachResolveTest()
+        {
+            //Arrange
+            ServiceLocator.Register(() => new FakeOne(), false);
+
+            //Act
+            FakeOne first = ServiceLocator.Resolve<FakeOne>();
+            FakeOne second = ServiceLocator.Resolve<FakeOne>();
+
+            //Assert
+            Assert.AreEqual(first, second);
+        }
+
+        [Test]
+        public void CannotRegisterPreservedIfNoPreservedRegisteredAlreadyTest()
+        {
+            //Arrange && Act
+            bool preservedRegistered = ServiceLocator.Register(() => new FakeOne(), true);
+            bool noPreservedRegistered = ServiceLocator.Register(() => new FakeOne(), false);
+
+            //Assert
+            Assert.IsTrue(preservedRegistered);
+            Assert.IsFalse(noPreservedRegistered);
+        }
+
+
+        [Test]
+        public void CannotRegisterNoPreservedIfPreservedRegisteredAlreadyTest()
+        {
+            //Arrange && Act
+            bool preservedRegistered = ServiceLocator.Register(() => new FakeOne(), false);
+            bool noPreservedRegistered = ServiceLocator.Register(() => new FakeOne(), true);
+
+            //Assert
+            Assert.IsTrue(preservedRegistered);
+            Assert.IsFalse(noPreservedRegistered);
+        }
+
+        [Test]
+        public void BothPreservedAndNoPreservedResolvedWhenResolveAllTest()
+        {
+            //Arrange
+            ServiceLocator.Register(() => new FakeCommon(), true);
+            ServiceLocator.Register(() => new AnotherFakeCommon(), false);
+
+            //Act
+            List<ICommon> implementations = ServiceLocator.ResolveAll<ICommon>().ToList();
+
+            //Assert
+            Assert.IsNotNull(implementations);
+            Assert.AreEqual(2, implementations.Count);
+
+            Assert.IsTrue(implementations.Any(x => x.GetType() == typeof(FakeCommon)));
+            Assert.IsTrue(implementations.Any(x => x.GetType() == typeof(AnotherFakeCommon)));
         }
     }
 }

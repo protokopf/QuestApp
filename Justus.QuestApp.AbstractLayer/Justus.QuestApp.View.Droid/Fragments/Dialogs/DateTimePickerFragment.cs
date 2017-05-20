@@ -76,7 +76,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         /// <returns></returns>
         public static DateTime GetItsDateTime(Bundle bundle)
         {
-            DateTime dateTime = DateTime.MinValue;
+            DateTime dateTime = default(DateTime);
             DateTimeHandler.Extract(DateTimeValueId, bundle, ref dateTime);
             return dateTime;
         }
@@ -119,7 +119,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         private void HandleTimePicker(TimePicker timePicker, DateTime dateTime)
         {
             _timePicker.TimeChanged += TimePickerOnTimeChanged;
-            if (dateTime != DateTime.MinValue)
+            if (dateTime != default(DateTime))
             {
                 timePicker.CurrentHour = new Integer(dateTime.Hour);
                 timePicker.CurrentMinute = new Integer(dateTime.Minute);

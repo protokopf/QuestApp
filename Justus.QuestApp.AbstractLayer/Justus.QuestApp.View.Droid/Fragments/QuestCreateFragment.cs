@@ -29,7 +29,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private const int DateTimePickerDeadlineRequestCode = 1;
 
         private readonly IEntityStateHandler<QuestCreateViewModel> _viewModelStateHandler;
-        private readonly DateTime _defaultDateTime = DateTime.MinValue;
+        private readonly DateTime _defaultDateTime = default(DateTime);
 
         private EditText _titleEditText;
         private EditText _descriptionEditText;
@@ -229,25 +229,25 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void HandleDeadlineDateButton(Button deadlineDateButton)
         {
+            if (ViewModel.Deadline != _defaultDateTime)
+            {
+                deadlineDateButton.Text = StringifyDateTime(ViewModel.Deadline);
+            }
             if (ViewModel.UseDeadline)
             {
                 deadlineDateButton.Visibility = ViewStates.Visible;
-                if (ViewModel.Deadline != _defaultDateTime)
-                {
-                    deadlineDateButton.Text = StringifyDateTime(ViewModel.Deadline);
-                }
             }
         }
 
         private void HandleStartDateButton(Button startDateButton)
         {
+            if (ViewModel.StartTime != _defaultDateTime)
+            {
+                startDateButton.Text = StringifyDateTime(ViewModel.StartTime);
+            }
             if (ViewModel.UseStartTime)
             {
                 startDateButton.Visibility = ViewStates.Visible;
-                if (ViewModel.StartTime != _defaultDateTime)
-                {
-                    startDateButton.Text = StringifyDateTime(ViewModel.StartTime);
-                }
             }
         }
 

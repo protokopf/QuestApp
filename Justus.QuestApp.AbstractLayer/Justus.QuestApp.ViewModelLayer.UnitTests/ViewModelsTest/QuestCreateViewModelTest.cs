@@ -1,10 +1,13 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
+using Justus.QuestApp.AbstractLayer.Entities.Errors;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.AbstractLayer.Factories;
 using Justus.QuestApp.AbstractLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ViewModelLayer.UnitTests.Stubs;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 using NUnit.Framework;
@@ -50,9 +53,12 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             factory.Expect(f => f.AddQuest(Arg<Quest>.Is.Equal(quest), Arg<Quest>.Is.Equal(parentQuest)))
                 .Return(addCommand)
                 .Repeat.Once();
-            
 
-            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory, questRepository)
+
+            IQuestValidator<ClarifiedResponse<string>> questValidator =
+                MockRepository.GenerateStrictMock<IQuestValidator<ClarifiedResponse<string>>>();
+
+            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory, questRepository, questValidator)
             {
                 ParentId = parentId,
                 Title = title,
@@ -80,8 +86,44 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             Assert.AreEqual(useStartTime, quest.StartTime == startTime);
             Assert.AreEqual(useDeadLine, quest.Deadline == deadline);
 
-            Assert.AreEqual(!useStartTime, quest.StartTime == DateTime.MinValue);
-            Assert.AreEqual(!useDeadLine, quest.Deadline == DateTime.MinValue);
+            Assert.AreEqual(!useStartTime, quest.StartTime == default(DateTime));
+            Assert.AreEqual(!useDeadLine, quest.Deadline == default(DateTime));
+        }
+
+        [Test]
+        public void ValidateTest()
+        {
+            //Arrange
+            Quest quest = new FakeQuest();
+            ClarifiedResponse<string> response = new ClarifiedResponse<string>();
+
+            IQuestCreator creator = MockRepository.GenerateStrictMock<IQuestCreator>();
+            creator.Expect(cr => cr.Create()).
+                Return(quest).
+                Repeat.Once();
+
+            IQuestRepository questRepository = MockRepository.GenerateStrictMock<IQuestRepository>();
+
+            IRepositoryCommandsFactory factory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
+
+            IQuestValidator<ClarifiedResponse<string>> questValidator =
+                MockRepository.GenerateStrictMock<IQuestValidator<ClarifiedResponse<string>>>();
+            questValidator.Expect(qv => qv.Validate(Arg<Quest>.Is.Equal(quest)))
+                .Repeat.Once()
+                .Return(response);
+
+            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory, questRepository, questValidator);
+
+            //Act
+            ClarifiedResponse<string> returnedResponse = viewModel.Validate();
+
+            //Assert
+            Assert.AreEqual(response, returnedResponse);
+
+            creator.VerifyAllExpectations();
+            questRepository.VerifyAllExpectations();
+            factory.VerifyAllExpectations();
+            questValidator.VerifyAllExpectations();
         }
     }
 }

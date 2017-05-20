@@ -90,8 +90,8 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels
 
         private void FillViewModelWithBundle(Bundle bundle, QuestCreateViewModel viewModel)
         {
-            DateTime startTime = DateTime.MinValue;
-            DateTime deadline = DateTime.MinValue;
+            DateTime startTime = default(DateTime);
+            DateTime deadline = default(DateTime);
 
             viewModel.ParentId = bundle.GetInt(ParentIdKey);
             viewModel.IsImportant = bundle.GetBoolean(IsImportantKey);

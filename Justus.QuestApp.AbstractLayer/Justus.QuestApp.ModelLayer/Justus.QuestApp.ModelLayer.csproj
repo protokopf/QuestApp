@@ -64,8 +64,8 @@
     <Compile Include="Validators\Actions\IdleQuestValidator.cs" />
     <Compile Include="Validators\Actions\StartQuestValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validators\QuestItself\QuestValidationErrorCode.cs" />
     <Compile Include="Validators\QuestItself\CompositeQuestValidator.cs" />
+    <Compile Include="Validators\QuestItself\DescriptionQuestValidator.cs" />
     <Compile Include="Validators\QuestItself\StartTimeDeadlineQuestValidator.cs" />
     <Compile Include="Validators\QuestItself\TitleQuestValidator.cs" />
   </ItemGroup>

@@ -6,6 +6,7 @@ using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Views;
 using Android.Widget;
+using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
@@ -23,6 +24,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private const string ParentIdKey = "ParentIdKey";
         private const string DateTimePickerId = "DateTimePickerId";
+        private const string ValidationErrorsId = "ValidationErrorsId";
+
         private const string ViewModelKey = "QuestCreateViewModel.Key";
 
         private const int DateTimePickerStartRequestCode = 0;
@@ -218,9 +221,19 @@ namespace Justus.QuestApp.View.Droid.Fragments
         {
             ViewModel.Title = _titleEditText.Text;
             ViewModel.Description = _descriptionEditText.Text;
-            ViewModel.Save();
-            this.Activity.SetResult(Result.Ok);
-            this.Activity.Finish();
+
+            ClarifiedResponse<int> validationResult = ViewModel.Validate();
+            if (validationResult.IsSuccessful)
+            {
+                ViewModel.Save();
+                this.Activity.SetResult(Result.Ok);
+                this.Activity.Finish();
+            }
+            else
+            {
+                ValidationErrorsFragment errorsFragment = ValidationErrorsFragment.NewInstance(validationResult.Errors);
+                errorsFragment.Show(FragmentManager, ValidationErrorsId);
+            }
         }
 
         #endregion

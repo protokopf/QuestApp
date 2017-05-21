@@ -6,6 +6,7 @@ using Justus.QuestApp.AbstractLayer.Services;
 using Justus.QuestApp.View.Droid.Abstract.Adapters;
 using Justus.QuestApp.View.Droid.Adapters.Quests;
 using Justus.QuestApp.View.Droid.ViewHolders;
+using Justus.QuestApp.View.Droid.ViewHolders.QuestItem;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Services.ViewServices

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/validationItemId"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+  <TextView
+    android:id="@+id/errorTextViewId"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+  <TextView
+    android:id="@+id/clarificationTextViewId"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="#E0E0E0"/>
+</LinearLayout>

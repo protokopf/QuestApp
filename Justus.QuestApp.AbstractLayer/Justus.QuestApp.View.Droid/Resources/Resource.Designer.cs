@@ -2546,6 +2546,9 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f0b00b7
 			public const int chronometer = 2131427511;
 			
+			// aapt resource value: 0x7f0b00db
+			public const int clarificationTextViewId = 2131427547;
+			
 			// aapt resource value: 0x7f0b002d
 			public const int clip_horizontal = 2131427373;
 			
@@ -2614,6 +2617,9 @@ namespace Justus.QuestApp.View.Droid
 			
 			// aapt resource value: 0x7f0b001d
 			public const int enterAlwaysCollapsed = 2131427357;
+			
+			// aapt resource value: 0x7f0b00da
+			public const int errorTextViewId = 2131427546;
 			
 			// aapt resource value: 0x7f0b001e
 			public const int exitUntilCollapsed = 2131427358;
@@ -2714,20 +2720,20 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f0b00a9
 			public const int mainActivityViewPager = 2131427497;
 			
-			// aapt resource value: 0x7f0b00d9
-			public const int masked = 2131427545;
+			// aapt resource value: 0x7f0b00dd
+			public const int masked = 2131427549;
 			
 			// aapt resource value: 0x7f0b00b1
 			public const int media_actions = 2131427505;
 			
-			// aapt resource value: 0x7f0b00dc
-			public const int menuExit = 2131427548;
+			// aapt resource value: 0x7f0b00e0
+			public const int menuExit = 2131427552;
 			
-			// aapt resource value: 0x7f0b00da
-			public const int menuFirstOption = 2131427546;
+			// aapt resource value: 0x7f0b00de
+			public const int menuFirstOption = 2131427550;
 			
-			// aapt resource value: 0x7f0b00db
-			public const int menuSecondOption = 2131427547;
+			// aapt resource value: 0x7f0b00df
+			public const int menuSecondOption = 2131427551;
 			
 			// aapt resource value: 0x7f0b0045
 			public const int middle = 2131427397;
@@ -3053,11 +3059,17 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f0b0041
 			public const int useLogo = 2131427393;
 			
+			// aapt resource value: 0x7f0b00d9
+			public const int validationItemId = 2131427545;
+			
+			// aapt resource value: 0x7f0b00d8
+			public const int validationRecyclerView = 2131427544;
+			
 			// aapt resource value: 0x7f0b0002
 			public const int view_offset_helper = 2131427330;
 			
-			// aapt resource value: 0x7f0b00d8
-			public const int visible = 2131427544;
+			// aapt resource value: 0x7f0b00dc
+			public const int visible = 2131427548;
 			
 			// aapt resource value: 0x7f0b0018
 			public const int wide = 2131427352;
@@ -3346,6 +3358,12 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f030049
 			public const int support_simple_spinner_dropdown_item = 2130903113;
 			
+			// aapt resource value: 0x7f03004a
+			public const int ValidationErrorsFragmentLayout = 2130903114;
+			
+			// aapt resource value: 0x7f03004b
+			public const int ValidationItemLayout = 2130903115;
+			
 			static Layout()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -3494,6 +3512,39 @@ namespace Justus.QuestApp.View.Droid
 			
 			// aapt resource value: 0x7f070053
 			public const int SyncButtonText = 2131165267;
+			
+			// aapt resource value: 0x7f07006d
+			public const int ValidationDeadlineLessThanNow = 2131165293;
+			
+			// aapt resource value: 0x7f07006e
+			public const int ValidationDeadlineLessThanNowClar = 2131165294;
+			
+			// aapt resource value: 0x7f070069
+			public const int ValidationDescriptionEmpty = 2131165289;
+			
+			// aapt resource value: 0x7f07006a
+			public const int ValidationDescriptionEmptyClar = 2131165290;
+			
+			// aapt resource value: 0x7f070064
+			public const int ValidationDialogTitle = 2131165284;
+			
+			// aapt resource value: 0x7f07006b
+			public const int ValidationStartMoreThanDeadline = 2131165291;
+			
+			// aapt resource value: 0x7f07006c
+			public const int ValidationStartMoreThanDeadlineClar = 2131165292;
+			
+			// aapt resource value: 0x7f070065
+			public const int ValidationTitleEmpty = 2131165285;
+			
+			// aapt resource value: 0x7f070066
+			public const int ValidationTitleEmptyClar = 2131165286;
+			
+			// aapt resource value: 0x7f070067
+			public const int ValidationTitleLong = 2131165287;
+			
+			// aapt resource value: 0x7f070068
+			public const int ValidationTitleLongClar = 2131165288;
 			
 			// aapt resource value: 0x7f070019
 			public const int abc_action_bar_home_description = 2131165209;

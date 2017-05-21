@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  <string name="ValidationDialogTitle">Suspicious quest...</string>
+  
+  <string name="ValidationTitleEmpty">You\'ve say nothing about name of your quest. People don\'t believe you.</string>
+  <string name="ValidationTitleEmptyClar">Specify quest title, please.</string> 
+
+  <string name="ValidationTitleLong">You\'ve been pronouncing name of quest too long. People don\'t understand you.</string>
+  <string name="ValidationTitleLongClar">Quest title should be less than 25 characters long.</string>
+
+  <string name="ValidationDescriptionEmpty">You\'ve said nothing about details of your quest. People don\'t believe you.</string>
+  <string name="ValidationDescriptionEmptyClar">Specify quest description, please.</string>
+
+  <string name="ValidationStartMoreThanDeadline">You\'ve said, that you\'ll start doing quest aftet finishing it. People don\'t understand you.</string>
+  <string name="ValidationStartMoreThanDeadlineClar">StartTime should be less than Deadline.</string>
+  
+  <string name="ValidationDeadlineLessThanNow">You\'ve said, that you\'ll finish quest by past date. People don\'t understand you.</string>
+  <string name="ValidationDeadlineLessThanNowClar">Deadline should be more than current date and time.</string>
+  
+</resources>

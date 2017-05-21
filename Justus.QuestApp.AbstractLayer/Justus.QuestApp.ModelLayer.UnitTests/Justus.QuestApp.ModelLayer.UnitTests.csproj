@@ -76,6 +76,7 @@
     <Compile Include="Stubs\FakeQuest.cs" />
     <Compile Include="ValidatorsTest\QuestItselfTest\CompositeQuestValidatorTest.cs" />
     <Compile Include="ValidatorsTest\QuestItselfTest\StartTimeDeadlineQuestValidatorTest.cs" />
+    <Compile Include="ValidatorsTest\QuestItselfTest\TitleQuestValidatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

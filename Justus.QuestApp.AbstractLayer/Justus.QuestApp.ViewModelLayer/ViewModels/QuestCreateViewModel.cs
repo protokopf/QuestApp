@@ -21,13 +21,13 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         private readonly IQuestCreator _questCreator;
         private readonly IRepositoryCommandsFactory _commandsFactory;
         private readonly IQuestRepository _questRepository;
-        private readonly IQuestValidator<ClarifiedResponse<string>> _questValidtor;
+        private readonly IQuestValidator<ClarifiedResponse<int>> _questValidtor;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public QuestCreateViewModel(IQuestCreator questCreator, IRepositoryCommandsFactory repCommandsFactory, IQuestRepository repository,
-            IQuestValidator<ClarifiedResponse<string>> questValidator)
+            IQuestValidator<ClarifiedResponse<int>> questValidator)
         {
             if (questCreator == null)
             {
@@ -67,7 +67,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         public string Title
         {
             get { return _innerQuest.Title; }
-            set { _innerQuest.Title = value; }
+            set { _innerQuest.Title = value.Trim(); }
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         public string Description
         {
             get { return _innerQuest.Description; }
-            set { _innerQuest.Description = value; }
+            set { _innerQuest.Description = value.Trim(); }
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Validates quest and returns validation response.
         /// </summary>
         /// <returns></returns>
-        public ClarifiedResponse<string> Validate()
+        public ClarifiedResponse<int> Validate()
         {
             return _questValidtor.Validate(_innerQuest);
         }

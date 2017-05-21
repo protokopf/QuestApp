@@ -55,8 +55,8 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
                 .Repeat.Once();
 
 
-            IQuestValidator<ClarifiedResponse<string>> questValidator =
-                MockRepository.GenerateStrictMock<IQuestValidator<ClarifiedResponse<string>>>();
+            IQuestValidator<ClarifiedResponse<int>> questValidator =
+                MockRepository.GenerateStrictMock<IQuestValidator<ClarifiedResponse<int>>>();
 
             QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory, questRepository, questValidator)
             {
@@ -91,11 +91,67 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         }
 
         [Test]
+        public void ViewModelTrimsTitleAndDescription()
+        {
+            //Arrange
+            string nonTrimedTitle = "   hello   ";
+            string nonTrimedDescription = "    description  \t";
+
+            Quest quest = new FakeQuest();
+
+            Command command = MockRepository.GenerateStrictMock<Command>();
+            command.Expect(cm => cm.Execute()).
+                Repeat.Once();
+
+            IQuestCreator creator = MockRepository.GenerateStrictMock<IQuestCreator>();
+            creator.Expect(cr => cr.Create()).
+                Return(quest).
+                Repeat.Once();
+
+            IQuestRepository questRepository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            questRepository.Expect(qr => qr.Get(Arg<Predicate<Quest>>.Is.Anything)).
+                Repeat.Once().
+                Return(null);
+
+            IRepositoryCommandsFactory factory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
+            factory.Expect(f => f.AddQuest(Arg<Quest>.Is.Equal(quest), Arg<Quest>.Is.Null))
+                .Repeat.Once()
+                .Return(command);
+
+            IQuestValidator<ClarifiedResponse<int>> questValidator =
+                MockRepository.GenerateStrictMock<IQuestValidator<ClarifiedResponse<int>>>();
+
+            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory, questRepository, questValidator)
+            {
+                Title = nonTrimedTitle,
+                Description = nonTrimedDescription
+            };
+
+            //Act
+            viewModel.Save();
+
+            //Assert
+            Quest savedQuest =
+                factory.GetArgumentsForCallsMadeOn(f => f.AddQuest(Arg<Quest>.Is.NotNull, Arg<Quest>.Is.Anything))[0][0]
+                    as Quest;
+
+            Assert.IsNotNull(savedQuest);
+            Assert.AreEqual(nonTrimedTitle.Trim(), savedQuest.Title);
+            Assert.AreEqual(nonTrimedDescription.Trim(), savedQuest.Description);
+
+            command.VerifyAllExpectations();
+            creator.VerifyAllExpectations();
+            questRepository.VerifyAllExpectations();
+            factory.VerifyAllExpectations();
+            questValidator.VerifyAllExpectations();
+        }
+
+        [Test]
         public void ValidateTest()
         {
             //Arrange
             Quest quest = new FakeQuest();
-            ClarifiedResponse<string> response = new ClarifiedResponse<string>();
+            ClarifiedResponse<int> response = new ClarifiedResponse<int>();
 
             IQuestCreator creator = MockRepository.GenerateStrictMock<IQuestCreator>();
             creator.Expect(cr => cr.Create()).
@@ -106,8 +162,8 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 
             IRepositoryCommandsFactory factory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
 
-            IQuestValidator<ClarifiedResponse<string>> questValidator =
-                MockRepository.GenerateStrictMock<IQuestValidator<ClarifiedResponse<string>>>();
+            IQuestValidator<ClarifiedResponse<int>> questValidator =
+                MockRepository.GenerateStrictMock<IQuestValidator<ClarifiedResponse<int>>>();
             questValidator.Expect(qv => qv.Validate(Arg<Quest>.Is.Equal(quest)))
                 .Repeat.Once()
                 .Return(response);
@@ -115,7 +171,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory, questRepository, questValidator);
 
             //Act
-            ClarifiedResponse<string> returnedResponse = viewModel.Validate();
+            ClarifiedResponse<int> returnedResponse = viewModel.Validate();
 
             //Assert
             Assert.AreEqual(response, returnedResponse);

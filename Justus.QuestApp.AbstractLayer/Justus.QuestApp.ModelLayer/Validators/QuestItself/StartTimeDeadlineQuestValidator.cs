@@ -13,21 +13,43 @@ namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
     /// <summary>
     /// Validates startTime and deadline of quests.
     /// </summary>
-    public class StartTimeDeadlineQuestValidator : IQuestValidator<ClarifiedResponse<QuestValidationErrorCode>>
+    public class StartTimeDeadlineQuestValidator<TMessage> : IQuestValidator<ClarifiedResponse<TMessage>>
     {
+        private readonly TMessage _startTimeMoreThanDeadline;
+        private readonly TMessage _startTimeMoreThanDeadlineClar;
+
+        private readonly TMessage _deadlineLessThanNow;
+        private readonly TMessage _deadlineLessThanNowClar;
+
+        /// <summary>
+        /// Reveices messages for possible validation fails.
+        /// </summary>
+        /// <param name="startTimeMoreDeadline"></param>
+        /// <param name="startTimeMoreDeadlineClar"></param>
+        /// <param name="deadlineLessThanNow"></param>
+        /// <param name="deadlineLessThanNowClar"></param>
+        public StartTimeDeadlineQuestValidator(TMessage startTimeMoreDeadline, TMessage startTimeMoreDeadlineClar,
+                                               TMessage deadlineLessThanNow, TMessage deadlineLessThanNowClar)
+        {
+            _startTimeMoreThanDeadline = startTimeMoreDeadline;
+            _startTimeMoreThanDeadlineClar = startTimeMoreDeadlineClar;
+            _deadlineLessThanNow = deadlineLessThanNow;
+            _deadlineLessThanNowClar = deadlineLessThanNowClar;
+        }
+
         private readonly DateTime _defaultDateTime = default(DateTime);
 
         #region IQuestValidator implementation
 
         ///<inheritdoc/>
-        public ClarifiedResponse<QuestValidationErrorCode> Validate(Quest quest)
+        public ClarifiedResponse<TMessage> Validate(Quest quest)
         {
             if (quest == null)
             {
                 throw new ArgumentNullException(nameof(quest));
             }
             
-            ClarifiedResponse<QuestValidationErrorCode> response  = new ClarifiedResponse<QuestValidationErrorCode>();
+            ClarifiedResponse<TMessage> response  = new ClarifiedResponse<TMessage>();
 
             DateTime start = quest.StartTime;
             DateTime deadline = quest.Deadline;
@@ -35,19 +57,19 @@ namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
 
             if (deadline < DateTime.Now && deadline != _defaultDateTime)
             {
-                response.Errors.Add(new ClarifiedError<QuestValidationErrorCode>
+                response.Errors.Add(new ClarifiedError<TMessage>
                 {
-                    Error = QuestValidationErrorCode.DeadlineLessThanNow,
-                    Clarification = QuestValidationErrorCode.DeadlineLessThanNowClar
+                    Error = _deadlineLessThanNow,
+                    Clarification = _deadlineLessThanNowClar
                 });
             }
             
             if (start > deadline && deadline != _defaultDateTime)
             {
-                response.Errors.Add(new ClarifiedError<QuestValidationErrorCode>()
+                response.Errors.Add(new ClarifiedError<TMessage>()
                 {
-                    Error = QuestValidationErrorCode.StartTimeMoreThanDeadline,
-                    Clarification = QuestValidationErrorCode.StartTimeMoreThanDeadlineClar
+                    Error = _startTimeMoreThanDeadline,
+                    Clarification = _startTimeMoreThanDeadlineClar
                 });
             }
             

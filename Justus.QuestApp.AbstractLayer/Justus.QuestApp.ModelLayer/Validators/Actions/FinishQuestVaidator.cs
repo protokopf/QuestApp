@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.AbstractLayer.Validators;
 
 namespace Justus.QuestApp.ModelLayer.Validators.Actions
@@ -9,18 +10,18 @@ namespace Justus.QuestApp.ModelLayer.Validators.Actions
     /// <summary>
     /// Type, that validates, whether quest can be finished or not.
     /// </summary>
-    public class FinishQuestVaidator : IQuestValidator
+    public class FinishQuestVaidator : IQuestValidator<StringResponse>
     {
         #region IQuestValidator implementation
 
         ///<inheritdoc/>
-        public Response Validate(Quest quest)
+        public StringResponse Validate(Quest quest)
         {
             if (quest == null)
             {
                 throw new ArgumentNullException(nameof(quest));
             }
-            Response result = new Response();
+            StringResponse result = new StringResponse();
             if (quest.CurrentState != QuestState.Progress)
             {
                 result.Errors.Add("ERR_QUEST_ACT_WRONG_STATE");

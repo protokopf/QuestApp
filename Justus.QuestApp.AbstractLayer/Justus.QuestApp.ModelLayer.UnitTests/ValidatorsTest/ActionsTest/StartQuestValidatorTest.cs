@@ -1,6 +1,7 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using Justus.QuestApp.ModelLayer.Validators.Actions;
@@ -15,7 +16,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         public void NullQuestTest()
         {
             //Arrange
-            IQuestValidator validator = new StartQuestValidator();
+            StartQuestValidator validator = new StartQuestValidator();
 
             //Act
             ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => validator.Validate(null));
@@ -29,11 +30,11 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         public void ValidateProgressQuestTest()
         {
             //Arrange
-            IQuestValidator validator = new StartQuestValidator();
+            StartQuestValidator validator = new StartQuestValidator();
             Quest quest = QuestHelper.CreateQuest(QuestState.Progress);
 
             //Act
-            Response result = validator.Validate(quest);
+            StringResponse result = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(result);
@@ -46,11 +47,11 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         public void ValidateDoneQuestTest()
         {
             //Arrange
-            IQuestValidator validator = new StartQuestValidator();
+            StartQuestValidator validator = new StartQuestValidator();
             Quest quest = QuestHelper.CreateQuest(QuestState.Done);
 
             //Act
-            Response result = validator.Validate(quest);
+            StringResponse result = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(result);
@@ -63,11 +64,11 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         public void ValidateFailedQuestTest()
         {
             //Arrange
-            IQuestValidator validator = new StartQuestValidator();
+            StartQuestValidator validator = new StartQuestValidator();
             Quest quest = QuestHelper.CreateQuest(QuestState.Failed);
 
             //Act
-            Response result = validator.Validate(quest);
+            StringResponse result = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(result);
@@ -80,12 +81,12 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         public void ValidateReadyQuestWithChildren()
         {
             //Arrange
-            IQuestValidator validator = new StartQuestValidator();
+            StartQuestValidator validator = new StartQuestValidator();
             Quest quest = QuestHelper.CreateQuest(QuestState.Idle);
             quest.Children.Add(QuestHelper.CreateQuest(QuestState.Idle));
 
             //Act
-            Response result = validator.Validate(quest);
+            StringResponse result = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(result);
@@ -98,11 +99,11 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         public void ValidateSuccessfulTest()
         {
             //Arrange
-            IQuestValidator validator = new StartQuestValidator();
+            StartQuestValidator validator = new StartQuestValidator();
             Quest quest = QuestHelper.CreateQuest(QuestState.Idle);
 
             //Act
-            Response result = validator.Validate(quest);
+            StringResponse result = validator.Validate(quest);
 
             //Assert
             Assert.IsNotNull(result);

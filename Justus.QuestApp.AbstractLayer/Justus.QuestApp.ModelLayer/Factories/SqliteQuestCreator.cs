@@ -22,8 +22,8 @@ namespace Justus.QuestApp.ModelLayer.Factories
                 Description = String.Empty,
                 Children = new List<Quest>(),
                 CurrentState = QuestState.Idle,
-                Deadline = DateTime.MinValue,
-                StartTime = DateTime.MinValue,
+                Deadline = default(DateTime),
+                StartTime = default(DateTime),
                 IsImportant = false
             };
         }

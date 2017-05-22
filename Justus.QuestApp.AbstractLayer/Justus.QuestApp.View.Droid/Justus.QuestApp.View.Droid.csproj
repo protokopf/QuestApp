@@ -122,6 +122,7 @@
     <Compile Include="Activities\QuestCreateActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
     <Compile Include="Activities\StartScreenActivity.cs" />
+    <Compile Include="Adapters\Dialogs\ValidationDialogFragmentAdapter.cs" />
     <Compile Include="Adapters\Fragments\GenericFragmentPagerAdapter.cs" />
     <Compile Include="Adapters\Quests\AvailableQuestsAdapter.cs" />
     <Compile Include="Abstract\Adapters\BaseQuestsAdapter.cs" />
@@ -129,17 +130,20 @@
     <Compile Include="Adapters\Quests\ResultQuestsAdapter.cs" />
     <Compile Include="Abstract\Fragments\BaseTraverseQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\ISelectable.cs" />
+    <Compile Include="EntityStateHandlers\ListOfClarifiedErrorIntStateHandler.cs" />
     <Compile Include="EntityStateHandlers\DateTimeStateHandler.cs" />
     <Compile Include="EntityStateHandlers\VIewModels\QuestCreateViewModelStateHandler.cs" />
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\BaseQuestsFragment.cs" />
     <Compile Include="Fragments\Dialogs\DateTimePickerFragment.cs" />
+    <Compile Include="Fragments\Dialogs\ValidationErrorsFragment.cs" />
     <Compile Include="Fragments\Factories\ParametrizedFragmentFactory.cs" />
     <Compile Include="Fragments\QuestCreateFragment.cs" />
     <Compile Include="Services\ViewServices\SimpleQuestExpireService.cs" />
     <Compile Include="StubServices\StubWebStringProvider.cs" />
     <Compile Include="Abstract\ViewHolders\ToggledViewHolder.cs" />
-    <Compile Include="ViewHolders\ActiveQuestViewHolder.cs" />
+    <Compile Include="ViewHolders\Error\DefaultValidationErrorViewHolder.cs" />
+    <Compile Include="ViewHolders\QuestItem\ActiveQuestViewHolder.cs" />
     <Compile Include="Fragments\ActiveQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\BaseFragment.cs" />
     <Compile Include="Fragments\ResultQuestsFragment.cs" />
@@ -149,9 +153,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StubServices\StubCommandManager.cs" />
     <Compile Include="StubServices\StubQuestRepositoryService.cs" />
-    <Compile Include="ViewHolders\AvailableQuestViewHolder.cs" />
+    <Compile Include="ViewHolders\QuestItem\AvailableQuestViewHolder.cs" />
     <Compile Include="Abstract\ViewHolders\PositionedViewHolder.cs" />
-    <Compile Include="ViewHolders\ResultQuestViewHolder.cs" />
+    <Compile Include="ViewHolders\QuestItem\ResultQuestViewHolder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -200,6 +204,12 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\DateTimePicker.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\ValidationErrorsFragmentLayout.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\ValidationItemLayout.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
@@ -273,6 +283,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\ValidationStrings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

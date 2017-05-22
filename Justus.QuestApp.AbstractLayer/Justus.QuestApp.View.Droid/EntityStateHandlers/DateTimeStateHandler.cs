@@ -67,7 +67,7 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers
         /// <returns></returns>
         private DateTime ParseDateTimeString(string dateTimeString)
         {
-            DateTime dt = DateTime.MinValue;
+            DateTime dt = default(DateTime);
             if (!string.IsNullOrWhiteSpace(dateTimeString))
             {
                 DateTime.TryParse(dateTimeString, DateTimeCultureInfo, DateTimeStyles.None, out dt);

@@ -14,6 +14,7 @@ using Android.Support.V7.Widget;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.Adapters.Quests;
+using Justus.QuestApp.View.Droid.ViewHolders.QuestItem;
 
 namespace Justus.QuestApp.View.Droid.Fragments
 {

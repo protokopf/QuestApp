@@ -1,15 +1,21 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Android.App;
 using Android.Runtime;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Data;
+using Justus.QuestApp.AbstractLayer.Entities.Errors;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.AbstractLayer.Factories;
 using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
 using Justus.QuestApp.ModelLayer.Factories;
 using Justus.QuestApp.ModelLayer.Model;
+using Justus.QuestApp.ModelLayer.Validators.QuestItself;
 using Justus.QuestApp.ServiceLayer.DataServices;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.EntityStateHandlers;
@@ -54,6 +60,8 @@ namespace Justus.QuestApp.View.Droid
             ServiceLocator.Register(() => new RecursiveQuestProgressCounter());
             ServiceLocator.Register(() => new DefaultStateCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
             ServiceLocator.Register(() => new DefaultRepositoryCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
+            InitializeQuestValidators();
+
         }
 
         private void InitializeViewModelServices()
@@ -78,16 +86,40 @@ namespace Justus.QuestApp.View.Droid
             ServiceLocator.Register(() => new QuestCreateViewModel(
                 ServiceLocator.Resolve<IQuestCreator>(),
                 ServiceLocator.Resolve<IRepositoryCommandsFactory>(),
-                ServiceLocator.Resolve<IQuestRepository>()), useLikeFactory: true);
+                ServiceLocator.Resolve<IQuestRepository>(),
+                ServiceLocator.Resolve<IQuestValidator<ClarifiedResponse<int>>>()), useLikeFactory: true);
         }
 
         private void InitializeApplicationServices()
         {
             ServiceLocator.Register(() => new DateTimeStateHandler(), useLikeFactory: true);
+            ServiceLocator.Register<IEntityStateHandler<IList<ClarifiedError<int>>>>(
+                () => new ListOfClarifiedErrorIntStateHandler());            
             ServiceLocator.Register(() => new QuestCreateViewModelStateHandler(
                 ServiceLocator.Resolve<IEntityStateHandler<DateTime>>()));
         }
 
+        private void InitializeQuestValidators()
+        {
+            IList<IQuestValidator<ClarifiedResponse<int>>> innerValidators = new List
+                <IQuestValidator<ClarifiedResponse<int>>>()
+                {
+                    new TitleQuestValidator<int>(
+                        Resource.String.ValidationTitleEmpty,
+                        Resource.String.ValidationTitleEmptyClar,
+                        Resource.String.ValidationTitleLong,
+                        Resource.String.ValidationTitleLongClar),
+                    new DescriptionQuestValidator<int>(
+                        Resource.String.ValidationDescriptionEmpty,
+                        Resource.String.ValidationDescriptionEmptyClar),
+                    new StartTimeDeadlineQuestValidator<int>(
+                        Resource.String.ValidationStartMoreThanDeadline,
+                        Resource.String.ValidationStartMoreThanDeadlineClar,
+                        Resource.String.ValidationDeadlineLessThanNow,
+                        Resource.String.ValidationDeadlineLessThanNowClar)
+                };                 
+            ServiceLocator.Register(() => new CompositeQuestValidator<ClarifiedResponse<int>>(innerValidators));
+        }
     }
 
 

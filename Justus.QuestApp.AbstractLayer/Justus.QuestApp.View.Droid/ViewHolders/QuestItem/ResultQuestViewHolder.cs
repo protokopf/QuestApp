@@ -3,7 +3,7 @@ using Android.Runtime;
 using Android.Widget;
 using Justus.QuestApp.View.Droid.Abstract.ViewHolders;
 
-namespace Justus.QuestApp.View.Droid.ViewHolders
+namespace Justus.QuestApp.View.Droid.ViewHolders.QuestItem
 {
     /// <summary>
     /// View holder for result quest item.

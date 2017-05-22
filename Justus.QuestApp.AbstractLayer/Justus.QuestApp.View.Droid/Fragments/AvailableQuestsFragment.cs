@@ -15,6 +15,7 @@ using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.Activities;
 using Justus.QuestApp.View.Droid.Adapters.Quests;
 using Justus.QuestApp.View.Droid.ViewHolders;
+using Justus.QuestApp.View.Droid.ViewHolders.QuestItem;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Fragments
@@ -41,7 +42,9 @@ namespace Justus.QuestApp.View.Droid.Fragments
                 switch (resultCode)
                 {
                     case (int)Result.Ok:
-                        Toast.MakeText(this.Context, "Save quest!", ToastLength.Short).Show();
+                        ViewModel.ResetChildren();
+                        QuestsAdapter.NotifyDataSetChanged();
+                        Toast.MakeText(this.Context, "New quest has been saved!", ToastLength.Short).Show();
                         break;
                     case (int)Result.Canceled:
                         Toast.MakeText(this.Context, "Cancel creating quest!", ToastLength.Short).Show();

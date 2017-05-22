@@ -6,6 +6,7 @@ using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Views;
 using Android.Widget;
+using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
@@ -23,13 +24,15 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private const string ParentIdKey = "ParentIdKey";
         private const string DateTimePickerId = "DateTimePickerId";
+        private const string ValidationErrorsId = "ValidationErrorsId";
+
         private const string ViewModelKey = "QuestCreateViewModel.Key";
 
         private const int DateTimePickerStartRequestCode = 0;
         private const int DateTimePickerDeadlineRequestCode = 1;
 
         private readonly IEntityStateHandler<QuestCreateViewModel> _viewModelStateHandler;
-        private readonly DateTime _defaultDateTime = DateTime.MinValue;
+        private readonly DateTime _defaultDateTime = default(DateTime);
 
         private EditText _titleEditText;
         private EditText _descriptionEditText;
@@ -183,6 +186,16 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #region Event handlers
 
+        private void StartDateButtonOnClick(object sender, EventArgs e)
+        {
+            ShowDateTimePickerFragment(DateTimePickerStartRequestCode, ViewModel.StartTime);
+        }
+
+        private void DeadlineDateButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            ShowDateTimePickerFragment(DateTimePickerDeadlineRequestCode, ViewModel.Deadline);
+        }
+
         private void ImportanceCheckBoxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs checkedChangeEventArgs)
         {
             ViewModel.IsImportant = checkedChangeEventArgs.IsChecked;
@@ -195,11 +208,6 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ViewModel.UseStartTime = selectEnable;
         }
 
-        private void StartDateButtonOnClick(object sender, EventArgs e)
-        {
-            ShowDateTimePickerFragment(DateTimePickerStartRequestCode, ViewModel.StartTime);
-        }
-
         private void DeadlineCheckboxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs eventArgs)
         {
             bool selectEnable = eventArgs.IsChecked;
@@ -207,15 +215,25 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ViewModel.UseDeadline = selectEnable;
         }
 
-        private void DeadlineDateButtonOnClick(object sender, EventArgs eventArgs)
-        {
-            ShowDateTimePickerFragment(DateTimePickerDeadlineRequestCode, ViewModel.Deadline);
-        }
+
 
         private void SaveButtonOnClick(object sender, EventArgs eventArgs)
         {
-            this.Activity.SetResult(Result.Ok);
-            this.Activity.Finish();
+            ViewModel.Title = _titleEditText.Text;
+            ViewModel.Description = _descriptionEditText.Text;
+
+            ClarifiedResponse<int> validationResult = ViewModel.Validate();
+            if (validationResult.IsSuccessful)
+            {
+                ViewModel.Save();
+                this.Activity.SetResult(Result.Ok);
+                this.Activity.Finish();
+            }
+            else
+            {
+                ValidationErrorsFragment errorsFragment = ValidationErrorsFragment.NewInstance(validationResult.Errors);
+                errorsFragment.Show(FragmentManager, ValidationErrorsId);
+            }
         }
 
         #endregion
@@ -224,25 +242,25 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private void HandleDeadlineDateButton(Button deadlineDateButton)
         {
+            if (ViewModel.Deadline != _defaultDateTime)
+            {
+                deadlineDateButton.Text = StringifyDateTime(ViewModel.Deadline);
+            }
             if (ViewModel.UseDeadline)
             {
                 deadlineDateButton.Visibility = ViewStates.Visible;
-                if (ViewModel.Deadline != _defaultDateTime)
-                {
-                    deadlineDateButton.Text = StringifyDateTime(ViewModel.Deadline);
-                }
             }
         }
 
         private void HandleStartDateButton(Button startDateButton)
         {
+            if (ViewModel.StartTime != _defaultDateTime)
+            {
+                startDateButton.Text = StringifyDateTime(ViewModel.StartTime);
+            }
             if (ViewModel.UseStartTime)
             {
                 startDateButton.Visibility = ViewStates.Visible;
-                if (ViewModel.StartTime != _defaultDateTime)
-                {
-                    startDateButton.Text = StringifyDateTime(ViewModel.StartTime);
-                }
             }
         }
 

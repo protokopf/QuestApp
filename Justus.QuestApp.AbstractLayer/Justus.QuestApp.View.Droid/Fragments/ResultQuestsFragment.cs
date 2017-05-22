@@ -10,6 +10,7 @@ using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.Adapters.Quests;
 using Justus.QuestApp.View.Droid.ViewHolders;
+using Justus.QuestApp.View.Droid.ViewHolders.QuestItem;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Fragments

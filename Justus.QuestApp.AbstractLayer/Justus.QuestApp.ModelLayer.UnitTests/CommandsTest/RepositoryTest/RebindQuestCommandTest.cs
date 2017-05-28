@@ -44,7 +44,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
 
             //Assert
             Assert.IsNotNull(ex);
-            Assert.AreEqual("childToAdd", ex.ParamName);
+            Assert.AreEqual("questToBind", ex.ParamName);
         }
 
         [Test]

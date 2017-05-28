@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Justus.QuestApp.AbstractLayer.Helpers
+namespace Justus.QuestApp.AbstractLayer.Helpers.Extentions
 {
     /// <summary>
     /// Extentions for IList implementations

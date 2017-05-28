@@ -12,6 +12,7 @@ using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.View.Droid.Abstract.Activities;
 using Justus.QuestApp.View.Droid.Fragments;
+using Justus.QuestApp.View.Droid.Fragments.Quest;
 using Fragment = Android.Support.V4.App.Fragment;
 
 namespace Justus.QuestApp.View.Droid.Activities

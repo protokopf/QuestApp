@@ -3414,8 +3414,8 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f070043
 			public const int ChildrenButtonText = 2131165251;
 			
-			// aapt resource value: 0x7f070063
-			public const int DatePickerTitle = 2131165283;
+			// aapt resource value: 0x7f070064
+			public const int DatePickerTitle = 2131165284;
 			
 			// aapt resource value: 0x7f070058
 			public const int DeadlineLabel = 2131165272;
@@ -3501,6 +3501,9 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f07004e
 			public const int QuestDefaultTitle = 2131165262;
 			
+			// aapt resource value: 0x7f070063
+			public const int QuestEditActivityLabel = 2131165283;
+			
 			// aapt resource value: 0x7f070052
 			public const int QuestListBack = 2131165266;
 			
@@ -3522,38 +3525,38 @@ namespace Justus.QuestApp.View.Droid
 			// aapt resource value: 0x7f070053
 			public const int SyncButtonText = 2131165267;
 			
-			// aapt resource value: 0x7f07006d
-			public const int ValidationDeadlineLessThanNow = 2131165293;
-			
 			// aapt resource value: 0x7f07006e
-			public const int ValidationDeadlineLessThanNowClar = 2131165294;
+			public const int ValidationDeadlineLessThanNow = 2131165294;
 			
-			// aapt resource value: 0x7f070069
-			public const int ValidationDescriptionEmpty = 2131165289;
+			// aapt resource value: 0x7f07006f
+			public const int ValidationDeadlineLessThanNowClar = 2131165295;
 			
 			// aapt resource value: 0x7f07006a
-			public const int ValidationDescriptionEmptyClar = 2131165290;
-			
-			// aapt resource value: 0x7f070064
-			public const int ValidationDialogTitle = 2131165284;
+			public const int ValidationDescriptionEmpty = 2131165290;
 			
 			// aapt resource value: 0x7f07006b
-			public const int ValidationStartMoreThanDeadline = 2131165291;
-			
-			// aapt resource value: 0x7f07006c
-			public const int ValidationStartMoreThanDeadlineClar = 2131165292;
+			public const int ValidationDescriptionEmptyClar = 2131165291;
 			
 			// aapt resource value: 0x7f070065
-			public const int ValidationTitleEmpty = 2131165285;
+			public const int ValidationDialogTitle = 2131165285;
+			
+			// aapt resource value: 0x7f07006c
+			public const int ValidationStartMoreThanDeadline = 2131165292;
+			
+			// aapt resource value: 0x7f07006d
+			public const int ValidationStartMoreThanDeadlineClar = 2131165293;
 			
 			// aapt resource value: 0x7f070066
-			public const int ValidationTitleEmptyClar = 2131165286;
+			public const int ValidationTitleEmpty = 2131165286;
 			
 			// aapt resource value: 0x7f070067
-			public const int ValidationTitleLong = 2131165287;
+			public const int ValidationTitleEmptyClar = 2131165287;
 			
 			// aapt resource value: 0x7f070068
-			public const int ValidationTitleLongClar = 2131165288;
+			public const int ValidationTitleLong = 2131165288;
+			
+			// aapt resource value: 0x7f070069
+			public const int ValidationTitleLongClar = 2131165289;
 			
 			// aapt resource value: 0x7f070019
 			public const int abc_action_bar_home_description = 2131165209;

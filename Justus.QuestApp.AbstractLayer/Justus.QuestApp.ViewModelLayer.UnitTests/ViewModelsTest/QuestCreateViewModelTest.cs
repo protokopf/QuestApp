@@ -10,6 +10,7 @@ using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ViewModelLayer.UnitTests.Stubs;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
+using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -33,24 +34,15 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             DateTime deadline = DateTime.Now;
 
             Quest quest = new FakeQuest();
-            Quest parentQuest = new FakeQuest();
 
             Command addCommand = MockRepository.GenerateStrictMock<Command>();
             addCommand.Expect(ac => ac.Execute()).
                 Repeat.Once();
 
-            IQuestCreator creator = MockRepository.GenerateStrictMock<IQuestCreator>();
-            creator.Expect(cr => cr.Create()).
-                Return(quest).
-                Repeat.Once();
-
             IQuestRepository questRepository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            questRepository.Expect(qr => qr.Get(Arg<Predicate<Quest>>.Is.Anything)).
-                Return(parentQuest).
-                Repeat.Once();
 
             IRepositoryCommandsFactory factory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
-            factory.Expect(f => f.AddQuest(Arg<Quest>.Is.Equal(quest), Arg<Quest>.Is.Equal(parentQuest)))
+            factory.Expect(f => f.AddQuest(Arg<Quest>.Is.Equal(quest)))
                 .Return(addCommand)
                 .Repeat.Once();
 
@@ -58,24 +50,23 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             IQuestValidator<ClarifiedResponse<int>> questValidator =
                 MockRepository.GenerateStrictMock<IQuestValidator<ClarifiedResponse<int>>>();
 
-            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory, questRepository, questValidator)
-            {
-                ParentId = parentId,
-                Title = title,
-                Description = decription,
-                IsImportant = isImportant,
-                StartTime = startTime,
-                Deadline = deadline,
-                UseStartTime = useStartTime,
-                UseDeadline = useDeadLine
-            };
+            QuestCreateViewModel viewModel = new QuestCreateViewModel(quest, questValidator, factory);
+
+            viewModel.QuestDetails.ParentId = parentId;
+            viewModel.QuestDetails.Title = title;
+            viewModel.QuestDetails.Description = decription;
+            viewModel.QuestDetails.IsImportant = isImportant;
+            viewModel.QuestDetails.StartTime = startTime;
+            viewModel.QuestDetails.Deadline = deadline;
+            viewModel.QuestDetails.UseStartTime = useStartTime;
+            viewModel.QuestDetails.UseDeadline = useDeadLine;
+                
 
             //Act
-            viewModel.Save();
+            viewModel.Action();
 
             //Assert
             addCommand.VerifyAllExpectations();
-            creator.VerifyAllExpectations();
             questRepository.VerifyAllExpectations();
             factory.VerifyAllExpectations();
 
@@ -103,36 +94,28 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             command.Expect(cm => cm.Execute()).
                 Repeat.Once();
 
-            IQuestCreator creator = MockRepository.GenerateStrictMock<IQuestCreator>();
-            creator.Expect(cr => cr.Create()).
-                Return(quest).
-                Repeat.Once();
-
             IQuestRepository questRepository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            questRepository.Expect(qr => qr.Get(Arg<Predicate<Quest>>.Is.Anything)).
-                Repeat.Once().
-                Return(null);
 
             IRepositoryCommandsFactory factory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
-            factory.Expect(f => f.AddQuest(Arg<Quest>.Is.Equal(quest), Arg<Quest>.Is.Null))
+            factory.Expect(f => f.AddQuest(Arg<Quest>.Is.Equal(quest)))
                 .Repeat.Once()
                 .Return(command);
 
             IQuestValidator<ClarifiedResponse<int>> questValidator =
                 MockRepository.GenerateStrictMock<IQuestValidator<ClarifiedResponse<int>>>();
 
-            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory, questRepository, questValidator)
-            {
-                Title = nonTrimedTitle,
-                Description = nonTrimedDescription
-            };
+            QuestCreateViewModel viewModel = new QuestCreateViewModel(quest, questValidator, factory);
+
+            viewModel.QuestDetails.Title = nonTrimedTitle;
+            viewModel.QuestDetails.Description = nonTrimedDescription;
+            
 
             //Act
-            viewModel.Save();
+            viewModel.Action();
 
             //Assert
             Quest savedQuest =
-                factory.GetArgumentsForCallsMadeOn(f => f.AddQuest(Arg<Quest>.Is.NotNull, Arg<Quest>.Is.Anything))[0][0]
+                factory.GetArgumentsForCallsMadeOn(f => f.AddQuest(Arg<Quest>.Is.NotNull))[0][0]
                     as Quest;
 
             Assert.IsNotNull(savedQuest);
@@ -140,7 +123,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             Assert.AreEqual(nonTrimedDescription.Trim(), savedQuest.Description);
 
             command.VerifyAllExpectations();
-            creator.VerifyAllExpectations();
             questRepository.VerifyAllExpectations();
             factory.VerifyAllExpectations();
             questValidator.VerifyAllExpectations();
@@ -153,11 +135,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             Quest quest = new FakeQuest();
             ClarifiedResponse<int> response = new ClarifiedResponse<int>();
 
-            IQuestCreator creator = MockRepository.GenerateStrictMock<IQuestCreator>();
-            creator.Expect(cr => cr.Create()).
-                Return(quest).
-                Repeat.Once();
-
             IQuestRepository questRepository = MockRepository.GenerateStrictMock<IQuestRepository>();
 
             IRepositoryCommandsFactory factory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
@@ -168,7 +145,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
                 .Repeat.Once()
                 .Return(response);
 
-            QuestCreateViewModel viewModel = new QuestCreateViewModel(creator, factory, questRepository, questValidator);
+            QuestCreateViewModel viewModel = new QuestCreateViewModel(quest, questValidator, factory);
 
             //Act
             ClarifiedResponse<int> returnedResponse = viewModel.Validate();
@@ -176,7 +153,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             //Assert
             Assert.AreEqual(response, returnedResponse);
 
-            creator.VerifyAllExpectations();
             questRepository.VerifyAllExpectations();
             factory.VerifyAllExpectations();
             questValidator.VerifyAllExpectations();

@@ -218,7 +218,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
               
         //            LastCommand = RepositoryCommands.UpdateQuest(currentQuest);
         //            LastCommand.Execute();
-        //            QuestRepository.Save();
+        //            QuestRepository.Action();
         //        });
         //        IsBusy = false;
         //    }

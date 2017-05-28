@@ -33,13 +33,15 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
         public void AddCommandTest()
         {
             //Arrange
-            IRepositoryCommandsFactory factory = new DefaultRepositoryCommandsFactory(
-                MockRepository.GenerateStrictMock<IQuestRepository>());
+            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            repository.Expect(rep => rep.Get(null)).IgnoreArguments().Repeat.Once().Return(null);
+
+            IRepositoryCommandsFactory factory = new DefaultRepositoryCommandsFactory(repository);
 
             Quest quest = MockRepository.GeneratePartialMock<Quest>();
 
             //Act
-            Command addCommand = factory.AddQuest(quest, quest);
+            Command addCommand = factory.AddQuest(quest);
 
             //Assert
             Assert.IsNotNull(addCommand);

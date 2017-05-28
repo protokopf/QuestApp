@@ -11,8 +11,7 @@ namespace Justus.QuestApp.AbstractLayer.Commands.Factories
         /// Return command, that add quest.
         /// </summary>
         /// <param name="quest"></param>
-        /// <param name="parentQuest"></param>
-        Command AddQuest(Quest quest, Quest parentQuest);
+        Command AddQuest(Quest quest);
 
         /// <summary>
         /// Returns command that delete quest.

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities;
+using Justus.QuestApp.AbstractLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model.Composite;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
 
@@ -80,7 +81,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
                         return _currentChildren = _emptyList;
                     }
                     
-                    return _currentChildren = FilterQuests(children);
+                    return _currentChildren = HandleQuests(children);
                 }
                 return _currentChildren;
             }
@@ -189,6 +190,42 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             });
         }
 
+        /// <summary>
+        /// Handles changing IsImpotrant field for quest in particular position.
+        /// </summary>
+        /// <param name="position"></param>
+        //public async Task<int> ToggleImportance(int position)
+        //{
+        //    List<Quest> leaves = Leaves;
+        //    int newPosition = -1;
+        //    if (leaves.InRange(position))
+        //    {
+        //        IsBusy = true;
+        //        await Task.Run(() =>
+        //        {                   
+        //            Quest currentQuest = leaves[position];
+        //            bool currentImportance = currentQuest.IsImportant;
+
+        //            //If quests is going to be important - it goes top up, otherwise - bottom down.
+        //            //newPosition = currentImportance ? leaves.Count - 1 : 0;
+        //            //leaves.Move(position, newPosition);
+
+        //            currentQuest.IsImportant = !currentImportance;
+
+        //            leaves = HandleQuests(leaves);
+
+        //            newPosition = leaves.FindIndex(q => q == currentQuest);
+              
+        //            LastCommand = RepositoryCommands.UpdateQuest(currentQuest);
+        //            LastCommand.Execute();
+        //            QuestRepository.Save();
+        //        });
+        //        IsBusy = false;
+        //    }
+        //    return newPosition;
+
+        //}
+
         #region Protected methods
 
         /// <summary>
@@ -196,7 +233,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// </summary>
         /// <param name="quests"></param>
         /// <returns></returns>
-        protected virtual List<Quest> FilterQuests(List<Quest> quests)
+        protected virtual List<Quest> HandleQuests(List<Quest> quests)
         {
             return quests;
         }

@@ -51,10 +51,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Justus.QuestApp.View.Droid\Justus.QuestApp.View.Droid.csproj">
-      <Project>{4b9078bd-48b9-47ac-8f7d-5488e7e69121}</Project>
-      <Name>Justus.QuestApp.View.Droid</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Justus.QuestApp.ViewModelLayer\Justus.QuestApp.ViewModelLayer.csproj">
       <Project>{0B2A3D17-4CAA-4435-9277-7029BF568E48}</Project>
       <Name>Justus.QuestApp.ViewModelLayer</Name>

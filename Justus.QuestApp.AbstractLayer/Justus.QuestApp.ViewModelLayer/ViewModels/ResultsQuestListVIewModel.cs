@@ -33,7 +33,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         #region QuestListViewModel overriding
 
         ///<inheritdoc/>
-        protected override List<Quest> FilterQuests(List<Quest> quests)
+        protected override List<Quest> HandleQuests(List<Quest> quests)
         {
             return
                 quests.Where(FilterItem)

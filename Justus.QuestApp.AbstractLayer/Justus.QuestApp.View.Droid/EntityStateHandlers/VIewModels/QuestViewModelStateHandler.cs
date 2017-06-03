@@ -18,9 +18,8 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels
     /// <summary>
     /// Handles state of QuestCreateViewModel
     /// </summary>
-    public class QuestViewModelStateHandler : IEntityStateHandler<QuestViewModel>
+    public class QuestViewModelStateHandler : IEntityStateHandler<IQuestViewModel>
     {
-        private const string ParentIdKey = "QuestCreateViewModel.ParentId";
         private const string IsImportantKey = "QuestCreateViewModel.IsImportant";
         private const string UseDeadlineKey = "QuestCreateViewModel.UseDeadline";
         private const string UseStartTimeKey = "QuestCreateViewModel.UseStartTime";
@@ -45,7 +44,7 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels
         #region IEntityStateHandler<QuestCreateViewModel> implementation
 
         ///<inheritdoc/>
-        public bool Save(string key, QuestViewModel entity, Bundle bundle)
+        public bool Save(string key, IQuestViewModel entity, Bundle bundle)
         {
             if (bundle != null && !string.IsNullOrWhiteSpace(key) && entity != null)
             {
@@ -57,7 +56,7 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels
         }
 
         ///<inheritdoc/>
-        public bool Extract(string key, Bundle bundle, ref QuestViewModel entity)
+        public bool Extract(string key, Bundle bundle, ref IQuestViewModel entity)
         {
             if (bundle != null && !string.IsNullOrWhiteSpace(key) && entity != null)
             {
@@ -75,11 +74,10 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels
 
         #region Private methods
 
-        private Bundle CreateViewModelBundle(QuestViewModel viewModel)
+        private Bundle CreateViewModelBundle(IQuestViewModel viewModel)
         {
             Bundle viewModelBundle = new Bundle();
 
-            viewModelBundle.PutInt(ParentIdKey, viewModel.ParentId);
             viewModelBundle.PutBoolean(IsImportantKey, viewModel.IsImportant);
             viewModelBundle.PutBoolean(UseStartTimeKey, viewModel.UseStartTime);
             viewModelBundle.PutBoolean(UseDeadlineKey, viewModel.UseDeadline);
@@ -89,12 +87,11 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels
             return viewModelBundle;
         }
 
-        private void FillViewModelWithBundle(Bundle bundle, QuestViewModel viewModel)
+        private void FillViewModelWithBundle(Bundle bundle, IQuestViewModel viewModel)
         {
             DateTime startTime = default(DateTime);
             DateTime deadline = default(DateTime);
 
-            viewModel.ParentId = bundle.GetInt(ParentIdKey);
             viewModel.IsImportant = bundle.GetBoolean(IsImportantKey);
             viewModel.UseStartTime = bundle.GetBoolean(UseStartTimeKey);
             viewModel.UseDeadline = bundle.GetBoolean(UseDeadlineKey);

@@ -147,6 +147,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
         private void EditHandler(int itemPosition)
         {
             Toast.MakeText(this.Context, $"Edit of {itemPosition} clicked!", ToastLength.Short).Show();
+            FragmentActivity activity = this.Activity;
+            if (activity != null)
+            {
+                Intent startQuestInfo = QuestEditActivity.GetStartIntent(ViewModel.GetLeafId(itemPosition), activity);
+                this.StartActivityForResult(startQuestInfo, OkCancelRequestCode);
+            }
         }
 
         private void StartHandler(int itemPosition)

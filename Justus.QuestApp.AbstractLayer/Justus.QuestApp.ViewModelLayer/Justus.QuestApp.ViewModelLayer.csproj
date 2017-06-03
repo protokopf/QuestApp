@@ -48,6 +48,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ActiveQuestListViewModel.cs" />
     <Compile Include="ViewModels\AvailableQuestListViewModel.cs" />
+    <Compile Include="ViewModels\QuestDetails\IQuestViewModel.cs" />
     <Compile Include="ViewModels\QuestDetails\QuestAbstractActionViewModel.cs" />
     <Compile Include="ViewModels\QuestDetails\QuestCreateViewModel.cs" />
     <Compile Include="ViewModels\QuestDetails\QuestEditViewModel.cs" />

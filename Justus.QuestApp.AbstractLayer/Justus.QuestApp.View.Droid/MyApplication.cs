@@ -85,8 +85,12 @@ namespace Justus.QuestApp.View.Droid
                 ServiceLocator.Resolve<IRepositoryCommandsFactory>()));
 
             ServiceLocator.Register(() => new QuestCreateViewModel(
-                ServiceLocator.Resolve<IQuestCreator>().
-                    Create(),
+                ServiceLocator.Resolve<IQuestCreator>(),
+                ServiceLocator.Resolve<IQuestValidator<ClarifiedResponse<int>>>(),
+                ServiceLocator.Resolve<IRepositoryCommandsFactory>()), useLikeFactory: true);
+
+            ServiceLocator.Register(() => new QuestEditViewModel(
+                ServiceLocator.Resolve<IQuestRepository>(),
                 ServiceLocator.Resolve<IQuestValidator<ClarifiedResponse<int>>>(),
                 ServiceLocator.Resolve<IRepositoryCommandsFactory>()), useLikeFactory: true);
         }
@@ -96,8 +100,9 @@ namespace Justus.QuestApp.View.Droid
             ServiceLocator.Register(() => new DateTimeStateHandler(), useLikeFactory: true);
             ServiceLocator.Register<IEntityStateHandler<IList<ClarifiedError<int>>>>(
                 () => new ListOfClarifiedErrorIntStateHandler());            
-            ServiceLocator.Register(() => new QuestViewModelStateHandler(
-                ServiceLocator.Resolve<IEntityStateHandler<DateTime>>()));
+            ServiceLocator.Register(
+                () => new QuestViewModelStateHandler(
+                    ServiceLocator.Resolve<IEntityStateHandler<DateTime>>()));
         }
 
         private void InitializeQuestValidators()

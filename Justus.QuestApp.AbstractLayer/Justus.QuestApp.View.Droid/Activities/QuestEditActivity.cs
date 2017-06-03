@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Justus.QuestApp.View.Droid.Abstract.Activities;
+using Justus.QuestApp.View.Droid.Fragments.Quest;
 using Fragment = Android.Support.V4.App.Fragment;
 
 namespace Justus.QuestApp.View.Droid.Activities
@@ -25,7 +26,7 @@ namespace Justus.QuestApp.View.Droid.Activities
         /// <param name="questId"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static Intent GetIntent(int questId, Context context)
+        public static Intent GetStartIntent(int questId, Context context)
         {
             Intent intent = new Intent(context, typeof(QuestEditActivity));
             intent.PutExtra(CurrentQuestId, questId);
@@ -38,7 +39,7 @@ namespace Justus.QuestApp.View.Droid.Activities
         protected override Fragment CreateFragment()
         {
             int questId = Intent.GetIntExtra(CurrentQuestId, 0);
-            throw new NotImplementedException();
+            return QuestEditFragment.NewInstance(questId);
         }
 
         #endregion

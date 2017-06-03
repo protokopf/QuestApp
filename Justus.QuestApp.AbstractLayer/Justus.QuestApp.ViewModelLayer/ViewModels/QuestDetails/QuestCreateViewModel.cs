@@ -18,36 +18,55 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
         private readonly DateTime _defaultDateTime = default(DateTime);
 
         private readonly IRepositoryCommandsFactory _commandsFactory;
+        private readonly IQuestCreator _questCreator;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public QuestCreateViewModel(
-            Quest questModel, 
+            IQuestCreator questCreator, 
             IQuestValidator<ClarifiedResponse<int>> questValidator, 
-            IRepositoryCommandsFactory repositoryCommands) : base(questModel, questValidator)
+            IRepositoryCommandsFactory repositoryCommands) : base( questValidator)
         {
             repositoryCommands.ThrowIfNull(nameof(repositoryCommands));
+            questCreator.ThrowIfNull(nameof(questCreator));
             _commandsFactory = repositoryCommands;
+            _questCreator = questCreator;
         }
+
+        /// <summary>
+        /// Id of quest, that will be parent of current creating quest.
+        /// </summary>
+        public int ParentId { get; set; }
 
         #region QuestAbstractActionViewModel overriding
 
         ///<inheritdoc cref="QuestAbstractActionViewModel"/>
         public override void Action()
         {
-            if (!QuestDetails.UseStartTime)
+            if (!QuestViewModel.UseStartTime)
             {
-                QuestDetails.StartTime = _defaultDateTime;
+                QuestViewModel.StartTime = _defaultDateTime;
             }
-            if (!QuestDetails.UseDeadline)
+            if (!QuestViewModel.UseDeadline)
             {
-                QuestDetails.Deadline = _defaultDateTime;
+                QuestViewModel.Deadline = _defaultDateTime;
             }
 
+            Quest model = QuestViewModel.Model;
+            model.ParentId = ParentId;
+
             _commandsFactory.
-                AddQuest(QuestDetails.QuestModel).
+                AddQuest(model).
                 Execute();
+        }
+
+        ///<inheritdoc cref="QuestAbstractActionViewModel"/>
+        protected override IQuestViewModel InitializeQuestViewModel()
+        {
+            Quest model = _questCreator.Create();
+            model.ParentId = ParentId;
+            return new QuestViewModel(model);
         }
 
         #endregion

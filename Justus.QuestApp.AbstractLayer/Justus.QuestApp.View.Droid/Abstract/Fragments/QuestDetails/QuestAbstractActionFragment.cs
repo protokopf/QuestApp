@@ -33,8 +33,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
 
         private const string ViewModelKey = "QuestCreateViewModel.Key";
 
-        private readonly IEntityStateHandler<QuestViewModel> _questDetailsStateHandler;
-        private readonly DateTime _defaultDateTime = default(DateTime);
+        private readonly IEntityStateHandler<IQuestViewModel> _questDetailsStateHandler;
 
         protected EditText TitleEditText;
         protected EditText DescriptionEditText;
@@ -49,12 +48,14 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
 
         protected FloatingActionButton SaveButton;
 
+        private readonly DateTime _defaultDateTime = default(DateTime);
+
         /// <summary>
         /// Default constructor. Resolves dependency on view model state handler.
         /// </summary>
         protected QuestAbstractActionFragment()
         {
-            _questDetailsStateHandler = ServiceLocator.Resolve<IEntityStateHandler<QuestViewModel>>();
+            _questDetailsStateHandler = ServiceLocator.Resolve<IEntityStateHandler<IQuestViewModel>>();
         }
 
         #region Fragment overriding
@@ -63,9 +64,9 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            ExtractViewModelState(savedInstanceState);           
             ParseArguments(Arguments);
-            
+            ViewModel.Initialize();
+            ExtractViewModelState(savedInstanceState);           
         }
 
         ///<inheritdoc/>
@@ -96,9 +97,6 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
             DeadlineDateButton.Click += DeadlineDateButtonOnClick;
 
             SaveButton.Click += SaveButtonOnClick;
-
-            HandleStartDateButton(StartDateButton);
-            HandleDeadlineDateButton(DeadlineDateButton);
 
             return mainView;
         }
@@ -137,15 +135,22 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
                 switch (requestCode)
                 {
                     case DateTimePickerStartRequestCode:
-                        ViewModel.QuestDetails.StartTime = receivedDateTime;
+                        ViewModel.QuestViewModel.StartTime = receivedDateTime;
                         StartDateButton.Text = receivedDateTimeString;
                         break;
                     case DateTimePickerDeadlineRequestCode:
-                        ViewModel.QuestDetails.Deadline = receivedDateTime;
+                        ViewModel.QuestViewModel.Deadline = receivedDateTime;
                         DeadlineDateButton.Text = receivedDateTimeString;
                         break;
                 }
             }
+        }
+
+        ///<inheritdoc/>
+        public override void OnViewCreated(Android.Views.View view, Bundle savedInstanceState)
+        {
+            base.OnViewCreated(view, savedInstanceState);
+            HandleUiElements();
         }
 
         #endregion
@@ -165,39 +170,37 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
 
         private void StartDateButtonOnClick(object sender, EventArgs e)
         {
-            ShowDateTimePickerFragment(DateTimePickerStartRequestCode, ViewModel.QuestDetails.StartTime);
+            ShowDateTimePickerFragment(DateTimePickerStartRequestCode, ViewModel.QuestViewModel.StartTime);
         }
 
         private void DeadlineDateButtonOnClick(object sender, EventArgs eventArgs)
         {
-            ShowDateTimePickerFragment(DateTimePickerDeadlineRequestCode, ViewModel.QuestDetails.Deadline);
+            ShowDateTimePickerFragment(DateTimePickerDeadlineRequestCode, ViewModel.QuestViewModel.Deadline);
         }
 
         private void ImportanceCheckBoxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs checkedChangeEventArgs)
         {
-            ViewModel.QuestDetails.IsImportant = checkedChangeEventArgs.IsChecked;
+            ViewModel.QuestViewModel.IsImportant = checkedChangeEventArgs.IsChecked;
         }
 
         private void StartDateTimeCheckboxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs eventArgs)
         {
             bool selectEnable = eventArgs.IsChecked;
             StartDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
-            ViewModel.QuestDetails.UseStartTime = selectEnable;
+            ViewModel.QuestViewModel.UseStartTime = selectEnable;
         }
 
         private void DeadlineCheckboxOnCheckedChange(object sender, CompoundButton.CheckedChangeEventArgs eventArgs)
         {
             bool selectEnable = eventArgs.IsChecked;
             DeadlineDateButton.Visibility = selectEnable ? ViewStates.Visible : ViewStates.Invisible;
-            ViewModel.QuestDetails.UseDeadline = selectEnable;
+            ViewModel.QuestViewModel.UseDeadline = selectEnable;
         }
-
-
 
         private void SaveButtonOnClick(object sender, EventArgs eventArgs)
         {
-            ViewModel.QuestDetails.Title = TitleEditText.Text;
-            ViewModel.QuestDetails.Description = DescriptionEditText.Text;
+            ViewModel.QuestViewModel.Title = TitleEditText.Text;
+            ViewModel.QuestViewModel.Description = DescriptionEditText.Text;
 
             ClarifiedResponse<int> validationResult = ViewModel.Validate();
             if (validationResult.IsSuccessful)
@@ -217,27 +220,48 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
 
         #region UI control handlers
 
-        private void HandleDeadlineDateButton(Button deadlineDateButton)
+        /// <summary>
+        /// Handles UI elements.
+        /// </summary>
+        protected virtual void HandleUiElements()
         {
-            if (ViewModel.QuestDetails.Deadline != _defaultDateTime)
+            HandleStartDateButton();
+            HandleDeadlineDateButton();
+        }
+
+        /// <summary>
+        /// Handles deadline date button.
+        /// </summary>
+        private void HandleDeadlineDateButton()
+        {
+            if (DeadlineDateButton != null)
             {
-                deadlineDateButton.Text = StringifyDateTime(ViewModel.QuestDetails.Deadline);
-            }
-            if (ViewModel.QuestDetails.UseDeadline)
-            {
-                deadlineDateButton.Visibility = ViewStates.Visible;
+                if (ViewModel.QuestViewModel.Deadline != _defaultDateTime)
+                {
+                    DeadlineDateButton.Text = StringifyDateTime(ViewModel.QuestViewModel.Deadline);
+                }
+                if (ViewModel.QuestViewModel.UseDeadline)
+                {
+                    DeadlineDateButton.Visibility = ViewStates.Visible;
+                }
             }
         }
 
-        private void HandleStartDateButton(Button startDateButton)
+        /// <summary>
+        /// Handles start date button.
+        /// </summary>
+        private void HandleStartDateButton()
         {
-            if (ViewModel.QuestDetails.StartTime != _defaultDateTime)
+            if (StartDateButton != null)
             {
-                startDateButton.Text = StringifyDateTime(ViewModel.QuestDetails.StartTime);
-            }
-            if (ViewModel.QuestDetails.UseStartTime)
-            {
-                startDateButton.Visibility = ViewStates.Visible;
+                if (ViewModel.QuestViewModel.StartTime != _defaultDateTime)
+                {
+                    StartDateButton.Text = StringifyDateTime(ViewModel.QuestViewModel.StartTime);
+                }
+                if (ViewModel.QuestViewModel.UseStartTime)
+                {
+                    StartDateButton.Visibility = ViewStates.Visible;
+                }
             }
         }
 
@@ -257,7 +281,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
         /// <param name="bundle"></param>
         private void ExtractViewModelState(Bundle bundle)
         {
-            var details = ViewModel.QuestDetails;
+            var details = ViewModel.QuestViewModel;
             _questDetailsStateHandler.Extract(ViewModelKey, bundle, ref details);
         }
 
@@ -267,7 +291,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
         /// <param name="bundle"></param>
         private void SaveViewModelState(Bundle bundle)
         {
-            _questDetailsStateHandler.Save(ViewModelKey, ViewModel.QuestDetails, bundle);
+            _questDetailsStateHandler.Save(ViewModelKey, ViewModel.QuestViewModel, bundle);
         }
 
         /// <summary>

@@ -1,18 +1,5 @@
-using System;
-using System.Globalization;
-using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Support.Design.Widget;
-using Android.Views;
-using Android.Widget;
-using Justus.QuestApp.AbstractLayer.Entities.Responses;
-using Justus.QuestApp.ModelLayer.Helpers;
-using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
-using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails;
-using Justus.QuestApp.View.Droid.Fragments.Dialogs;
-using Justus.QuestApp.ViewModelLayer.ViewModels;
 using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails;
 
 namespace Justus.QuestApp.View.Droid.Fragments.Quest
@@ -52,7 +39,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Quest
             if (arguments != null)
             {
                 int parentId = arguments.GetInt(ParentIdKey);
-                ViewModel.QuestDetails.ParentId = parentId;
+                ViewModel.ParentId = parentId;
             }
         }
 

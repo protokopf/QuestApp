@@ -23,19 +23,17 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
         /// </summary>
         /// <param name="questModel"></param>
         /// <param name="questValidator"></param>
-        protected QuestAbstractActionViewModel(Quest questModel, IQuestValidator<ClarifiedResponse<int>> questValidator)
+        protected QuestAbstractActionViewModel(IQuestValidator<ClarifiedResponse<int>> questValidator)
         {
-            questModel.ThrowIfNull(nameof(questModel));
             questValidator.ThrowIfNull(nameof(questValidator));
 
             _questValidator = questValidator;
-            QuestDetails = new QuestViewModel(questModel);
         }
 
         /// <summary>
         /// Reference to quest view model.
         /// </summary>
-        public QuestViewModel QuestDetails { get; }
+        public IQuestViewModel QuestViewModel { get; private set; }
 
         /// <summary>
         /// Abstract action on quest.
@@ -48,7 +46,21 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
         /// <returns></returns>
         public ClarifiedResponse<int> Validate()
         {
-            return _questValidator.Validate(QuestDetails.QuestModel);
+            return _questValidator.Validate(QuestViewModel.Model);
         }
+
+        /// <summary>
+        /// Initializes current view model.
+        /// </summary>
+        public virtual void Initialize()
+        {
+            QuestViewModel = InitializeQuestViewModel();
+        }
+
+        /// <summary>
+        /// Returns initialized quest details view model.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract IQuestViewModel InitializeQuestViewModel();
     }
 }

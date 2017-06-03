@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Helpers;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Model.Composite;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
 
@@ -154,6 +155,20 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Returns id of root quest. Otherwise returns 0.
         /// </summary>
         public int RootId => InTopRoot ? 0 : Root.Id;
+
+        /// <summary>
+        /// Returns id of leaf.
+        /// </summary>
+        /// <param name="leafPosition"></param>
+        /// <returns></returns>
+        public int GetLeafId(int leafPosition)
+        {
+            if (!Leaves.InRange(leafPosition))
+            {
+                return 0;
+            }
+            return Leaves[leafPosition].Id;
+        }
 
         /// <summary>
         /// Undo last made command.

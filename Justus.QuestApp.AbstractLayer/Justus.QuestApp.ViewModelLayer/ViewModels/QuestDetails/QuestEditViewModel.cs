@@ -7,6 +7,7 @@ using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
+using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.AbstractLayer.Validators;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
@@ -17,34 +18,49 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
     public class QuestEditViewModel : QuestAbstractActionViewModel
     {
         private readonly IRepositoryCommandsFactory _commandsFactory;
+        private readonly IQuestRepository _questRepository;
 
         /// <summary>
         /// Receives quest model, quest validator and reference to repository command.
         /// </summary>
-        /// <param name="questModel"></param>
+        /// <param name="questRepository"></param>
         /// <param name="questValidator"></param>
         /// <param name="repositoryCommands"></param>
         public QuestEditViewModel(
-            Quest questModel, 
+            IQuestRepository questRepository, 
             IQuestValidator<ClarifiedResponse<int>> questValidator, 
-            IRepositoryCommandsFactory repositoryCommands) : base(questModel, questValidator)
+            IRepositoryCommandsFactory repositoryCommands) : base(questValidator)
         {
+            questRepository.ThrowIfNull(nameof(questRepository));
             repositoryCommands.ThrowIfNull(nameof(repositoryCommands));
+            _questRepository = questRepository;
             _commandsFactory = repositoryCommands;
         }
 
         #region QuestAbstractActionViewModel overriding
 
+        public int QuestId { get; set; }
+
         ///<inheritdoc cref="QuestAbstractActionViewModel"/>
         public override void Action()
         {
             _commandsFactory.
-                UpdateQuest(QuestDetails.QuestModel).
+                UpdateQuest(QuestViewModel.Model).
                 Execute();
         }
 
+        ///<inheritdoc cref="QuestAbstractActionViewModel"/>
+        protected override IQuestViewModel InitializeQuestViewModel()
+        {
+            Quest model = _questRepository.Get(q => q.Id == QuestId);
+            QuestViewModel questViewModel = new QuestViewModel(model)
+            {
+                UseStartTime = model.StartTime != default(DateTime),
+                UseDeadline = model.Deadline != default(DateTime)
+            };
+            return questViewModel;
+        }
+
         #endregion
-
-
     }
 }

@@ -10,7 +10,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
     /// <summary>
     /// View model for holding quest details.
     /// </summary>
-    public class QuestViewModel : BaseViewModel
+    public class QuestViewModel : BaseViewModel, IQuestViewModel
     {
         private readonly Quest _innerQuest;
 
@@ -27,50 +27,30 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
             _innerQuest = questModel;
         }
 
-        /// <summary>
-        /// Return quest model.
-        /// </summary>
-        public Quest QuestModel => _innerQuest;
+        #region IQuestViewModel implementation
 
-        /// <summary>
-        /// Id of parent quest.
-        /// </summary>
-        public int ParentId
-        {
-            get { return _innerQuest.ParentId; }
-            set { _innerQuest.ParentId = value; }
-        }
-
-        /// <summary>
-        /// Title of current quest.
-        /// </summary>
+        ///<inheritdoc cref="IQuestViewModel"/>
         public string Title
         {
             get { return _innerQuest.Title; }
             set { _innerQuest.Title = value.Trim(); }
         }
 
-        /// <summary>
-        /// Description of current quest.
-        /// </summary>
+        ///<inheritdoc cref="IQuestViewModel"/>
         public string Description
         {
             get { return _innerQuest.Description; }
             set { _innerQuest.Description = value.Trim(); }
         }
 
-        /// <summary>
-        /// Points, whether current quest important or not.
-        /// </summary>
+        ///<inheritdoc cref="IQuestViewModel"/>
         public bool IsImportant
         {
             get { return _innerQuest.IsImportant; }
             set { _innerQuest.IsImportant = value; }
         }
 
-        /// <summary>
-        /// Points, whether start time should be used.
-        /// </summary>
+        ///<inheritdoc cref="IQuestViewModel"/>
         public bool UseStartTime { get; set; }
 
         /// <summary>
@@ -82,18 +62,19 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
             set { _innerQuest.StartTime = value; }
         }
 
-        /// <summary>
-        /// Points, whether deadline should be used.
-        /// </summary>
+        ///<inheritdoc cref="IQuestViewModel"/>
         public bool UseDeadline { get; set; }
 
-        /// <summary>
-        /// Deadline.
-        /// </summary>
+        ///<inheritdoc cref="IQuestViewModel"/>
         public DateTime Deadline
         {
             get { return _innerQuest.Deadline; }
             set { _innerQuest.Deadline = value; }
         }
+
+        ///<inheritdoc cref="IQuestViewModel"/>
+        public Quest Model => _innerQuest;
+
+        #endregion
     }
 }

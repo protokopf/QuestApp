@@ -59,6 +59,9 @@
   <string name="QuestCreateImportant">Is important</string>
   <string name="QuestCreateDateTitle">Select...</string>
   
+  <!--Quest edit fragment-->
+  <string name="QuestEditActivityLabel">Edit quest</string>
+  
   <!--Date picker fragment-->
   <string name="DatePickerTitle">Choose date and time:</string>
   

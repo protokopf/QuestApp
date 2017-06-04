@@ -118,9 +118,11 @@
     <Compile Include="Abstract\Fragments\Factories\IFragmentFactory.cs" />
     <Compile Include="Abstract\Fragments\IFabDecorator.cs" />
     <Compile Include="Abstract\EntityStateHandlers\IEntityStateHandler.cs" />
+    <Compile Include="Abstract\Fragments\QuestDetails\QuestAbstractActionFragment.cs" />
     <Compile Include="Abstract\ViewHoldersClickManagers\IViewHolderClickManager.cs" />
     <Compile Include="Activities\QuestCreateActivity.cs" />
     <Compile Include="Activities\MainTabbedActivity.cs" />
+    <Compile Include="Activities\QuestEditActivity.cs" />
     <Compile Include="Activities\StartScreenActivity.cs" />
     <Compile Include="Adapters\Dialogs\ValidationDialogFragmentAdapter.cs" />
     <Compile Include="Adapters\Fragments\GenericFragmentPagerAdapter.cs" />
@@ -132,13 +134,14 @@
     <Compile Include="Abstract\Fragments\ISelectable.cs" />
     <Compile Include="EntityStateHandlers\ListOfClarifiedErrorIntStateHandler.cs" />
     <Compile Include="EntityStateHandlers\DateTimeStateHandler.cs" />
-    <Compile Include="EntityStateHandlers\VIewModels\QuestCreateViewModelStateHandler.cs" />
+    <Compile Include="EntityStateHandlers\VIewModels\QuestViewModelStateHandler.cs" />
     <Compile Include="Fragments\AvailableQuestsFragment.cs" />
     <Compile Include="Abstract\Fragments\BaseQuestsFragment.cs" />
     <Compile Include="Fragments\Dialogs\DateTimePickerFragment.cs" />
     <Compile Include="Fragments\Dialogs\ValidationErrorsFragment.cs" />
     <Compile Include="Fragments\Factories\ParametrizedFragmentFactory.cs" />
-    <Compile Include="Fragments\QuestCreateFragment.cs" />
+    <Compile Include="Fragments\Quest\QuestCreateFragment.cs" />
+    <Compile Include="Fragments\Quest\QuestEditFragment.cs" />
     <Compile Include="Services\ViewServices\SimpleQuestExpireService.cs" />
     <Compile Include="StubServices\StubWebStringProvider.cs" />
     <Compile Include="Abstract\ViewHolders\ToggledViewHolder.cs" />
@@ -286,6 +289,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\ValidationStrings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\star_disabled_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\star_enabled_16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

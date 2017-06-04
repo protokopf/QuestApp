@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
+using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
@@ -29,11 +33,12 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         #region QuestListViewModel overriding
 
         ///<inheritdoc/>
-        protected override List<Quest> FilterQuests(List<Quest> quests)
+        protected override List<Quest> HandleQuests(List<Quest> quests)
         {
             return
-                quests.Where(FilterItem)
-                    .ToList();
+                quests.Where(FilterItem).
+                    OrderBy(q => q.StartTime - DateTime.Now).
+                        ToList();
         }
 
         #endregion

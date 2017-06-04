@@ -18,16 +18,15 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         /// Receives reference to repository, parent and new child.
         /// </summary>
         /// <param name="repository"></param>
-        /// <param name="parent"></param>
         /// <param name="childToAdd"></param>
-        public AddQuestCommand(IQuestRepository repository, Quest parent, Quest childToAdd) : 
+        public AddQuestCommand(IQuestRepository repository, Quest childToAdd) : 
             base(repository)
         {
             if(childToAdd == null)
             {
                 throw new ArgumentNullException(nameof(childToAdd));
             }
-            Parent = parent;
+            Parent = repository.Get(q => q.Id == childToAdd.ParentId);
             ChildToAdd = childToAdd;
         }
 
@@ -83,7 +82,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         protected void ConnectWithParent(Quest parent, Quest child)
         {
             child.Parent = parent;
-            child.ParentId = parent.ParentId;
+            child.ParentId = parent.Id;
             parent.Children.Add(child);
         }
     }

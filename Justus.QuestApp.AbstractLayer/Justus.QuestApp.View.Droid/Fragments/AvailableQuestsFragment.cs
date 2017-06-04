@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Graphics.Drawables;
@@ -10,6 +11,7 @@ using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
+using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.Activities;
@@ -92,6 +94,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         ///<inheritdoc/>
         public void BindClickListeners(AvailableQuestViewHolder holder)
         {
+            holder.IsImportantButton.Click += (sender, args) => { IsImpotrantHandler(holder.ItemPosition); };
             holder.ItemView.Click += (sender, e) => holder.Toggle();
             holder.DeleteButton.Click += (o, eventArgs) =>  DeleteHandler(holder.ItemPosition);
             holder.ChildrenButton.Click += (o, eventArgs) => ChildrenHandler(holder.ItemPosition); 
@@ -134,9 +137,22 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #region Handlers
 
+        private async void IsImpotrantHandler(int itemPosition)
+        {
+            //int newPosition = await ViewModel.ToggleImportance(itemPosition);
+            //QuestsAdapter.NotifyItemMoved(itemPosition, newPosition);
+            //QuestsAdapter.NotifyItemRangeChanged(0, QuestsAdapter.ItemCount);
+        }
+
         private void EditHandler(int itemPosition)
         {
             Toast.MakeText(this.Context, $"Edit of {itemPosition} clicked!", ToastLength.Short).Show();
+            FragmentActivity activity = this.Activity;
+            if (activity != null)
+            {
+                Intent startQuestInfo = QuestEditActivity.GetStartIntent(ViewModel.GetLeafId(itemPosition), activity);
+                this.StartActivityForResult(startQuestInfo, OkCancelRequestCode);
+            }
         }
 
         private void StartHandler(int itemPosition)

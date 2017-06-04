@@ -46,7 +46,8 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         protected override void FillViewHolder(AvailableQuestViewHolder holder, Quest questData, int position)
         {
             holder.Collapse();
-            
+
+            holder.HandleIsImportantButton(questData.IsImportant);
             holder.StartTime.Text = FormTime(questData.StartTime);
             holder.Deadline.Text = FormTime(questData.Deadline);
 
@@ -58,7 +59,6 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         } 
 
         #endregion
-
         private string FormTime(DateTime time)
         {
             if (time != DateTime.MaxValue)

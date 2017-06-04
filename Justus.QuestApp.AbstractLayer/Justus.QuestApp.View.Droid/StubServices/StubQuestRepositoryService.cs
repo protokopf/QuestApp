@@ -114,14 +114,14 @@ namespace Justus.QuestApp.View.Droid.StubServices
         private DateTime GetDeadLine(int id)
         {
             DateTime result = DateTime.MaxValue;
-            result = DateTime.Now + new TimeSpan(0, 1, 60, 0);
+            result = DateTime.Now + new TimeSpan(0, id, 60, 0);
             return result;
         }
 
         private DateTime GetStartDate(int id)
         {
             DateTime result = DateTime.MaxValue;
-            result = DateTime.Now - new TimeSpan(0, 0, 5, 0);
+            result = DateTime.Now - new TimeSpan(0, id, 5, 0);
             return result;
         }
 

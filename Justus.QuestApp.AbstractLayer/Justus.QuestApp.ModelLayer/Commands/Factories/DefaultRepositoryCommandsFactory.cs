@@ -30,9 +30,9 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         #region IRepositoryCommandsFactory implementation
 
         ///<inheritdoc/>
-        public Command AddQuest(Quest quest, Quest parentQuest)
+        public Command AddQuest(Quest quest)
         {
-            return new AddQuestCommand(_repository,parentQuest, quest);
+            return new AddQuestCommand(_repository, quest);
         }
 
         ///<inheritdoc/>

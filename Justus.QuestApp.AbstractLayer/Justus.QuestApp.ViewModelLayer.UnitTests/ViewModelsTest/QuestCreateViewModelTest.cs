@@ -26,7 +26,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
         public void SaveTestWithStartTimeDeadline(bool useStartTime, bool useDeadLine)
         {
             //Arrange
-            int parentId = 42;
             string title = "title";
             string decription = "description";
             bool isImportant = true;

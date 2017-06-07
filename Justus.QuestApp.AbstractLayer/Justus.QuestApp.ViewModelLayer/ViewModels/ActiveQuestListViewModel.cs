@@ -7,6 +7,7 @@ using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Helpers;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
@@ -60,10 +61,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <returns></returns>
         public int CountProgress(Quest quest)
         {
-            if (quest == null)
-            {
-                throw new ArgumentNullException(nameof(quest));
-            }
+            quest.ThrowIfNull(nameof(quest));
             ProgressValue value = _progressCounter.CountProgress(quest);
             int result = (int)(value.Current / (double)value.Total * 100);
             return result;

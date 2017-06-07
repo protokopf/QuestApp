@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandsTest\FactoriesTest\Wrappers\RecountProgressRepositoryCommandsFactoryTest.cs" />
+    <Compile Include="CommandsTest\FactoriesTest\Wrappers\RecountProgressStateCommandsFactoryTest.cs" />
     <Compile Include="CommandsTest\WrapersTest\CompositeCommandTest.cs" />
     <Compile Include="CommandsTest\FactoriesTest\DefaultRepositoryCommandsFactoryTest.cs" />
     <Compile Include="CommandsTest\FactoriesTest\DefaultStateCommandsFectoryTest.cs" />

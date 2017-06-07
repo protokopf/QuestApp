@@ -7,6 +7,7 @@ using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Commands;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
+using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {

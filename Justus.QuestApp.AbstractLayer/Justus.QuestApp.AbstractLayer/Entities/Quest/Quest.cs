@@ -52,5 +52,10 @@ namespace Justus.QuestApp.AbstractLayer.Entities.Quest
         /// Points, whether quest important or not.
         /// </summary>
         public virtual bool IsImportant { get; set; }
+
+        /// <summary>
+        /// Progress of quest.
+        /// </summary>
+        public double Progress { get; set; }
     }
 }

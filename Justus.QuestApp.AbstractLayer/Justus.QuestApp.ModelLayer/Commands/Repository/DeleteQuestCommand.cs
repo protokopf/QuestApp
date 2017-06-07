@@ -36,23 +36,17 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         #region AbstractRepositoryCommand overriding
 
         ///<inheritdoc/>
-        public override void Execute()
+        protected override bool InnerExecute()
         {
-            if (!HasExecuted)
-            {
-                Repository.Delete(_toDelete);
-                HasExecuted = true;
-            }        
+            Repository.Delete(_toDelete);
+            return true;
         }
 
         ///<inheritdoc/>
-        public override void Undo()
+        protected override bool InnerUndo()
         {
-            if (HasExecuted)
-            {
-                Repository.RevertDelete(_toDelete);
-                HasExecuted = false;
-            }
+            Repository.RevertDelete(_toDelete);
+            return true;
         }
 
         #endregion

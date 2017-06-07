@@ -64,6 +64,7 @@
     <Compile Include="Helpers\ITaskWrapper.cs" />
     <Compile Include="Model\Composite\ICompositeModel.cs" />
     <Compile Include="Model\IQuestCompositeModel.cs" />
+    <Compile Include="Model\IQuestProgressRecounter.cs" />
     <Compile Include="Model\IQuestRepository.cs" />
     <Compile Include="Model\IQuestProgressCounter.cs" />
     <Compile Include="Model\IQuestTimeLeftCounter.cs" />

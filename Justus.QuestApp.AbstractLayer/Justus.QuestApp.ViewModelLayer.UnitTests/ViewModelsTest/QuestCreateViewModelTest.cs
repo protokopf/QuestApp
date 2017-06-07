@@ -37,6 +37,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 
             Command addCommand = MockRepository.GenerateStrictMock<Command>();
             addCommand.Expect(ac => ac.Execute()).
+                Return(true).
                 Repeat.Once();
 
             IQuestRepository questRepository = MockRepository.GenerateStrictMock<IQuestRepository>();
@@ -98,6 +99,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 
             Command command = MockRepository.GenerateStrictMock<Command>();
             command.Expect(cm => cm.Execute()).
+                Return(true).
                 Repeat.Once();
 
             IQuestRepository questRepository = MockRepository.GenerateStrictMock<IQuestRepository>();

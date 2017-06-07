@@ -29,23 +29,17 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         #region AbstractRepositoryCommand overriding
 
         ///<inheritdoc/>
-        public override void Execute()
+        protected override bool InnerExecute()
         {
-            if(!HasExecuted)
-            {
-                Repository.Update(_toUpdate);
-                HasExecuted = true;
-            }
+            Repository.Update(_toUpdate);
+            return true;
         }
 
         ///<inheritdoc/>
-        public override void Undo()
+        protected override bool InnerUndo()
         {
-            if (HasExecuted)
-            {
-                Repository.RevertUpdate(_toUpdate);
-                HasExecuted = false;
-            }
+            Repository.RevertUpdate(_toUpdate);
+            return true;
         } 
 
         #endregion

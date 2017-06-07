@@ -33,31 +33,25 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         #region AbstractRepositoryCommand overriding
 
         ///<inheritdoc/>
-        public override void Execute()
+        protected override bool InnerExecute()
         {
-            if(!HasExecuted)
-            {
                 if (Parent != null)
                 {
                     ConnectWithParent(Parent, ChildToAdd);
                 }
                 Repository.Insert(ChildToAdd);               
-                HasExecuted = true;
-            }
+                return true;
         }
 
         ///<inheritdoc/>
-        public override void Undo()
+        protected override bool InnerUndo()
         {
-            if(HasExecuted)
+            if (Parent != null)
             {
-                if (Parent != null)
-                {
-                    BreakWithParent(Parent, ChildToAdd);
-                }
-                Repository.RevertInsert(ChildToAdd);
-                HasExecuted = false;
+                BreakWithParent(Parent, ChildToAdd);
             }
+            Repository.RevertInsert(ChildToAdd);
+            return true;
         }
 
         #endregion

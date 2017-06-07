@@ -36,27 +36,21 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         #region AddQuestCommand overriding
 
         ///<inheritdoc/>
-        public override void Execute()
+        protected override bool InnerExecute()
         {
-            if (!HasExecuted)
-            {
-                BreakWithParent(_oldParent, _questToBind);
-                ConnectWithParent(_newParent, _questToBind);
-                Repository.Update(_questToBind);
-                HasExecuted = true;
-            }
+            BreakWithParent(_oldParent, _questToBind);
+            ConnectWithParent(_newParent, _questToBind);
+            Repository.Update(_questToBind);
+            return true;
         }
 
         ///<inheritdoc/>
-        public override void Undo()
+        protected override bool InnerUndo()
         {
-            if (HasExecuted)
-            {
-                BreakWithParent(_newParent, _questToBind);
-                ConnectWithParent(_oldParent, _questToBind);
-                Repository.RevertUpdate(_questToBind);
-                HasExecuted = false;
-            }
+            BreakWithParent(_newParent, _questToBind);
+            ConnectWithParent(_oldParent, _questToBind);
+            Repository.RevertUpdate(_questToBind);
+            return true;
         }
 
         #endregion

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.ModelLayer.Commands;
+using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -28,15 +29,17 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
             Stack<int> stack = new Stack<int>();
 
             Command firstOne = MockRepository.GenerateStrictMock<Command>();
-            firstOne.Expect(c => c.Execute()).Repeat.Once().Do(new Action((() =>
+            firstOne.Expect(c => c.Execute()).Repeat.Once().Do(new Func<bool>((() =>
             {
                 stack.Push(1);
+                return true;
             })));
 
             Command secondOne = MockRepository.GenerateStrictMock<Command>();
-            secondOne.Expect(c => c.Execute()).Repeat.Once().Do(new Action((() =>
+            secondOne.Expect(c => c.Execute()).Repeat.Once().Do(new Func<bool>((() =>
             {
                 stack.Push(2);
+                return true;
             })));
 
             Command composite = new CompositeCommand(new []{firstOne, secondOne});
@@ -59,15 +62,17 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
             Stack<int> stack = new Stack<int>();
 
             Command firstOne = MockRepository.GenerateStrictMock<Command>();
-            firstOne.Expect(c => c.Undo()).Repeat.Once().Do(new Action((() =>
+            firstOne.Expect(c => c.Undo()).Repeat.Once().Return(true).Do(new Func<bool>((() =>
             {
                 stack.Push(1);
+                return true;
             })));
 
             Command secondOne = MockRepository.GenerateStrictMock<Command>();
-            secondOne.Expect(c => c.Undo()).Repeat.Once().Do(new Action((() =>
+            secondOne.Expect(c => c.Undo()).Repeat.Once().Return(true).Do(new Func<bool>((() =>
             {
                 stack.Push(2);
+                return true;
             })));
 
             Command composite = new CompositeCommand(new[] { firstOne, secondOne });
@@ -110,7 +115,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
         public void ValidFalseTest()
         {
             //Arrange
-
             Command firstOne = MockRepository.GenerateStrictMock<Command>();
             firstOne.Expect(c => c.IsValid()).Repeat.Once().Return(true);
 
@@ -127,6 +131,35 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
 
             firstOne.VerifyAllExpectations();
             secondOne.VerifyAllExpectations();
+        }
+
+        [TestCase(new[] { true, true, true, false})]
+        [TestCase(new[] { true, true, false, false})]
+        [TestCase(new[] { true, false, false, false})]
+        [TestCase(new[] { false, false, false, false})]
+        public void IfOneOrMoreExecutesWithFalseResultFalseTest(bool[] executeResults)
+        {
+            //Arrange
+            int count = executeResults.Length;
+            Command[] commands = new Command[count];
+            for (int i = 0; i < count; ++i)
+            {
+                commands[i] = MockRepository.GenerateStrictMock<Command>();
+                commands[i].Expect(cm => cm.Execute()).Return(executeResults[i]).Repeat.Once();
+            }
+
+            Command composite = new CompositeCommand(commands);
+
+            //Act
+            bool result = composite.Execute();
+
+            //Assert
+            Assert.IsFalse(result);
+
+            foreach (Command command in commands)
+            {
+                command.VerifyAllExpectations();
+            }
         }
     }
 }

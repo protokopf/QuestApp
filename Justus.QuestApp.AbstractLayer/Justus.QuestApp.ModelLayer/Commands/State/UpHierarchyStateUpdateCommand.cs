@@ -29,23 +29,17 @@ namespace Justus.QuestApp.ModelLayer.Commands.State
         #region BaseStateUpdateCommand overriding
 
         ///<inheritdoc/>
-        public override void Execute()
-        {
-            if (!HasExecuted)
-            {
-                AssignStateAllParentHierarchyIfSiblingsHasSameState(QuestRef, _state);
-                HasExecuted = true;
-            }
+        protected override bool InnerExecute()
+        {           
+            AssignStateAllParentHierarchyIfSiblingsHasSameState(QuestRef, _state);
+            return true;
         }
 
         ///<inheritdoc/>
-        public override void Undo()
+        protected override bool InnerUndo()
         {
-            if (HasExecuted)
-            {
-                RevertChanges();
-                HasExecuted = false;
-            }
+            RevertChanges();
+            return true;
         }
 
 

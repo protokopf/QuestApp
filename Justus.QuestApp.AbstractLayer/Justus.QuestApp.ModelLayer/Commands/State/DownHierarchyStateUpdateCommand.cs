@@ -22,29 +22,23 @@ namespace Justus.QuestApp.ModelLayer.Commands.State
         #region Command overriding
 
         ///<inehritdoc/>
-        public override void Execute()
+        protected override bool InnerExecute()
         {
-            if (!HasExecuted)
+            _statesDictionary.Add(QuestRef, QuestRef.CurrentState);
+            QuestRef.CurrentState = _state;
+            Repository.Update(QuestRef);
+            if (QuestRef.Children != null)
             {
-                _statesDictionary.Add(QuestRef, QuestRef.CurrentState);
-                QuestRef.CurrentState = _state;
-                Repository.Update(QuestRef);
-                if (QuestRef.Children != null)
-                {
-                    AssignStateDownToHierarchy(QuestRef.Children, _state);
-                }
-                HasExecuted = true;
+                AssignStateDownToHierarchy(QuestRef.Children, _state);
             }
+            return true;
         }
 
         ///<inheritdoc/>
-        public override void Undo()
+        protected override bool InnerUndo()
         {
-            if(HasExecuted)
-            {
-                RevertChanges();
-                HasExecuted = false;
-            }
+            RevertChanges();
+            return true;
         }
         #endregion
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Commands;
 
-namespace Justus.QuestApp.ModelLayer.Commands
+namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
 {
     /// <summary>
     /// Command, which executes another commands.
@@ -26,23 +26,39 @@ namespace Justus.QuestApp.ModelLayer.Commands
         #region Command overriding
 
         ///<inheritdoc/>
-        public override void Execute()
+        public override bool Execute()
         {
             int length = _commands.Length;
+
+            bool result = true;
+
             for (int i = 0; i < length; ++i)
             {
-                _commands[i].Execute();
+                if (!_commands[i].Execute())
+                {
+                    result = false;
+                };
             }
+
+            return result;
         }
 
         ///<inheritdoc/>
-        public override void Undo()
+        public override bool Undo()
         {
             int length = _commands.Length;
+
+            bool result = true;
+
             for (int i = length - 1; i >= 0; --i)
             {
-                _commands[i].Undo();
+                if (!_commands[i].Undo())
+                {
+                    result = false;
+                }
             }
+
+            return result;
         }
 
         ///<inheritdoc/>

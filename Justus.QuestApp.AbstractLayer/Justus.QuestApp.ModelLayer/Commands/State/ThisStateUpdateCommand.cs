@@ -26,26 +26,20 @@ namespace Justus.QuestApp.ModelLayer.Commands.State
         #region Command overriding
 
         ///<inheritdoc/>
-        public override void Execute()
+        protected override bool InnerExecute()
         {
-            if (!HasExecuted)
-            {
-                _previousState = QuestRef.CurrentState;
-                QuestRef.CurrentState = _state;
-                Repository.Update(QuestRef);
-                HasExecuted = true;
-            }
+            _previousState = QuestRef.CurrentState;
+            QuestRef.CurrentState = _state;
+            Repository.Update(QuestRef);
+            return true;
         }
 
         ///<inheritdoc/>
-        public override void Undo()
+        protected override bool InnerUndo()
         {
-            if (HasExecuted)
-            {
-                QuestRef.CurrentState = _previousState;
-                Repository.RevertUpdate(QuestRef);
-                HasExecuted = false;
-            }
+            QuestRef.CurrentState = _previousState;
+            Repository.RevertUpdate(QuestRef);
+            return true;
         } 
 
         #endregion

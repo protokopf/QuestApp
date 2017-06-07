@@ -40,8 +40,8 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.ManagementTest
         {
             //Arrange
             Command first = MockRepository.GenerateStrictMock<Command>();
-            first.Expect(c => c.Execute()).Repeat.Once();
-            first.Expect(c => c.Undo()).Repeat.Once();
+            first.Expect(c => c.Execute()).Repeat.Once().Return(true);
+            first.Expect(c => c.Undo()).Repeat.Once().Return(true);
             first.Expect(c => c.IsValid()).Return(true).Repeat.Once();
 
             Command second = MockRepository.GenerateStrictMock<Command>();
@@ -93,11 +93,11 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.ManagementTest
             first.Expect(c => c.IsValid()).Return(true).Repeat.Never();
 
             Command second = MockRepository.GenerateStrictMock<Command>();
-            second.Expect(c => c.Execute()).Repeat.Once();
+            second.Expect(c => c.Execute()).Repeat.Once().Return(true);
             second.Expect(c => c.IsValid()).Return(true).Repeat.Once();
 
             Command third = MockRepository.GenerateStrictMock<Command>();
-            third.Expect(c => c.Execute()).Repeat.Once();
+            third.Expect(c => c.Execute()).Repeat.Once().Return(true);
             third.Expect(c => c.IsValid()).Return(true).Repeat.Once();
 
             ICommandManager manager = new CommandCyclingManager(2);
@@ -122,15 +122,15 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.ManagementTest
         {
             //Arrange
             Command first = MockRepository.GenerateStrictMock<Command>();
-            first.Expect(c => c.Execute()).Repeat.Once();
+            first.Expect(c => c.Execute()).Repeat.Once().Return(true);
             first.Expect(c => c.IsValid()).Return(true).Repeat.Once();
 
             Command second = MockRepository.GenerateStrictMock<Command>();
-            second.Expect(c => c.Execute()).Repeat.Once();
+            second.Expect(c => c.Execute()).Repeat.Once().Return(true);
             second.Expect(c => c.IsValid()).Return(true).Repeat.Once();
 
             Command third = MockRepository.GenerateStrictMock<Command>();
-            third.Expect(c => c.Execute()).Repeat.Once();
+            third.Expect(c => c.Execute()).Repeat.Once().Return(true);
             third.Expect(c => c.IsValid()).Return(true).Repeat.Once();
 
             ICommandManager manager = new CommandCyclingManager(3);
@@ -156,13 +156,13 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.ManagementTest
         {
             //Arrange
             Command first = MockRepository.GenerateStrictMock<Command>();
-            first.Expect(c => c.Execute()).Repeat.Once();
-            first.Expect(c => c.Undo()).Repeat.Once();
+            first.Expect(c => c.Execute()).Repeat.Once().Return(true);
+            first.Expect(c => c.Undo()).Repeat.Once().Return(true);
             first.Expect(c => c.IsValid()).Return(true).Repeat.Once();
 
             Command second = MockRepository.GenerateStrictMock<Command>();
-            second.Expect(c => c.Execute()).Repeat.Once();
-            second.Expect(c => c.Undo()).Repeat.Once();
+            second.Expect(c => c.Execute()).Repeat.Once().Return(true);
+            second.Expect(c => c.Undo()).Repeat.Once().Return(true);
             second.Expect(c => c.IsValid()).Return(true).Repeat.Once();
 
             Command third = MockRepository.GenerateStrictMock<Command>();
@@ -193,11 +193,11 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.ManagementTest
         {
             //Arrange
             Command first = MockRepository.GenerateStrictMock<Command>();
-            first.Expect(c => c.Execute()).Repeat.Once();
+            first.Expect(c => c.Execute()).Repeat.Once().Return(true);
             first.Expect(c => c.IsValid()).Return(true).Repeat.Once();
 
             Command second = MockRepository.GenerateStrictMock<Command>();
-            second.Expect(c => c.Execute()).Repeat.Once();
+            second.Expect(c => c.Execute()).Repeat.Once().Return(true);
             second.Expect(c => c.IsValid()).Return(true).Repeat.Once();
 
 

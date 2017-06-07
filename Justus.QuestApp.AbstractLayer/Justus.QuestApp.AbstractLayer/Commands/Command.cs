@@ -8,12 +8,12 @@
         /// <summary>
         /// Executes command.
         /// </summary>
-        public abstract void Execute();
+        public abstract bool Execute();
 
         /// <summary>
         /// Reverts command influence.
         /// </summary>
-        public abstract void Undo();
+        public abstract bool Undo();
 
         /// <summary>
         /// Check, whether command is valid or not.

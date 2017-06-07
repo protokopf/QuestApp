@@ -38,7 +38,9 @@
     <Folder Include="Entities\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CompositeCommand.cs" />
+    <Compile Include="Commands\Abstracts\SwitchCommand.cs" />
+    <Compile Include="Commands\Factories\Wrappers\RecountProgressRepositoryCommandsFactory.cs" />
+    <Compile Include="Commands\Wrappers\CompositeCommand.cs" />
     <Compile Include="Commands\Factories\DefaultRepositoryCommandsFactory.cs" />
     <Compile Include="Commands\Factories\DefaultStateCommandsFactory.cs" />
     <Compile Include="Commands\Management\CommandCyclingManager.cs" />
@@ -51,10 +53,12 @@
     <Compile Include="Commands\Repository\RebindQuestCommand.cs" />
     <Compile Include="Commands\Abstracts\AbstractRepositoryCommand.cs" />
     <Compile Include="Commands\Repository\UpdateQuestCommand.cs" />
+    <Compile Include="Commands\Wrappers\RecountQuestProgressCommandWrapper.cs" />
     <Compile Include="Factories\SqliteQuestCreator.cs" />
     <Compile Include="Helpers\DefaultDataKeeper.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\AutoStartTaskWrapper.cs" />
+    <Compile Include="Model\AllUpperQuestProgressRecounter.cs" />
     <Compile Include="Model\QuestTimeLeftCounter.cs" />
     <Compile Include="Model\RecursiveQuestActionManager.cs" />
     <Compile Include="Model\RecursiveQuestProgressCounter.cs" />

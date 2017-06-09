@@ -16,19 +16,12 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// </summary>
     public class ActiveQuestListViewModel : QuestListViewModel
     {
-        private readonly IQuestProgressCounter _progressCounter;
-
         public ActiveQuestListViewModel(IQuestRepository repository,
             IStateCommandsFactory stateCommandsFactory,
-            IRepositoryCommandsFactory repositoryCommandsFactory,
-            IQuestProgressCounter questProgressCounter) : 
+            IRepositoryCommandsFactory repositoryCommandsFactory) : 
             base(repository, stateCommandsFactory,repositoryCommandsFactory)
         {
-            if (questProgressCounter == null)
-            {
-                throw new ArgumentNullException(nameof(questProgressCounter));
-            }
-            _progressCounter = questProgressCounter;
+
         }
 
         #region QuestListViewModel overriding
@@ -62,9 +55,9 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         public int CountProgress(Quest quest)
         {
             quest.ThrowIfNull(nameof(quest));
-            ProgressValue value = _progressCounter.CountProgress(quest);
-            int result = (int)(value.Current / (double)value.Total * 100);
-            return result;
+            double progress = quest.Progress;
+            int result = (int) Math.Floor(progress * 100);
+            return result > 100 ? 100 : result;
         }
 
         /// <summary>

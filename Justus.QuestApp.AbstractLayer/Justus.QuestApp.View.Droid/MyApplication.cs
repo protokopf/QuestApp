@@ -13,6 +13,7 @@ using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
+using Justus.QuestApp.ModelLayer.Commands.Factories.Wrappers;
 using Justus.QuestApp.ModelLayer.Factories;
 using Justus.QuestApp.ModelLayer.Model;
 using Justus.QuestApp.ModelLayer.Validators.QuestItself;
@@ -43,26 +44,50 @@ namespace Justus.QuestApp.View.Droid
         public override void OnCreate()
         {
             base.OnCreate();
+            InitializeDataLayerServices();
             InitializeModelServices();
             InitializeViewModelServices();
             InitializeApplicationServices();
         }
 
+        private void InitializeDataLayerServices()
+        {
+            //Quest data access layer.
+            ServiceLocator.Register(() => new StubQuestRepositoryService(12, 1, 3));
+        }
+
         private void InitializeModelServices()
         {
-            ServiceLocator.Register(() => new StubQuestRepositoryService(12, 1, 3));
+            //Quest repository. Model layer.
             ServiceLocator.Register(() => new RecursiveQuestRepository(
                 ServiceLocator.Resolve<IDataAccessInterface<Quest>>(),
                 "some connection string"
                 ));
-            ServiceLocator.Register(() => new SqliteQuestCreator());
-            //ServiceLocator.Register<IQuestRepository>(() => new RecursiveQuestRepository(
-            //    new RestDataStorage(), "http://192.168.0.104/api/Quests"));
-            ServiceLocator.Register(() => new RecursiveQuestProgressCounter());
-            ServiceLocator.Register(() => new DefaultStateCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
-            ServiceLocator.Register(() => new DefaultRepositoryCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
-            InitializeQuestValidators();
 
+            //Quest progress recounter.
+            ServiceLocator.Register(() => 
+                new AllUpperQuestProgressRecounter(
+                    ServiceLocator.Resolve<IQuestRepository>()));
+
+            //Quests factory.
+            ServiceLocator.Register(() => 
+                new SqliteQuestCreator());
+
+            //Quest state commands factory. Used to produce commands for changing quest state.
+            ServiceLocator.Register(() => 
+                new RecountProgressStateCommandsFactory(
+                    new DefaultStateCommandsFactory(
+                        ServiceLocator.Resolve<IQuestRepository>()), 
+                    ServiceLocator.Resolve<IQuestProgressRecounter>()));
+
+            //Quest repository commands factory. Used to produce commands for changing quest trees.
+            ServiceLocator.Register(() =>
+                new RecountProgressRepositoryCommandsFactory(
+                    new DefaultRepositoryCommandsFactory(
+                        ServiceLocator.Resolve<IQuestRepository>()),
+                    ServiceLocator.Resolve<IQuestProgressRecounter>()));
+
+            InitializeQuestValidators();
         }
 
         private void InitializeViewModelServices()
@@ -70,8 +95,7 @@ namespace Justus.QuestApp.View.Droid
             ServiceLocator.Register(() => new ActiveQuestListViewModel(
                 ServiceLocator.Resolve<IQuestRepository>(),
                 ServiceLocator.Resolve<IStateCommandsFactory>(),
-                ServiceLocator.Resolve<IRepositoryCommandsFactory>(),
-                ServiceLocator.Resolve<IQuestProgressCounter>()
+                ServiceLocator.Resolve<IRepositoryCommandsFactory>()
                 ));
 
             ServiceLocator.Register(() => new ResultsQuestListViewModel(

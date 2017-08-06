@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.AbstractLayer.Validators;
@@ -22,7 +21,7 @@ namespace Justus.QuestApp.ModelLayer.Validators.Actions
                 throw new ArgumentNullException(nameof(quest));
             }
             StringResponse result = new StringResponse();
-            if (quest.CurrentState != QuestState.Progress)
+            if (quest.State != State.Progress)
             {
                 result.Errors.Add("ERR_QUEST_ACT_WRONG_STATE");
                 return result;
@@ -41,7 +40,7 @@ namespace Justus.QuestApp.ModelLayer.Validators.Actions
             int length = children.Count;
             for (int i = 0; i < length; ++i)
             {
-                if (children[i].CurrentState != QuestState.Done)
+                if (children[i].State != State.Done)
                 {
                     return false;
                 }

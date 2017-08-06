@@ -1,11 +1,6 @@
 ﻿using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.ModelLayer.Commands.Wrappers;
@@ -37,25 +32,25 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories.Wrappers
         #region IStateCommandsFactory implementation
 
         ///<inheritdoc cref="IStateCommandsFactory"/>
-        public Command CancelQuest(Quest quest)
+        public ICommand CancelQuest(Quest quest)
         {
             return new RecountQuestProgressCommandWrapper(_innerFactory.CancelQuest(quest), quest, _progressRecounter);
         }
 
         ///<inheritdoc cref="IStateCommandsFactory"/>
-        public Command DoneQuest(Quest quest)
+        public ICommand DoneQuest(Quest quest)
         {
             return new RecountQuestProgressCommandWrapper(_innerFactory.DoneQuest(quest), quest, _progressRecounter);
         }
 
         ///<inheritdoc cref="IStateCommandsFactory"/>
-        public Command FailQuest(Quest quest)
+        public ICommand FailQuest(Quest quest)
         {
             return new RecountQuestProgressCommandWrapper(_innerFactory.FailQuest(quest), quest, _progressRecounter);
         }
 
         ///<inheritdoc cref="IStateCommandsFactory"/>
-        public Command StartQuest(Quest quest)
+        public ICommand StartQuest(Quest quest)
         {
             return new RecountQuestProgressCommandWrapper(_innerFactory.StartQuest(quest), quest, _progressRecounter);
         }

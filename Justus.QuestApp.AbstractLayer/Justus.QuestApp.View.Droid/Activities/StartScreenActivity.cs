@@ -1,17 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Support.V7.App;
-using Android.Views;
-using Android.Widget;
-using Justus.QuestApp.AbstractLayer.Helpers;
+using Justus.QuestApp.AbstractLayer.Helpers.Behaviours;
 using Justus.QuestApp.ModelLayer.Helpers;
 
 namespace Justus.QuestApp.View.Droid.Activities
@@ -57,7 +49,10 @@ namespace Justus.QuestApp.View.Droid.Activities
             IEnumerable<IInitializable> implementations = ServiceLocator.ResolveAll<IInitializable>();
             foreach (IInitializable toInit in implementations)
             {
-                toInit.Initialize();
+                if (!toInit.IsInitialized())
+                {
+                    toInit.Initialize();
+                }       
             }
         }
 

@@ -6,11 +6,6 @@ using Justus.QuestApp.ModelLayer.Commands.Factories.Wrappers;
 using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 using NUnit.Framework;
 using Rhino.Mocks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappers
 {
@@ -21,19 +16,20 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
         public void AddQuestMethodTest()
         {
             //Arrange
+            Quest parent = new Quest();
             Quest quest = new Quest();
-            Command innerAddCommand = MockRepository.GeneratePartialMock<Command>();
+            ICommand innerAddCommand = MockRepository.GenerateStrictMock<ICommand>();
 
-            IRepositoryCommandsFactory innerFactory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
-            innerFactory.Expect(inf => inf.AddQuest(Arg<Quest>.Is.Equal(quest))).Repeat.Once().Return(innerAddCommand);
+            ITreeCommandsFactory innerFactory = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
+            innerFactory.Expect(inf => inf.AddQuest(Arg<Quest>.Is.Equal(parent), Arg<Quest>.Is.Equal(quest))).Repeat.Once().Return(innerAddCommand);
 
             IQuestProgressRecounter recounter = MockRepository.GenerateStrictMock<IQuestProgressRecounter>();
 
 
-            RecountProgressRepositoryCommandsFactory factory = new RecountProgressRepositoryCommandsFactory(innerFactory, recounter);
+            RecountProgressTreeCommandsFactory factory = new RecountProgressTreeCommandsFactory(innerFactory, recounter);
 
             //Act
-            Command addCommand = factory.AddQuest(quest);
+            ICommand addCommand = factory.AddQuest(parent, quest);
 
             //Assert
             Assert.IsNotNull(addCommand);
@@ -50,18 +46,19 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
         {
             //Arrange
             Quest quest = new Quest();
-            Command innerDeleteCommand = MockRepository.GeneratePartialMock<Command>();
+            Quest parent = new Quest();
+            ICommand innerDeleteCommand = MockRepository.GenerateStrictMock<ICommand>();
 
-            IRepositoryCommandsFactory innerFactory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
-            innerFactory.Expect(inf => inf.DeleteQuest(Arg<Quest>.Is.Equal(quest))).Repeat.Once().Return(innerDeleteCommand);
+            ITreeCommandsFactory innerFactory = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
+            innerFactory.Expect(inf => inf.DeleteQuest(Arg<Quest>.Is.Equal(parent), Arg<Quest>.Is.Equal(quest))).Repeat.Once().Return(innerDeleteCommand);
 
             IQuestProgressRecounter recounter = MockRepository.GenerateStrictMock<IQuestProgressRecounter>();
 
 
-            RecountProgressRepositoryCommandsFactory factory = new RecountProgressRepositoryCommandsFactory(innerFactory, recounter);
+            RecountProgressTreeCommandsFactory factory = new RecountProgressTreeCommandsFactory(innerFactory, recounter);
 
             //Act
-            Command deleteCommand = factory.DeleteQuest(quest);
+            ICommand deleteCommand = factory.DeleteQuest(parent, quest);
 
             //Assert
             Assert.IsNotNull(deleteCommand);
@@ -78,18 +75,18 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
         {
             //Arrange
             Quest quest = new Quest();
-            Command innerUpdateCommand = MockRepository.GeneratePartialMock<Command>();
+            ICommand innerUpdateCommand = MockRepository.GenerateStrictMock<ICommand>();
 
-            IRepositoryCommandsFactory innerFactory = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
+            ITreeCommandsFactory innerFactory = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
             innerFactory.Expect(inf => inf.UpdateQuest(Arg<Quest>.Is.Equal(quest))).Repeat.Once().Return(innerUpdateCommand);
 
             IQuestProgressRecounter recounter = MockRepository.GenerateStrictMock<IQuestProgressRecounter>();
 
 
-            RecountProgressRepositoryCommandsFactory factory = new RecountProgressRepositoryCommandsFactory(innerFactory, recounter);
+            RecountProgressTreeCommandsFactory factory = new RecountProgressTreeCommandsFactory(innerFactory, recounter);
 
             //Act
-            Command updateCommand = factory.UpdateQuest(quest);
+            ICommand updateCommand = factory.UpdateQuest(quest);
 
             //Assert
             Assert.IsNotNull(updateCommand);

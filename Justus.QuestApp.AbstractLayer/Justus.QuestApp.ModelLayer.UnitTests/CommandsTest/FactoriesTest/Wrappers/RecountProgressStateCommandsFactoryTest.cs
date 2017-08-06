@@ -6,11 +6,6 @@ using Justus.QuestApp.ModelLayer.Commands.Factories.Wrappers;
 using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 using NUnit.Framework;
 using Rhino.Mocks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappers
 {
@@ -22,7 +17,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
         {
             //Arrange
             Quest quest = new Quest();
-            Command innerDoneCommand = MockRepository.GeneratePartialMock<Command>();
+            ICommand innerDoneCommand = MockRepository.GenerateStrictMock<ICommand>();
 
             IStateCommandsFactory innerFactory = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
             innerFactory.Expect(inf => inf.DoneQuest(Arg<Quest>.Is.Equal(quest))).Repeat.Once().Return(innerDoneCommand);
@@ -32,7 +27,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
             RecountProgressStateCommandsFactory factory = new RecountProgressStateCommandsFactory(innerFactory, recounter);
 
             //Act
-            Command doneCommand = factory.DoneQuest(quest);
+            ICommand doneCommand = factory.DoneQuest(quest);
 
             //Assert
             Assert.IsNotNull(doneCommand);
@@ -49,7 +44,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
         {
             //Arrange
             Quest quest = new Quest();
-            Command innerCancelCommand = MockRepository.GeneratePartialMock<Command>();
+            ICommand innerCancelCommand = MockRepository.GenerateStrictMock<ICommand>();
 
             IStateCommandsFactory innerFactory = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
             innerFactory.Expect(inf => inf.CancelQuest(Arg<Quest>.Is.Equal(quest))).Repeat.Once().Return(innerCancelCommand);
@@ -59,7 +54,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
             RecountProgressStateCommandsFactory factory = new RecountProgressStateCommandsFactory(innerFactory, recounter);
 
             //Act
-            Command cancelCommand = factory.CancelQuest(quest);
+            ICommand cancelCommand = factory.CancelQuest(quest);
 
             //Assert
             Assert.IsNotNull(cancelCommand);
@@ -76,7 +71,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
         {
             //Arrange
             Quest quest = new Quest();
-            Command innerFailCommand = MockRepository.GeneratePartialMock<Command>();
+            ICommand innerFailCommand = MockRepository.GenerateStrictMock<ICommand>();
 
             IStateCommandsFactory innerFactory = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
             innerFactory.Expect(inf => inf.FailQuest(Arg<Quest>.Is.Equal(quest))).Repeat.Once().Return(innerFailCommand);
@@ -86,7 +81,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
             RecountProgressStateCommandsFactory factory = new RecountProgressStateCommandsFactory(innerFactory, recounter);
 
             //Act
-            Command failCommand = factory.FailQuest(quest);
+            ICommand failCommand = factory.FailQuest(quest);
 
             //Assert
             Assert.IsNotNull(failCommand);
@@ -103,7 +98,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
         {
             //Arrange
             Quest quest = new Quest();
-            Command innerStartCommand = MockRepository.GeneratePartialMock<Command>();
+            ICommand innerStartCommand = MockRepository.GenerateStrictMock<ICommand>();
 
             IStateCommandsFactory innerFactory = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
             innerFactory.Expect(inf => inf.StartQuest(Arg<Quest>.Is.Equal(quest))).Repeat.Once().Return(innerStartCommand);
@@ -113,7 +108,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest.Wrappe
             RecountProgressStateCommandsFactory factory = new RecountProgressStateCommandsFactory(innerFactory, recounter);
 
             //Act
-            Command startCommand = factory.StartQuest(quest);
+            ICommand startCommand = factory.StartQuest(quest);
 
             //Assert
             Assert.IsNotNull(startCommand);

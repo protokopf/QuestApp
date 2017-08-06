@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Justus.QuestApp.AbstractLayer.Commands;
+﻿using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Model;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
 {
-    public class RecountQuestProgressCommandWrapper : Command
+    public class RecountQuestProgressCommandWrapper : ICommand
     {
-        private readonly Command _innerCommand;
+        private readonly ICommand _innerCommand;
         private readonly Quest _target;
         private readonly IQuestProgressRecounter _recountStrategy;
 
@@ -22,7 +17,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
         /// <param name="innerCommand"></param>
         /// <param name="target"></param>
         /// <param name="recountStrategy"></param>
-        public RecountQuestProgressCommandWrapper(Command innerCommand, Quest target, IQuestProgressRecounter recountStrategy)
+        public RecountQuestProgressCommandWrapper(ICommand innerCommand, Quest target, IQuestProgressRecounter recountStrategy)
         {
             innerCommand.ThrowIfNull(nameof(innerCommand));
             target.ThrowIfNull(nameof(target));
@@ -33,10 +28,10 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
             _recountStrategy = recountStrategy;
         }
 
-        #region Command implementation
+        #region ICommand implementation
 
-        ///<inheritdoc cref="Command"/>
-        public override bool Execute()
+        ///<inheritdoc cref="ICommand"/>
+        public bool Execute()
         {
             if (_innerCommand.Execute())
             {
@@ -46,8 +41,8 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
             return false;
         }
 
-        ///<inheritdoc cref="Command"/>
-        public override bool Undo()
+        ///<inheritdoc cref="ICommand"/>
+        public bool Undo()
         {
             if (_innerCommand.Undo())
             {
@@ -55,6 +50,18 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
                 return true;
             }
             return false;
+        }
+
+        ///<inheritdoc cref="ICommand"/>
+        public bool IsValid()
+        {
+            return _innerCommand.IsValid();
+        }
+
+        ///<inheritdoc cref="ICommand"/>
+        public bool Commit()
+        {
+            return _innerCommand.Commit();
         }
 
         #endregion

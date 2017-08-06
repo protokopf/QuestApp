@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
+using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -22,7 +19,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
         {
             //Arrange && Act
             ArgumentNullException ex =
-                Assert.Throws<ArgumentNullException>(() => new DefaultRepositoryCommandsFactory(null));
+                Assert.Throws<ArgumentNullException>(() => new DefaultTreeCommandsFactory(null));
 
             //Assert
             Assert.IsNotNull(ex);
@@ -33,53 +30,55 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
         public void AddCommandTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(rep => rep.Get(null)).IgnoreArguments().Repeat.Once().Return(null);
+            Quest quest = new FakeQuest();
+            Quest parent = new FakeQuest();
 
-            IRepositoryCommandsFactory factory = new DefaultRepositoryCommandsFactory(repository);
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
 
-            Quest quest = MockRepository.GeneratePartialMock<Quest>();
+            ITreeCommandsFactory factory = new DefaultTreeCommandsFactory(repository);
 
             //Act
-            Command addCommand = factory.AddQuest(quest);
+            ICommand addCommand = factory.AddQuest(parent, quest);
 
             //Assert
             Assert.IsNotNull(addCommand);
-            Assert.AreEqual(typeof(AddQuestCommand),addCommand.GetType());
+            Assert.IsTrue(addCommand is AddQuestCommand);
         }
 
         [Test]
         public void UpdateCommandTest()
         {
             //Arrange
-            IRepositoryCommandsFactory factory = new DefaultRepositoryCommandsFactory(
-                MockRepository.GenerateStrictMock<IQuestRepository>());
+            ITreeCommandsFactory factory = new DefaultTreeCommandsFactory(
+                MockRepository.GenerateStrictMock<IQuestTree>());
 
-            Quest quest = MockRepository.GeneratePartialMock<Quest>();
+            Quest quest = new FakeQuest();
 
             //Act
-            Command addCommand = factory.UpdateQuest(quest);
+            ICommand addCommand = factory.UpdateQuest(quest);
 
             //Assert
             Assert.IsNotNull(addCommand);
-            Assert.AreEqual(typeof(UpdateQuestCommand), addCommand.GetType());
+            Assert.IsTrue(addCommand is UpdateQuestCommand);
         }
 
         [Test]
         public void DeleteCommandTest()
         {
             //Arrange
-            IRepositoryCommandsFactory factory = new DefaultRepositoryCommandsFactory(
-                MockRepository.GenerateStrictMock<IQuestRepository>());
+            Quest quest = new FakeQuest();
+            Quest parent = new FakeQuest();
 
-            Quest quest = MockRepository.GeneratePartialMock<Quest>();
+            ITreeCommandsFactory factory = new DefaultTreeCommandsFactory(
+                MockRepository.GenerateStrictMock<IQuestTree>());
+
 
             //Act
-            Command addCommand = factory.DeleteQuest(quest);
+            ICommand addCommand = factory.DeleteQuest(parent, quest);
 
             //Assert
             Assert.IsNotNull(addCommand);
-            Assert.AreEqual(typeof(DeleteQuestCommand), addCommand.GetType());
+            Assert.IsTrue(addCommand is DeleteQuestCommand);
         }
     }
 }

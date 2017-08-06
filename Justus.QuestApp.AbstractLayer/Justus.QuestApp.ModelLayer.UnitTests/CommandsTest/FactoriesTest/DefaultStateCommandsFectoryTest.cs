@@ -2,7 +2,7 @@
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using NUnit.Framework;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
 using Justus.QuestApp.ModelLayer.Commands.State;
@@ -21,14 +21,14 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
 
             //Assert
             Assert.IsNotNull(ex);
-            Assert.AreEqual("repository", ex.ParamName);
+            Assert.AreEqual("questTree", ex.ParamName);
         }
 
         [Test]
         public void DoneFailTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
 
             IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
@@ -44,7 +44,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
         public void FailFailTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
 
             IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
@@ -60,7 +60,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
         public void StartFailTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
 
             IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
@@ -76,7 +76,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
         public void CancelFailTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
 
             IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
@@ -92,64 +92,64 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
         public void DoneQuestCommandTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
             Quest quest = MockRepository.GeneratePartialMock<Quest>();
 
             IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
-            Command command = factory.DoneQuest(quest);
+            ICommand command = factory.DoneQuest(quest);
 
             //Assert
-            Assert.IsTrue(command is UpHierarchyStateUpdateCommand);
+            Assert.IsTrue(command is UpHierarchyQuestCommand);
         }
 
         [Test]
         public void FailQuestCommandTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
             Quest quest = MockRepository.GeneratePartialMock<Quest>();
 
             IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
-            Command command = factory.FailQuest(quest);
+            ICommand command = factory.FailQuest(quest);
 
             //Assert
-            Assert.IsTrue(command is UpHierarchyStateUpdateCommand);
+            Assert.IsTrue(command is UpHierarchyQuestCommand);
         }
 
         [Test]
         public void CancelQuestCommandTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
             Quest quest = MockRepository.GeneratePartialMock<Quest>();
 
             IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
-            Command command = factory.CancelQuest(quest);
+            ICommand command = factory.CancelQuest(quest);
 
             //Assert
-            Assert.IsTrue(command is DownHierarchyStateUpdateCommand);
+            Assert.IsTrue(command is DownHierarchyQuestCommand);
         }
 
         [Test]
         public void StartQuestCommandTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
             Quest quest = MockRepository.GeneratePartialMock<Quest>();
 
             IStateCommandsFactory factory = new DefaultStateCommandsFactory(repository);
 
             //Act
-            Command command = factory.StartQuest(quest);
+            ICommand command = factory.StartQuest(quest);
 
             //Assert
-            Assert.IsTrue(command is ThisStateUpdateCommand);
+            Assert.IsTrue(command is ThisQuestCommand);
         }
     }
 }

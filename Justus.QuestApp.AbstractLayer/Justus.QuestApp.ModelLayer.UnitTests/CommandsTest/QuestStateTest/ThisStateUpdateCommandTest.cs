@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.State;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
+namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.StateTest
 {
     [TestFixture]
     class ThisStateUpdateCommandTest
@@ -16,44 +16,46 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         public void ExecuteSuccessfulTest()
         {
             //Arrange
-            Quest quest = QuestHelper.CreateQuest(QuestState.Progress);
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(r => r.Update(null)).IgnoreArguments().Repeat.Once();
+            Quest quest = QuestHelper.CreateQuest(State.Progress);
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.Equal(quest))).
+                Repeat.Once();
 
 
-            Command command = new ThisStateUpdateCommand(quest, QuestState.Failed, repository);
+            ICommand command = new ThisQuestCommand(quest, State.Failed, repository);
 
             //Act
             command.Execute();
 
             //Assert
-            Assert.AreEqual(QuestState.Failed, quest.CurrentState);
+            Assert.AreEqual(State.Failed, quest.State);
 
             repository.VerifyAllExpectations();
         }
 
         [Test]
-        public void ExecuteChangeOnlyThisQuestStateTest()
+        public void ExecuteChangeOnlyThisStateTest()
         {
-            Quest quest = QuestHelper.CreateQuest(QuestState.Progress);
-            quest.Parent = QuestHelper.CreateQuest(QuestState.Progress);
+            Quest quest = QuestHelper.CreateQuest(State.Progress);
+            quest.Parent = QuestHelper.CreateQuest(State.Progress);
             quest.Children = new List<Quest>
             {
-                QuestHelper.CreateQuest(QuestState.Progress)
+                QuestHelper.CreateQuest(State.Progress)
             };
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(r => r.Update(null)).IgnoreArguments().Repeat.Once();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.Equal(quest))).
+                Repeat.Once();
 
 
-            Command command = new ThisStateUpdateCommand(quest, QuestState.Failed, repository);
+            ICommand command = new ThisQuestCommand(quest, State.Failed, repository);
 
             //Act
             command.Execute();
 
             //Assert
-            Assert.AreEqual(QuestState.Failed, quest.CurrentState);
-            Assert.AreEqual(QuestState.Progress, quest.Parent.CurrentState);
-            Assert.AreEqual(QuestState.Progress, quest.Children[0].CurrentState);
+            Assert.AreEqual(State.Failed, quest.State);
+            Assert.AreEqual(State.Progress, quest.Parent.State);
+            Assert.AreEqual(State.Progress, quest.Children[0].State);
 
             repository.VerifyAllExpectations();
         }
@@ -62,20 +64,21 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         public void UndoSuccessfulTest()
         {
             //Arrange
-            Quest quest = QuestHelper.CreateQuest(QuestState.Progress);
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(r => r.Update(null)).IgnoreArguments().Repeat.Once();
-            repository.Expect(r => r.RevertUpdate(null)).IgnoreArguments().Return(true).Repeat.Once();
+            Quest quest = QuestHelper.CreateQuest(State.Progress);
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.Equal(quest))).
+                Repeat.Once();
+            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Equal(quest))).
+                Repeat.Once();
 
-
-            Command command = new ThisStateUpdateCommand(quest, QuestState.Failed, repository);
+            ICommand command = new ThisQuestCommand(quest, State.Failed, repository);
 
             //Act
             command.Execute();
             command.Undo();
 
             //Assert
-            Assert.AreEqual(QuestState.Progress, quest.CurrentState);
+            Assert.AreEqual(State.Progress, quest.State);
 
             repository.VerifyAllExpectations();
         }

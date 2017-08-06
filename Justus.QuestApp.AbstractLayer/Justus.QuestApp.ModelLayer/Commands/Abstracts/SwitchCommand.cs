@@ -1,29 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Justus.QuestApp.AbstractLayer.Commands;
+﻿using Justus.QuestApp.AbstractLayer.Commands;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
 {
     /// <summary>
-    /// Command, that can be or execute, or reverted. It won't be executed, if it is executed already. 
+    /// ICommand, that can be or execute, or reverted. It won't be executed, if it is executed already. 
     /// It won't be reverted, if it is reverted already.
     /// </summary>
-    public abstract class SwitchCommand : Command
+    public abstract class SwitchCommand : ICommand
     {
         /// <summary>
         /// Points if command has been executed.
         /// </summary>
         private bool _hasExecuted;
 
-        #region Command implementation
+        private bool _hasCommited;
 
-        ///<inheritdoc cref="Command"/>
-        public sealed override bool Execute()
+        #region ICommand implementation
+
+        ///<inheritdoc cref="ICommand"/>
+        public bool Execute()
         {
-            if (!_hasExecuted)
+            if (!_hasExecuted && !_hasCommited)
             {
                 _hasExecuted = true;
                 return InnerExecute();
@@ -31,15 +28,28 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
             return false;
         }
 
-        ///<inheritdoc cref="Command"/>
-        public sealed override bool Undo()
+        ///<inheritdoc cref="ICommand"/>
+        public bool Undo()
         {
-            if (_hasExecuted)
+            if (_hasExecuted && !_hasCommited)
             {
                 _hasExecuted = false;
                 return InnerUndo();
             }
             return false;
+        }
+
+        ///<inheritdoc cref="ICommand"/>
+        public virtual bool IsValid()
+        {
+            return true;
+        }
+
+        ///<inheritdoc cref="ICommand"/>
+        public virtual bool Commit()
+        {
+            _hasCommited = true;
+            return true;
         }
 
         #endregion

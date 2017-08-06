@@ -1,7 +1,6 @@
-﻿using System;
-using Justus.QuestApp.AbstractLayer.Entities.Quest;
+﻿using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
-using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Abstracts;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Repository
@@ -9,21 +8,21 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// <summary>
     /// Rebind quest from old parent to new one.
     /// </summary>
-    public class RebindQuestCommand : AbstractRepositoryCommand
+    public class RebindQuestCommand : AbstractTreeCommand
     {
         private readonly Quest _oldParent;
         private readonly Quest _questToBind;
         private readonly Quest _newParent;
 
         /// <summary>
-        /// Receives repository, parent and quest.
+        /// Receives tree, parent and quest.
         /// </summary>
-        /// <param name="repository"></param>
+        /// <param name="tree"></param>
         /// <param name="questToBind"></param>
         /// <param name="newParent"></param>
         /// <param name="oldParent"></param>
-        public RebindQuestCommand(IQuestRepository repository, Quest questToBind, Quest newParent, Quest oldParent) :
-            base(repository)
+        public RebindQuestCommand(IQuestTree tree, Quest questToBind, Quest newParent, Quest oldParent) :
+            base(tree)
         {
             questToBind.ThrowIfNull(nameof(questToBind));
             newParent.ThrowIfNull(nameof(newParent));
@@ -33,14 +32,14 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             _oldParent = oldParent;
         }
 
-        #region AddQuestCommand overriding
+        #region AbstractTreeCommand overriding
 
         ///<inheritdoc/>
         protected override bool InnerExecute()
         {
             BreakWithParent(_oldParent, _questToBind);
             ConnectWithParent(_newParent, _questToBind);
-            Repository.Update(_questToBind);
+            QuestTree.Update(_questToBind);
             return true;
         }
 
@@ -49,7 +48,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         {
             BreakWithParent(_newParent, _questToBind);
             ConnectWithParent(_oldParent, _questToBind);
-            Repository.RevertUpdate(_questToBind);
+            QuestTree.RevertUpdate(_questToBind);
             return true;
         }
 
@@ -64,7 +63,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         {
             parent.Children.Remove(child);
             child.Parent = null;
-            child.ParentId = 0;
+            child.ParentId = null;
         }
 
         /// <summary>

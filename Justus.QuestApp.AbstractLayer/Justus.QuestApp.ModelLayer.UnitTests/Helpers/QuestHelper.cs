@@ -10,12 +10,12 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
     /// </summary>
     public static class QuestHelper
     {
-        public static Quest CreateQuest(QuestState state)
+        public static Quest CreateQuest(State state)
         {
             return new FakeQuest()
             {
                 Children = new List<Quest>(),
-                CurrentState = state,
+                State = state,
                 Title = "Title",
                 Description = "Description",
                 Id = 0,
@@ -24,7 +24,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
             };
         }
 
-        public static Quest CreateCompositeQuest(int compositionLevel, int childNumber, QuestState state)
+        public static Quest CreateCompositeQuest(int compositionLevel, int childNumber, State state)
         {
             Quest quest = CreateQuest(state);
             if (compositionLevel == 0 || childNumber == 0)
@@ -89,7 +89,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
                 Id = id,
                 Title = "title",
                 Description = "description",
-                CurrentState = QuestState.Idle,
+                State = State.Idle,
                 Children = new List<Quest>()
             };
         }

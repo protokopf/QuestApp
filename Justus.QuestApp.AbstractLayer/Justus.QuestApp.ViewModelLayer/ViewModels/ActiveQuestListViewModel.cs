@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
-using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
-using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
@@ -16,23 +12,14 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     /// </summary>
     public class ActiveQuestListViewModel : QuestListViewModel
     {
-        public ActiveQuestListViewModel(IQuestRepository repository,
+        public ActiveQuestListViewModel(IQuestListModel questListModel,
             IStateCommandsFactory stateCommandsFactory,
-            IRepositoryCommandsFactory repositoryCommandsFactory) : 
-            base(repository, stateCommandsFactory,repositoryCommandsFactory)
+            ITreeCommandsFactory treeCommandsFactory) : 
+            base(questListModel, stateCommandsFactory,treeCommandsFactory)
         {
 
         }
 
-        #region QuestListViewModel overriding
-
-        ///<inheritdoc/>
-        protected override List<Quest> HandleQuests(List<Quest> quests)
-        {
-            return quests.Where(FilterEachQuest).ToList();
-        }
-
-        #endregion
 
         /// <summary>
         /// Points, whether all quests are done or not.
@@ -44,16 +31,21 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             {
                 return false;
             }
-            return Root.CurrentState == QuestState.Done;
+            return QuestListModel.Parent.State == State.Done;
         }
 
         /// <summary>
         /// Count progress of quest.
         /// </summary>
-        /// <param name="quest"></param>
+        /// <param name="position"></param>
         /// <returns></returns>
-        public int CountProgress(Quest quest)
+        public int CountProgress(int position)
         {
+            Quest quest = GetQuestByPosition(position);
+            if (quest == null)
+            {
+                return -1;
+            }
             quest.ThrowIfNull(nameof(quest));
             double progress = quest.Progress;
             int result = (int) Math.Floor(progress * 100);
@@ -63,83 +55,31 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <summary>
         /// Fails given quest.
         /// </summary>
-        /// <param name="quest"></param>
-        public async Task FailQuest(Quest quest)
+        /// <param name="position"></param>
+        public Task FailQuest(int position)
         {
-            LastCommand = StateCommads.FailQuest(quest);
-            IsBusy = true;
-            await Task.Run(() =>
-            {
-                LastCommand.Execute();
-                QuestRepository.Save();
-                ResetChildren();
-            });
-            IsBusy = false;
+            Quest quest = GetQuestByPosition(position);
+            return quest == null ? null : RunCommand(StateCommads.FailQuest(quest));
         }
 
         /// <summary>
         /// Make done given quest.
         /// </summary>
-        /// <param name="quest"></param>
-        public async Task DoneQuest(Quest quest)
+        /// <param name="position"></param>
+        public Task DoneQuest(int position)
         {
-            LastCommand = StateCommads.DoneQuest(quest);
-            IsBusy = true;
-            await Task.Run(() =>
-            {
-                LastCommand.Execute();
-                QuestRepository.Save();
-                ResetChildren();
-            });
-            IsBusy = false;
+            Quest quest = GetQuestByPosition(position);
+            return quest == null ? null : RunCommand(StateCommads.DoneQuest(quest));
         }
 
         /// <summary>
         /// Cancels given quest.
         /// </summary>
-        /// <param name="quest"></param>
-        public async Task CancelQuest(Quest quest)
+        /// <param name="position"></param>
+        public Task CancelQuest(int position)
         {
-            LastCommand = StateCommads.CancelQuest(quest);
-            IsBusy = true;
-            await Task.Run(() =>
-            {
-                LastCommand.Execute();
-                QuestRepository.Save();
-                ResetChildren();
-            });
-            IsBusy = false;
+            Quest quest = GetQuestByPosition(position);
+            return quest == null ? null : RunCommand(StateCommads.CancelQuest(quest));
         }
-
-        /// <summary>
-        /// Starts given quest.
-        /// </summary>
-        /// <param name="quest"></param>
-        public async Task StartQuest(Quest quest)
-        {
-            LastCommand = StateCommads.StartQuest(quest);
-            IsBusy = true;
-            await Task.Run(() =>
-            {
-                LastCommand.Execute();
-                QuestRepository.Save();
-            });
-            IsBusy = false;
-
-        }
-
-        #region Private methods
-
-        private bool FilterEachQuest(Quest quest)
-        {
-            QuestState state = quest.CurrentState;
-            if (quest.Parent == null)
-            {
-                return state == QuestState.Progress;
-            }
-            return true;
-        }
-
-        #endregion
     }
 }

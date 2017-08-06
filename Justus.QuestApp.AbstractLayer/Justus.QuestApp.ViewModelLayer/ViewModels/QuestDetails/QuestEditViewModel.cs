@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
-using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.AbstractLayer.Validators;
+using Justus.QuestApp.ViewModelLayer.Factories;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
 {
@@ -17,24 +14,26 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
     /// </summary>
     public class QuestEditViewModel : QuestAbstractActionViewModel
     {
-        private readonly IRepositoryCommandsFactory _commandsFactory;
-        private readonly IQuestRepository _questRepository;
+        private readonly ITreeCommandsFactory _commandsFactory;
+        private readonly IQuestTree _questTree;
 
         /// <summary>
         /// Receives quest model, quest validator and reference to repository command.
         /// </summary>
-        /// <param name="questRepository"></param>
+        /// <param name="questTree"></param>
+        /// <param name="questViewModelFactory"></param>
         /// <param name="questValidator"></param>
-        /// <param name="repositoryCommands"></param>
+        /// <param name="treeCommands"></param>
         public QuestEditViewModel(
-            IQuestRepository questRepository, 
-            IQuestValidator<ClarifiedResponse<int>> questValidator, 
-            IRepositoryCommandsFactory repositoryCommands) : base(questValidator)
+            IQuestViewModelFactory questViewModelFactory,
+            IQuestValidator<ClarifiedResponse<int>> questValidator,
+            IQuestTree questTree,
+            ITreeCommandsFactory treeCommands) : base(questViewModelFactory, questValidator)
         {
-            questRepository.ThrowIfNull(nameof(questRepository));
-            repositoryCommands.ThrowIfNull(nameof(repositoryCommands));
-            _questRepository = questRepository;
-            _commandsFactory = repositoryCommands;
+            questTree.ThrowIfNull(nameof(questTree));
+            treeCommands.ThrowIfNull(nameof(treeCommands));
+            _questTree = questTree;
+            _commandsFactory = treeCommands;
         }
 
         #region QuestAbstractActionViewModel overriding
@@ -44,21 +43,21 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
         ///<inheritdoc cref="QuestAbstractActionViewModel"/>
         public override void Action()
         {
-            _commandsFactory.
-                UpdateQuest(QuestViewModel.Model).
-                Execute();
+            ICommand updateCommand = _commandsFactory.UpdateQuest(QuestViewModel.Model);
+            if (updateCommand.Execute())
+            {
+                updateCommand.Commit();
+            }
         }
 
         ///<inheritdoc cref="QuestAbstractActionViewModel"/>
-        protected override IQuestViewModel InitializeQuestViewModel()
+        public override void Initialize()
         {
-            Quest model = _questRepository.Get(q => q.Id == QuestId);
-            QuestViewModel questViewModel = new QuestViewModel(model)
-            {
-                UseStartTime = model.StartTime != default(DateTime),
-                UseDeadline = model.Deadline != default(DateTime)
-            };
-            return questViewModel;
+            base.Initialize();
+            Quest model = _questTree.Get(q => q.Id == QuestId);
+            QuestViewModel.Model = model;
+            QuestViewModel.UseStartTime = model.StartTime != null;
+            QuestViewModel.UseDeadline = model.Deadline != null;
         }
 
         #endregion

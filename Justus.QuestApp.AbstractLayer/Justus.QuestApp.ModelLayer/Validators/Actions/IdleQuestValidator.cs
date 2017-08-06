@@ -1,5 +1,4 @@
 ﻿using System;
-using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.AbstractLayer.Validators;
@@ -21,7 +20,7 @@ namespace Justus.QuestApp.ModelLayer.Validators.Actions
                 throw new ArgumentNullException(nameof(quest));
             }
             StringResponse result = new StringResponse();
-            if (quest.CurrentState == QuestState.Idle)
+            if (quest.State == State.Idle)
             {
                 result.Errors.Add("ERR_QUEST_ACT_WRONG_STATE");
             }

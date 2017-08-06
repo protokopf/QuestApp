@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Errors;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
-using Justus.QuestApp.ModelLayer.Validators;
 using Justus.QuestApp.ModelLayer.Validators.QuestItself;
 using NUnit.Framework;
 
@@ -55,8 +50,8 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
                 deadlineLessThanNowClar);
             Quest quest = new FakeQuest()
             {
-                StartTime = default(DateTime),
-                Deadline = default(DateTime)
+                StartTime = null,
+                Deadline = null
             };
 
             //Act
@@ -85,7 +80,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
             Quest quest = new FakeQuest()
             {
                 StartTime = DateTime.Now,
-                Deadline = default(DateTime)
+                Deadline = null
             };
 
             //Act
@@ -113,7 +108,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
                 deadlineLessThanNowClar);
             Quest quest = new FakeQuest()
             {
-                StartTime = default(DateTime),
+                StartTime = null,
                 Deadline = DateTime.Now - new TimeSpan(1,1,1)
             };
 
@@ -146,7 +141,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
                 deadlineLessThanNowClar);
             Quest quest = new FakeQuest()
             {
-                StartTime = default(DateTime),
+                StartTime = null,
                 Deadline = DateTime.Now + new TimeSpan(1, 1, 1)
             };
 

@@ -1,9 +1,9 @@
-﻿using NUnit.Framework;
-using Justus.QuestApp.AbstractLayer.Commands;
+﻿using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.State;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
@@ -15,18 +15,18 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         public void ExecuteChangesDownHierarchyTest()
         {
             //Arrange
-            Quest parent = QuestHelper.CreateCompositeQuest(2, 2, QuestState.Progress);
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(r => r.Update(null)).IgnoreArguments().Repeat.Times(7);
+            Quest parent = QuestHelper.CreateCompositeQuest(2, 2, State.Progress);
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.NotNull)).Repeat.Times(7);
 
-            Command command = new DownHierarchyStateUpdateCommand(parent,QuestState.Idle, repository);
+            ICommand command = new DownHierarchyQuestCommand(parent,State.Idle, repository);
 
             //Act
             command.Execute();
 
             //Assert
-            Assert.AreEqual(QuestState.Idle, parent.CurrentState);
-            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.CurrentState == QuestState.Idle));
+            Assert.AreEqual(State.Idle, parent.State);
+            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.State == State.Idle));
 
             repository.VerifyAllExpectations();
         }
@@ -35,20 +35,20 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         public void UndoRevertChangesDownHierarchyTest()
         {
             //Arrange
-            Quest parent = QuestHelper.CreateCompositeQuest(2, 2, QuestState.Progress);
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(r => r.Update(null)).IgnoreArguments().Repeat.Times(7);
-            repository.Expect(r => r.RevertUpdate(null)).IgnoreArguments().Return(true).Repeat.Times(7);
+            Quest parent = QuestHelper.CreateCompositeQuest(2, 2, State.Progress);
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.NotNull)).Repeat.Times(7);
+            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.NotNull)).Repeat.Times(7);
 
-            Command command = new DownHierarchyStateUpdateCommand(parent, QuestState.Idle, repository);
+            ICommand command = new DownHierarchyQuestCommand(parent, State.Idle, repository);
 
             //Act
             command.Execute();
             command.Undo();
 
             //Assert
-            Assert.AreEqual(QuestState.Progress, parent.CurrentState);
-            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.CurrentState == QuestState.Progress));
+            Assert.AreEqual(State.Progress, parent.State);
+            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.State == State.Progress));
 
             repository.VerifyAllExpectations();
         }

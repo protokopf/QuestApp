@@ -1,6 +1,7 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Factories;
+using Justus.QuestApp.DataLayer.Entities;
 using Justus.QuestApp.ModelLayer.Factories;
 using NUnit.Framework;
 
@@ -13,21 +14,23 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.FactoriesTest
         public void CreateTest()
         {
             //Arrange
-            IQuestCreator creator = new SqliteQuestCreator();
+            IQuestFactory factory = new SqliteQuestFactory();
 
             //Act
-            Quest item = creator.Create();
+            Quest item = factory.CreateQuest();
 
             //Assert
+            Assert.IsInstanceOf<SqliteQuest>(item);
             Assert.IsNotNull(item);
-            Assert.IsNotNull(item.Children);
-            Assert.IsEmpty(item.Children);
-            Assert.AreEqual(QuestState.Idle, item.CurrentState);
+            Assert.IsNull(item.Children);
+            Assert.AreEqual(State.Idle, item.State);
             Assert.AreEqual(String.Empty, item.Title);
             Assert.AreEqual(String.Empty, item.Description);
-            Assert.AreEqual(default(DateTime), item.Deadline);
-            Assert.AreEqual(default(DateTime), item.Deadline);
+            Assert.AreEqual(null, item.Deadline);
+            Assert.AreEqual(null, item.Deadline);
             Assert.IsFalse(item.IsImportant);
+            Assert.IsNull(item.ParentId);
+            Assert.IsNull(item.Parent);
         }
     }
 }

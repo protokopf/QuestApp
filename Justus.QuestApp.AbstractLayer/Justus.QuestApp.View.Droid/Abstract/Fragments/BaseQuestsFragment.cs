@@ -24,7 +24,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         /// </summary>
         protected RecyclerView RecyclerViewRef;
 
-        #region ISelectable implmentation
+        #region ISelectable implementation
 
         ///<inheritdoc/>
         public virtual void OnSelect()

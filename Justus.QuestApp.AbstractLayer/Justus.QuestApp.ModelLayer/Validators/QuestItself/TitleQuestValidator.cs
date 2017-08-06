@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Errors;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
@@ -39,7 +35,7 @@ namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
             _tooLongClar = tooLongClar;
         }
 
-        #region IQuestValidator imlementation
+        #region IQuestValidator implementation
 
         ///<inheritdoc/>
         public ClarifiedResponse<TMessage> Validate(Quest quest)

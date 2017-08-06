@@ -1,39 +1,24 @@
 ﻿using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
-using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using NUnit.Framework;
 using Rhino.Mocks;
 using System;
-using System.Collections.Generic;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
+using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
 {
     [TestFixture]
     class UpdateQuestTest
     {
-        [Test]
-        public void InitializeFailRepositoryNullTest()
-        {
-            //Arrange
-            Quest toUpdate = QuestHelper.CreateQuest();
-            IQuestRepository repository = null;
-
-            //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new UpdateQuestCommand(repository, toUpdate));
-
-            //Assert
-            Assert.IsNotNull(ex);
-            Assert.AreEqual("repository", ex.ParamName);
-        }
 
         [Test]
         public void InitializeFailQuestNullTest()
         {
             //Arrange
             Quest toUpdate = null;
-            IQuestRepository repository = MockRepository.GenerateMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateMock<IQuestTree>();
 
             //Act
             ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new UpdateQuestCommand(repository, toUpdate));
@@ -47,25 +32,19 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
         public void ExecuteTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            List<Quest> repositoryCache = new List<Quest>()
-            {
-                QuestHelper.CreateCompositeQuest(2,3,QuestState.Progress)
-            };
-            int beforeCommandlength = QuestHelper.CountSubQuests(repositoryCache);
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            Quest toUpdate = new FakeQuest();
 
-            Quest toUpdate = repositoryCache[0].Children[0];
-            toUpdate.Title = "new title";
+            repository.Expect(rep => rep.Update(Arg<Quest>.Is.Equal(toUpdate))).
+                Repeat.Once();
 
-            repository.Expect(rep => rep.Update(null)).IgnoreArguments().Repeat.Once();
-
-            Command command = new UpdateQuestCommand(repository, toUpdate);
+            ICommand command = new UpdateQuestCommand(repository, toUpdate);
 
             //Act
-            command.Execute();
+            bool result = command.Execute();
 
             //Assert
-            Assert.AreEqual(beforeCommandlength, QuestHelper.CountSubQuests(repositoryCache));
+            Assert.IsTrue(result);
 
             repository.VerifyAllExpectations();
         }
@@ -74,27 +53,23 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
         public void UndoTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            List<Quest> repositoryCache = new List<Quest>()
-            {
-                QuestHelper.CreateCompositeQuest(2,3,QuestState.Progress)
-            };
-            int beforeCommandlength = QuestHelper.CountSubQuests(repositoryCache);
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            Quest toUpdate = new FakeQuest();
 
-            Quest toUpdate = repositoryCache[0].Children[0];
-            toUpdate.Title = "new title";
+            repository.Expect(rep => rep.Update(Arg<Quest>.Is.Equal(toUpdate))).
+                Repeat.Once();
+            repository.Expect(rep => rep.RevertUpdate(Arg<Quest>.Is.Equal(toUpdate))).
+                Repeat.Once();
 
-            repository.Expect(rep => rep.Update(null)).IgnoreArguments().Repeat.Once();
-            repository.Expect(rep => rep.RevertUpdate(null)).IgnoreArguments().Return(true).Repeat.Once();
-
-            Command command = new UpdateQuestCommand(repository, toUpdate);
+            ICommand command = new UpdateQuestCommand(repository, toUpdate);
 
             //Act
-            command.Execute();
-            command.Undo();
+            bool executeResult = command.Execute();
+            bool undoResult = command.Undo();
 
             //Assert
-            Assert.AreEqual(beforeCommandlength, QuestHelper.CountSubQuests(repositoryCache));
+            Assert.IsTrue(executeResult);
+            Assert.IsTrue(undoResult);
 
             repository.VerifyAllExpectations();
         }

@@ -1,14 +1,6 @@
 using System;
-using Android.OS;
-using Android.Views;
-using Android.Widget;
-using Justus.QuestApp.AbstractLayer.Services;
-using Justus.QuestApp.View.Droid.Services.ViewServices;
-using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
-using System.Threading.Tasks;
 using Android.Graphics.Drawables;
-using Android.Support.Design.Widget;
 using Android.Support.V4.Content.Res;
 using Android.Support.V7.Widget;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
@@ -98,14 +90,14 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private async void StartHandler(int itemPosition)
         {
-            await ViewModel.StartQuest(ViewModel.Leaves[itemPosition]);
+            await ViewModel.StartQuest(itemPosition);
             //Staring quest won't removing it from sequence, so we just notifying adapter about changes.
             QuestsAdapter.NotifyItemChanged(itemPosition);
         }
 
         private async void DoneHandler(int viewPosition)
         {
-            await ViewModel.DoneQuest(ViewModel.Leaves[viewPosition]);
+            await ViewModel.DoneQuest(viewPosition);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
             while(ViewModel.IsRootDone())
             {
@@ -113,20 +105,15 @@ namespace Justus.QuestApp.View.Droid.Fragments
             }
         }
 
-        private void Undo(Android.Views.View view)
-        {
-            ViewModel.UndoLastCommand();
-        }
-
         private async void FailHandler(int viewPosition)
         {
-            await ViewModel.FailQuest(ViewModel.Leaves[viewPosition]);
+            await ViewModel.FailQuest(viewPosition);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
         }
 
         private async void CancelHandler(int viewPosition)
         {
-            await ViewModel.CancelQuest(ViewModel.Leaves[viewPosition]);
+            await ViewModel.CancelQuest(viewPosition);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
         }
 

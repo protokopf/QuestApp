@@ -1,8 +1,6 @@
 ﻿using System;
-using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
-using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using Justus.QuestApp.ModelLayer.Validators.Actions;
 using NUnit.Framework;
@@ -31,7 +29,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         {
             //Arrange
             StartQuestValidator validator = new StartQuestValidator();
-            Quest quest = QuestHelper.CreateQuest(QuestState.Progress);
+            Quest quest = QuestHelper.CreateQuest(State.Progress);
 
             //Act
             StringResponse result = validator.Validate(quest);
@@ -48,7 +46,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         {
             //Arrange
             StartQuestValidator validator = new StartQuestValidator();
-            Quest quest = QuestHelper.CreateQuest(QuestState.Done);
+            Quest quest = QuestHelper.CreateQuest(State.Done);
 
             //Act
             StringResponse result = validator.Validate(quest);
@@ -65,7 +63,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         {
             //Arrange
             StartQuestValidator validator = new StartQuestValidator();
-            Quest quest = QuestHelper.CreateQuest(QuestState.Failed);
+            Quest quest = QuestHelper.CreateQuest(State.Failed);
 
             //Act
             StringResponse result = validator.Validate(quest);
@@ -82,8 +80,8 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         {
             //Arrange
             StartQuestValidator validator = new StartQuestValidator();
-            Quest quest = QuestHelper.CreateQuest(QuestState.Idle);
-            quest.Children.Add(QuestHelper.CreateQuest(QuestState.Idle));
+            Quest quest = QuestHelper.CreateQuest(State.Idle);
+            quest.Children.Add(QuestHelper.CreateQuest(State.Idle));
 
             //Act
             StringResponse result = validator.Validate(quest);
@@ -100,7 +98,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         {
             //Arrange
             StartQuestValidator validator = new StartQuestValidator();
-            Quest quest = QuestHelper.CreateQuest(QuestState.Idle);
+            Quest quest = QuestHelper.CreateQuest(State.Idle);
 
             //Act
             StringResponse result = validator.Validate(quest);

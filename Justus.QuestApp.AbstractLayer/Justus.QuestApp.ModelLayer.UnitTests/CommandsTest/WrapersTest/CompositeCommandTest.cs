@@ -1,16 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using Justus.QuestApp.AbstractLayer.Commands;
-using Justus.QuestApp.ModelLayer.Commands;
 using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
+namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.WrapersTest
 {
     [TestFixture]
     class CompositeCommandTest
     {
+        private ICommand[] CreateCommands(int count, Action<ICommand> actionWithCommand)
+        {
+            ICommand[] commands = new ICommand[count];
+            for (int i = 0; i < count; ++i)
+            {
+                commands[i] = MockRepository.GenerateStrictMock<ICommand>();
+                actionWithCommand(commands[i]);
+            }
+            return commands;
+        }
+
         [Test]
         public void CtorNullTest()
         {
@@ -28,21 +38,21 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
             //Arrange
             Stack<int> stack = new Stack<int>();
 
-            Command firstOne = MockRepository.GenerateStrictMock<Command>();
+            ICommand firstOne = MockRepository.GenerateStrictMock<ICommand>();
             firstOne.Expect(c => c.Execute()).Repeat.Once().Do(new Func<bool>((() =>
             {
                 stack.Push(1);
                 return true;
             })));
 
-            Command secondOne = MockRepository.GenerateStrictMock<Command>();
+            ICommand secondOne = MockRepository.GenerateStrictMock<ICommand>();
             secondOne.Expect(c => c.Execute()).Repeat.Once().Do(new Func<bool>((() =>
             {
                 stack.Push(2);
                 return true;
             })));
 
-            Command composite = new CompositeCommand(new []{firstOne, secondOne});
+            ICommand composite = new CompositeCommand(new []{firstOne, secondOne});
 
             //Act
             composite.Execute();
@@ -61,21 +71,21 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
             //Arrange
             Stack<int> stack = new Stack<int>();
 
-            Command firstOne = MockRepository.GenerateStrictMock<Command>();
+            ICommand firstOne = MockRepository.GenerateStrictMock<ICommand>();
             firstOne.Expect(c => c.Undo()).Repeat.Once().Return(true).Do(new Func<bool>((() =>
             {
                 stack.Push(1);
                 return true;
             })));
 
-            Command secondOne = MockRepository.GenerateStrictMock<Command>();
+            ICommand secondOne = MockRepository.GenerateStrictMock<ICommand>();
             secondOne.Expect(c => c.Undo()).Repeat.Once().Return(true).Do(new Func<bool>((() =>
             {
                 stack.Push(2);
                 return true;
             })));
 
-            Command composite = new CompositeCommand(new[] { firstOne, secondOne });
+            ICommand composite = new CompositeCommand(new[] { firstOne, secondOne });
 
             //Act
             composite.Undo();
@@ -93,13 +103,13 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
         {
             //Arrange
 
-            Command firstOne = MockRepository.GenerateStrictMock<Command>();
+            ICommand firstOne = MockRepository.GenerateStrictMock<ICommand>();
             firstOne.Expect(c => c.IsValid()).Repeat.Once().Return(true);
 
-            Command secondOne = MockRepository.GenerateStrictMock<Command>();
+            ICommand secondOne = MockRepository.GenerateStrictMock<ICommand>();
             secondOne.Expect(c => c.IsValid()).Repeat.Once().Return(true);
 
-            Command composite = new CompositeCommand(new[] { firstOne, secondOne });
+            ICommand composite = new CompositeCommand(new[] { firstOne, secondOne });
 
             //Act
             bool isValid = composite.IsValid();
@@ -115,13 +125,13 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
         public void ValidFalseTest()
         {
             //Arrange
-            Command firstOne = MockRepository.GenerateStrictMock<Command>();
+            ICommand firstOne = MockRepository.GenerateStrictMock<ICommand>();
             firstOne.Expect(c => c.IsValid()).Repeat.Once().Return(true);
 
-            Command secondOne = MockRepository.GenerateStrictMock<Command>();
+            ICommand secondOne = MockRepository.GenerateStrictMock<ICommand>();
             secondOne.Expect(c => c.IsValid()).Repeat.Once().Return(false);
 
-            Command composite = new CompositeCommand(new[] { firstOne, secondOne });
+            ICommand composite = new CompositeCommand(new[] { firstOne, secondOne });
 
             //Act
             bool isValid = composite.IsValid();
@@ -141,14 +151,14 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
         {
             //Arrange
             int count = executeResults.Length;
-            Command[] commands = new Command[count];
+            ICommand[] commands = new ICommand[count];
             for (int i = 0; i < count; ++i)
             {
-                commands[i] = MockRepository.GenerateStrictMock<Command>();
+                commands[i] = MockRepository.GenerateStrictMock<ICommand>();
                 commands[i].Expect(cm => cm.Execute()).Return(executeResults[i]).Repeat.Once();
             }
 
-            Command composite = new CompositeCommand(commands);
+            ICommand composite = new CompositeCommand(commands);
 
             //Act
             bool result = composite.Execute();
@@ -156,9 +166,97 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest
             //Assert
             Assert.IsFalse(result);
 
-            foreach (Command command in commands)
+            foreach (ICommand command in commands)
             {
                 command.VerifyAllExpectations();
+            }
+        }
+
+        [TestCase(new[] { true, true, true, false })]
+        [TestCase(new[] { true, true, false, false })]
+        [TestCase(new[] { true, false, false, false })]
+        [TestCase(new[] { false, false, false, false })]
+        public void IfOneOrMoreUndoWithFalseResultFalseTest(bool[] undoResults)
+        {
+            //Arrange
+            int count = undoResults.Length;
+            ICommand[] commands = new ICommand[count];
+            for (int i = 0; i < count; ++i)
+            {
+                commands[i] = MockRepository.GenerateStrictMock<ICommand>();
+                commands[i].Expect(cm => cm.Undo()).Return(undoResults[i]).Repeat.Once();
+            }
+
+            ICommand composite = new CompositeCommand(commands);
+
+            //Act
+            bool result = composite.Undo();
+
+            //Assert
+            Assert.IsFalse(result);
+
+            foreach (ICommand command in commands)
+            {
+                command.VerifyAllExpectations();
+            }
+        }
+
+        [Test]
+        public void CommitTest()
+        {
+            //Arrange
+            ICommand[] commands = CreateCommands(5, (cm) =>
+            {
+                cm.Expect(c => c.Commit()).Repeat.Once().Return(true);
+            });
+
+            CompositeCommand compositeCommand = new CompositeCommand(commands);
+
+            //Act
+            bool commitResult = compositeCommand.Commit();
+
+            //Assert
+            Assert.IsTrue(commitResult);
+
+            foreach (ICommand command in commands)
+            {
+                command.VerifyAllExpectations();
+            }
+        }
+
+        [TestCase(new[] { true, true, true, false })]
+        [TestCase(new[] { true, true, false, false })]
+        [TestCase(new[] { true, false, false, false })]
+        [TestCase(new[] { false, false, false, false })]
+        public void IfOneOrMoreCommitWithFalseResultFalseTest(bool[] commitResults)
+        {
+            //Arrange
+            int count = commitResults.Length;
+            ICommand[] commands = new ICommand[count];
+            for (int i = 0; i < count; ++i)
+            {
+                commands[i] = MockRepository.GenerateStrictMock<ICommand>();
+                commands[i].Expect(cm => cm.Commit()).
+                    Return(commitResults[i]).
+                    Repeat.Once();
+                if (!commitResults[i])
+                {
+                    break;
+                }
+                
+            }
+
+            ICommand composite = new CompositeCommand(commands);
+
+            //Act
+            bool result = composite.Commit();
+
+            //Assert
+            Assert.IsFalse(result);
+
+            foreach (ICommand command in commands)
+            {
+                command?.VerifyAllExpectations();
             }
         }
     }

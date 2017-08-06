@@ -1,12 +1,12 @@
 ﻿using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.State;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
+namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.StateTest
 {
     [TestFixture]
     class UpHierarchyStateUpdateCommandTest
@@ -15,18 +15,18 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         public void ExecuteStandaloneQuestTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
             repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Once();
 
-            Quest parent = QuestHelper.CreateQuest(QuestState.Progress);
+            Quest parent = QuestHelper.CreateQuest(State.Progress);
 
-            Command command = new UpHierarchyStateUpdateCommand(parent, QuestState.Done,  repository);
+            ICommand command = new UpHierarchyQuestCommand(parent, State.Done,  repository);
 
             //Act
             command.Execute();
 
             //Assert
-            Assert.AreEqual(QuestState.Done, parent.CurrentState);
+            Assert.AreEqual(State.Done, parent.State);
             
             repository.VerifyAllExpectations();
         }
@@ -35,20 +35,20 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         public void UndoStandaloneQuestTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
             repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Once();
-            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).Repeat.Once().Return(true);
+            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).Repeat.Once();
 
-            Quest parent = QuestHelper.CreateQuest(QuestState.Progress);
+            Quest parent = QuestHelper.CreateQuest(State.Progress);
 
-            Command command = new UpHierarchyStateUpdateCommand(parent,QuestState.Done,  repository);
+            ICommand command = new UpHierarchyQuestCommand(parent,State.Done,  repository);
 
             //Act
             command.Execute();
             command.Undo();
 
             //Assert
-            Assert.AreEqual(QuestState.Progress, parent.CurrentState);
+            Assert.AreEqual(State.Progress, parent.State);
 
             repository.VerifyAllExpectations();
         }
@@ -57,28 +57,28 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         public void ExecuteAllParentHierarchyTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
             repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Times(3);
 
-            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, QuestState.Done);
-            parent.CurrentState = QuestState.Progress;
+            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, State.Done);
+            parent.State = State.Progress;
 
             Quest current = parent;
             while (current.Children.Count != 0)
             {
-                current.Children[0].CurrentState = QuestState.Progress;
+                current.Children[0].State = State.Progress;
                 current = current.Children[0];
             }
 
-            Command command = new UpHierarchyStateUpdateCommand(current, QuestState.Done, repository);
+            ICommand command = new UpHierarchyQuestCommand(current, State.Done, repository);
 
             //Act
             command.Execute();
 
             //Assert
-            Assert.AreEqual(QuestState.Done, current.CurrentState);
-            Assert.AreEqual(QuestState.Done, parent.CurrentState);
-            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.CurrentState == QuestState.Done));
+            Assert.AreEqual(State.Done, current.State);
+            Assert.AreEqual(State.Done, parent.State);
+            Assert.IsTrue(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.State == State.Done));
 
             repository.VerifyAllExpectations();
         }
@@ -87,30 +87,30 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         public void UndoAllParentHierarchyTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
             repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Times(3);
-            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).Return(true).Repeat.Times(3);
+            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).Repeat.Times(3);
 
-            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, QuestState.Done);
-            parent.CurrentState = QuestState.Progress;
+            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, State.Done);
+            parent.State = State.Progress;
 
             Quest current = parent;
             while (current.Children.Count != 0)
             {
-                current.Children[0].CurrentState = QuestState.Progress;
+                current.Children[0].State = State.Progress;
                 current = current.Children[0];
             }
 
-            Command command = new UpHierarchyStateUpdateCommand(current, QuestState.Done, repository);
+            ICommand command = new UpHierarchyQuestCommand(current, State.Done, repository);
 
             //Act
             command.Execute();
             command.Undo();
 
             //Assert
-            Assert.AreEqual(QuestState.Progress, current.CurrentState);
-            Assert.AreEqual(QuestState.Progress, parent.CurrentState);
-            Assert.False(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.CurrentState == QuestState.Done));
+            Assert.AreEqual(State.Progress, current.State);
+            Assert.AreEqual(State.Progress, parent.State);
+            Assert.False(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.State == State.Done));
 
             repository.VerifyAllExpectations();
         }
@@ -119,29 +119,29 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         public void ExecuteOnlyChildTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
             repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Times(1);
 
-            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, QuestState.Done);
-            parent.CurrentState = QuestState.Progress;
+            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, State.Done);
+            parent.State = State.Progress;
 
             Quest current = parent;
-            current.Children[0].Children[1].CurrentState = QuestState.Progress;
+            current.Children[0].Children[1].State = State.Progress;
             while (current.Children.Count != 0)
             {
-                current.Children[0].CurrentState = QuestState.Progress;
+                current.Children[0].State = State.Progress;
                 current = current.Children[0];
             }
 
-            Command command = new UpHierarchyStateUpdateCommand(current, QuestState.Done, repository);
+            ICommand command = new UpHierarchyQuestCommand(current, State.Done, repository);
 
             //Act
             command.Execute();
 
             //Assert
-            Assert.AreEqual(QuestState.Done, current.CurrentState);
-            Assert.AreEqual(QuestState.Progress, parent.CurrentState);
-            Assert.IsFalse(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.CurrentState == QuestState.Done));
+            Assert.AreEqual(State.Done, current.State);
+            Assert.AreEqual(State.Progress, parent.State);
+            Assert.IsFalse(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.State == State.Done));
 
             repository.VerifyAllExpectations();
         }
@@ -150,31 +150,31 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         public void UndoOnlyChildTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
             repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Times(1);
-            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).Return(true).Repeat.Times(1);
+            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).Repeat.Times(1);
 
-            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, QuestState.Done);
-            parent.CurrentState = QuestState.Progress;
+            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, State.Done);
+            parent.State = State.Progress;
 
             Quest current = parent;
-            current.Children[0].Children[1].CurrentState = QuestState.Progress;
+            current.Children[0].Children[1].State = State.Progress;
             while (current.Children.Count != 0)
             {
-                current.Children[0].CurrentState = QuestState.Progress;
+                current.Children[0].State = State.Progress;
                 current = current.Children[0];
             }
 
-            Command command = new UpHierarchyStateUpdateCommand(current, QuestState.Done, repository);
+            ICommand command = new UpHierarchyQuestCommand(current, State.Done, repository);
 
             //Act
             command.Execute();
             command.Undo();
 
             //Assert
-            Assert.AreEqual(QuestState.Progress, current.CurrentState);
-            Assert.AreEqual(QuestState.Progress, parent.CurrentState);
-            Assert.IsFalse(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.CurrentState == QuestState.Done));
+            Assert.AreEqual(State.Progress, current.State);
+            Assert.AreEqual(State.Progress, parent.State);
+            Assert.IsFalse(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.State == State.Done));
 
             repository.VerifyAllExpectations();
         }

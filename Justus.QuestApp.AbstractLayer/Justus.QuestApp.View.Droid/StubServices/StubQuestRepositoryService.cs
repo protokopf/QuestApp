@@ -1,14 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using Justus.QuestApp.AbstractLayer.Data;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model;
 
 namespace Justus.QuestApp.View.Droid.StubServices
 {
-    class StubQuestRepositoryService : IDataAccessInterface<Quest>
+    class StubQuestRepositoryService : IQuestDataLayer
     {
         private int _depth = 0;
         private int _child = 0;
@@ -34,7 +33,7 @@ namespace Justus.QuestApp.View.Droid.StubServices
             
         }
 
-        public void InsertAll(List<Quest> quests)
+        public void InsertAll(IEnumerable<Quest> quests)
         {
             
         }
@@ -44,7 +43,7 @@ namespace Justus.QuestApp.View.Droid.StubServices
             
         }
 
-        public void UpdateAll(List<Quest> quests)
+        public void UpdateAll(IEnumerable<Quest> quests)
         {
             
         }
@@ -54,7 +53,12 @@ namespace Justus.QuestApp.View.Droid.StubServices
             throw new NotImplementedException();
         }
 
-        public List<Quest> GetAll()
+        public IEnumerable<Quest> GetAll()
+        {
+            return GetQuests(_topCount);
+        }
+
+        public IEnumerable<Quest> GetAll(int parentId)
         {
             return GetQuests(_topCount);
         }
@@ -63,6 +67,11 @@ namespace Justus.QuestApp.View.Droid.StubServices
         public void DeleteAll()
         {
             
+        }
+
+        public void DeleteAll(int parentId)
+        {
+
         }
 
 
@@ -78,14 +87,14 @@ namespace Justus.QuestApp.View.Droid.StubServices
 
         private Quest CreateQuest(int id = 0)
         {
-            QuestState state = QuestState.Idle;
+            State state = State.Idle;
 
             return new StubQuest()
             {
                 Id = id,
                 Title = "Quest ¹ " + id,
                 Description = /*GenerateDescription()*/ $"Desription {id}",
-                CurrentState = state,
+                State = state,
                 Children = new List<Quest>(),
                 Deadline = GetDeadLine(id),
                 StartTime = GetStartDate(id)
@@ -155,16 +164,36 @@ namespace Justus.QuestApp.View.Droid.StubServices
         {
             _quests?.RemoveAll(q => q.Id == id);
         }
+
+        public void Open()
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IQuestDataLayer.IsClosed()
+        {
+            return IsClosed();
+        }
+
+        public void InsertAll(IEnumerable entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateAll(IEnumerable entities)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     class StubQuest : Quest
     {
         public override int Id { get; set; }
-        public override int ParentId { get; set; }
+        public override int? ParentId { get; set; }
         public override string Title { get; set; }
         public override string Description { get; set; }
         public override Quest Parent { get; set; }
         public override List<Quest> Children { get; set; }
-        public override DateTime Deadline { get; set; }
     }
 }

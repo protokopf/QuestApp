@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
@@ -20,7 +16,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.WrapersTest
         public void CtorNullTest()
         {
             //Arrange
-            Command command = MockRepository.GenerateStrictMock<Command>();
+            ICommand command = MockRepository.GenerateStrictMock<ICommand>();
             Quest target = new FakeQuest();
             IQuestProgressRecounter recounter = MockRepository.GenerateStrictMock<IQuestProgressRecounter>();
 
@@ -52,7 +48,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.WrapersTest
         public void ExecuteProgressWontBeRecountedIfInnerCommandReturnsFalseTest()
         {
             //Arrange
-            Command command = MockRepository.GenerateStrictMock<Command>();
+            ICommand command = MockRepository.GenerateStrictMock<ICommand>();
             command.Expect(cm => cm.Execute()).Return(false).Repeat.Once();
 
             Quest target = new FakeQuest();
@@ -74,7 +70,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.WrapersTest
         public void ExecuteProgressWillBeRecountedIfInnerCommandReturnsTrueTest()
         {
             //Arrange
-            Command command = MockRepository.GenerateStrictMock<Command>();
+            ICommand command = MockRepository.GenerateStrictMock<ICommand>();
             command.Expect(cm => cm.Execute()).Return(true).Repeat.Once();
 
             Quest target = new FakeQuest();
@@ -96,7 +92,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.WrapersTest
         public void UndoProgressWontBeRecountedIfInnerCommandReturnsFalseTest()
         {
             //Arrange
-            Command command = MockRepository.GenerateStrictMock<Command>();
+            ICommand command = MockRepository.GenerateStrictMock<ICommand>();
             command.Expect(cm => cm.Undo()).Return(false).Repeat.Once();
 
             Quest target = new FakeQuest();
@@ -118,7 +114,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.WrapersTest
         public void UndoProgressWillBeRecountedIfInnerCommandReturnsTrueTest()
         {
             //Arrange
-            Command command = MockRepository.GenerateStrictMock<Command>();
+            ICommand command = MockRepository.GenerateStrictMock<ICommand>();
             command.Expect(cm => cm.Undo()).Return(true).Repeat.Once();
 
             Quest target = new FakeQuest();
@@ -132,6 +128,56 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.WrapersTest
             wrapper.Undo();
 
             //Assert
+            command.VerifyAllExpectations();
+            recounter.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void IsValidTest()
+        {
+            //Arrange
+            ICommand command = MockRepository.GenerateStrictMock<ICommand>();
+            command.Expect(cm => cm.IsValid()).
+                Return(true).
+                Repeat.Once();
+
+            Quest target = new FakeQuest();
+
+            IQuestProgressRecounter recounter = MockRepository.GenerateStrictMock<IQuestProgressRecounter>();
+
+            RecountQuestProgressCommandWrapper wrapper = new RecountQuestProgressCommandWrapper(command, target, recounter);
+
+            //Act
+            bool isValidResult = wrapper.IsValid();
+
+            //Assert
+            Assert.IsTrue(isValidResult);
+
+            command.VerifyAllExpectations();
+            recounter.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void CommitTest()
+        {
+            //Arrange
+            ICommand command = MockRepository.GenerateStrictMock<ICommand>();
+            command.Expect(cm => cm.Commit()).
+                Return(true).
+                Repeat.Once();
+
+            Quest target = new FakeQuest();
+
+            IQuestProgressRecounter recounter = MockRepository.GenerateStrictMock<IQuestProgressRecounter>();
+
+            RecountQuestProgressCommandWrapper wrapper = new RecountQuestProgressCommandWrapper(command, target, recounter);
+
+            //Act
+            bool commitResult = wrapper.Commit();
+
+            //Assert
+            Assert.IsTrue(commitResult);
+
             command.VerifyAllExpectations();
             recounter.VerifyAllExpectations();
         }

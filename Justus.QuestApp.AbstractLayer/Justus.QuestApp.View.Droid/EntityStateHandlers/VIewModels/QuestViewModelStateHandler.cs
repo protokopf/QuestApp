@@ -1,17 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
-using Justus.QuestApp.ViewModelLayer.ViewModels;
-using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails;
+using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails.Abstract;
 
 namespace Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels
 {
@@ -26,13 +16,13 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels
         private const string DeadlineKey = "QuestCreateViewModel.Deadline";
         private const string StartTimeKey = "QuestCreateViewModel.StartTime";
 
-        private readonly IEntityStateHandler<DateTime> _dateTimeStateHandler;
+        private readonly IEntityStateHandler<DateTime?> _dateTimeStateHandler;
 
         /// <summary>
         /// Receives date handler as dependency.
         /// </summary>
         /// <param name="dateTimeStateHandler"></param>
-        public QuestViewModelStateHandler(IEntityStateHandler<DateTime> dateTimeStateHandler)
+        public QuestViewModelStateHandler(IEntityStateHandler<DateTime?> dateTimeStateHandler)
         {
             if (dateTimeStateHandler == null)
             {
@@ -89,8 +79,8 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels
 
         private void FillViewModelWithBundle(Bundle bundle, IQuestViewModel viewModel)
         {
-            DateTime startTime = default(DateTime);
-            DateTime deadline = default(DateTime);
+            DateTime? startTime = null;
+            DateTime? deadline = null;
 
             viewModel.IsImportant = bundle.GetBoolean(IsImportantKey);
             viewModel.UseStartTime = bundle.GetBoolean(UseStartTimeKey);

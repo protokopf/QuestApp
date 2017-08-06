@@ -1,6 +1,6 @@
 ﻿using System;
-using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Abstracts;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Repository
@@ -8,16 +8,16 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// <summary>
     /// Updates quest.
     /// </summary>
-    public class UpdateQuestCommand : AbstractRepositoryCommand
+    public class UpdateQuestCommand : AbstractTreeCommand
     {
         private Quest _toUpdate;
 
         /// <summary>
-        /// Receives repository and reference to quest to update.
+        /// Receives tree and reference to quest to update.
         /// </summary>
-        /// <param name="repository"></param>
+        /// <param name="tree"></param>
         /// <param name="questToUpdate"></param>
-        public UpdateQuestCommand(IQuestRepository repository, Quest questToUpdate) : base(repository)
+        public UpdateQuestCommand(IQuestTree tree, Quest questToUpdate) : base(tree)
         {
             if(questToUpdate == null)
             {
@@ -26,19 +26,19 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             _toUpdate = questToUpdate;
         }
 
-        #region AbstractRepositoryCommand overriding
+        #region AbstractTreeCommand overriding
 
         ///<inheritdoc/>
         protected override bool InnerExecute()
         {
-            Repository.Update(_toUpdate);
+            QuestTree.Update(_toUpdate);
             return true;
         }
 
         ///<inheritdoc/>
         protected override bool InnerUndo()
         {
-            Repository.RevertUpdate(_toUpdate);
+            QuestTree.RevertUpdate(_toUpdate);
             return true;
         } 
 

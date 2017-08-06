@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Justus.QuestApp.ModelLayer.Helpers
 {
     /// <summary>
-    /// Sevice locator type.
+    /// Service locator type.
     /// </summary>
     public static class ServiceLocator
     {
@@ -50,7 +50,7 @@ namespace Justus.QuestApp.ModelLayer.Helpers
         }
 
         /// <summary>
-        /// Returns enumaration of T implementations.
+        /// Returns enumeration of T implementations.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>

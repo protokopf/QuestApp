@@ -1,22 +1,16 @@
 using System;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Graphics.Drawables;
-using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 using Android.Support.V4.Content.Res;
-using Android.Support.V7.App;
 using Android.Support.V7.Widget;
-using Android.Views;
 using Android.Widget;
-using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.Activities;
 using Justus.QuestApp.View.Droid.Adapters.Quests;
-using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.View.Droid.ViewHolders.QuestItem;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -44,8 +38,8 @@ namespace Justus.QuestApp.View.Droid.Fragments
                 switch (resultCode)
                 {
                     case (int)Result.Ok:
-                        ViewModel.ResetChildren();
-                        QuestsAdapter.NotifyDataSetChanged();
+                        ViewModel.Refresh();
+                        RedrawQuests();
                         Toast.MakeText(this.Context, "New quest has been saved!", ToastLength.Short).Show();
                         break;
                     case (int)Result.Canceled:
@@ -150,14 +144,18 @@ namespace Justus.QuestApp.View.Droid.Fragments
             FragmentActivity activity = this.Activity;
             if (activity != null)
             {
-                Intent startQuestInfo = QuestEditActivity.GetStartIntent(ViewModel.GetLeafId(itemPosition), activity);
-                this.StartActivityForResult(startQuestInfo, OkCancelRequestCode);
+                int? questId = ViewModel.GetLeafId(itemPosition);
+                if (questId != null)
+                {
+                    Intent startQuestInfo = QuestEditActivity.GetStartIntent(questId.Value, activity);
+                    this.StartActivityForResult(startQuestInfo, OkCancelRequestCode);
+                }
             }
         }
 
         private void StartHandler(int itemPosition)
         {
-            ViewModel.StartQuest(ViewModel.Leaves[itemPosition]);
+            ViewModel.StartQuest(itemPosition);
             QuestsAdapter.NotifyItemRemoved(itemPosition);
             QuestsAdapter.NotifyItemRangeChanged(itemPosition, QuestsAdapter.ItemCount);
         }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Justus.QuestApp.AbstractLayer.Model.Composite
+﻿namespace Justus.QuestApp.AbstractLayer.Model.Composite
 {
     /// <summary>
     /// Interface for composable types.

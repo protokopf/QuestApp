@@ -11,7 +11,7 @@ namespace Justus.QuestApp.AbstractLayer.Entities.Quest
         /// <summary>
         /// Parents quest id.
         /// </summary>
-        public virtual int ParentId { get; set; }
+        public virtual int? ParentId { get; set; }
 
         /// <summary>
         /// Quest title.
@@ -36,17 +36,17 @@ namespace Justus.QuestApp.AbstractLayer.Entities.Quest
         /// <summary>
         /// Time, until which quest should be done.
         /// </summary>
-        public virtual DateTime Deadline { get; set; }
+        public virtual DateTime? Deadline { get; set; }
 
         /// <summary>
         /// Time, when quest should start.
         /// </summary>
-        public virtual DateTime StartTime { get; set; }
+        public virtual DateTime? StartTime { get; set; }
 
         /// <summary>
         /// Current quest state.
         /// </summary>
-        public virtual QuestState CurrentState { get; set; }
+        public virtual State State { get; set; }
 
         /// <summary>
         /// Points, whether quest important or not.

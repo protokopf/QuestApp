@@ -4,17 +4,17 @@ using Justus.QuestApp.AbstractLayer.Commands;
 namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
 {
     /// <summary>
-    /// Command, which executes another commands.
+    /// ICommand, which executes another commands.
     /// </summary>
-    public class CompositeCommand : Command
+    public class CompositeCommand : ICommand
     {
-        private readonly Command[] _commands;
+        private readonly ICommand[] _commands;
 
         /// <summary>
         /// Receives array of inner commands.
         /// </summary>
         /// <param name="commands"></param>
-        public CompositeCommand(Command[] commands)
+        public CompositeCommand(ICommand[] commands)
         {
             if (commands == null)
             {
@@ -23,10 +23,10 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
             _commands = commands;
         }
 
-        #region Command overriding
+        #region ICommand overriding
 
         ///<inheritdoc/>
-        public override bool Execute()
+        public bool Execute()
         {
             int length = _commands.Length;
 
@@ -44,7 +44,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
         }
 
         ///<inheritdoc/>
-        public override bool Undo()
+        public bool Undo()
         {
             int length = _commands.Length;
 
@@ -62,7 +62,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
         }
 
         ///<inheritdoc/>
-        public override bool IsValid()
+        public bool IsValid()
         {
             int length = _commands.Length;
             for (int i = 0; i < length; ++i)
@@ -73,7 +73,21 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
                 }
             }
             return true;
-        } 
+        }
+
+        ///<inheritdoc/>
+        public bool Commit()
+        {
+            int length = _commands.Length;
+            for (int i = 0; i < length; ++i)
+            {
+                if (!_commands[i].Commit())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         #endregion
     }

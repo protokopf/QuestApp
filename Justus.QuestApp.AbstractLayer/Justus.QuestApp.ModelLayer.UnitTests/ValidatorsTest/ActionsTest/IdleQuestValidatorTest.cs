@@ -1,8 +1,6 @@
 ﻿using System;
-using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
-using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using Justus.QuestApp.ModelLayer.Validators.Actions;
 using NUnit.Framework;
@@ -26,8 +24,8 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
             Assert.AreEqual("quest", ex.ParamName);
         }
 
-        [TestCase(QuestState.Idle)]
-        public void ValidateQuestWithWrongStateTest(QuestState state)
+        [TestCase(State.Idle)]
+        public void ValidateQuestWithWrongStateTest(State state)
         {
             //Arrange
             IdleQuestValidator validator = new IdleQuestValidator();
@@ -43,10 +41,10 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
             Assert.AreEqual("ERR_QUEST_ACT_WRONG_STATE", result.Errors[0]);
         }
 
-        [TestCase(QuestState.Failed)]
-        [TestCase(QuestState.Progress)]
-        [TestCase(QuestState.Done)]
-        public void ValidateQuestSuccessfulTest(QuestState state)
+        [TestCase(State.Failed)]
+        [TestCase(State.Progress)]
+        [TestCase(State.Done)]
+        public void ValidateQuestSuccessfulTest(State state)
         {
             //Arrange
             IdleQuestValidator validator = new IdleQuestValidator();

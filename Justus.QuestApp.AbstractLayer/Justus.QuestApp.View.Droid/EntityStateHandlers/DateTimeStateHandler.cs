@@ -1,15 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 
 namespace Justus.QuestApp.View.Droid.EntityStateHandlers
@@ -17,25 +8,25 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers
     /// <summary>
     /// Handles date time state.
     /// </summary>
-    internal class DateTimeStateHandler : IEntityStateHandler<DateTime>
+    internal class DateTimeStateHandler : IEntityStateHandler<DateTime?>
     {
         private static readonly CultureInfo DateTimeCultureInfo = CultureInfo.CurrentUICulture;
 
         #region IEntityStateHandler<DateTime> implementation
 
         ///<inheritdoc/>
-        public bool Save(string key, DateTime entity, Bundle bundle)
+        public bool Save(string key, DateTime? entity, Bundle bundle)
         {
-            if (bundle != null && !string.IsNullOrWhiteSpace(key))
+            if (bundle != null && entity != null && !string.IsNullOrWhiteSpace(key))
             {
-                bundle.PutString(key, StringifyDateTime(entity));
+                bundle.PutString(key, StringifyDateTime(entity.Value));
                 return true;
             }
             return false;
         }
 
         ///<inheritdoc/>
-        public bool Extract(string key, Bundle bundle, ref DateTime entity)
+        public bool Extract(string key, Bundle bundle, ref DateTime? entity)
         {
             if (bundle != null && !string.IsNullOrWhiteSpace(key))
             {
@@ -65,12 +56,15 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers
         /// </summary>
         /// <param name="dateTimeString"></param>
         /// <returns></returns>
-        private DateTime ParseDateTimeString(string dateTimeString)
+        private DateTime? ParseDateTimeString(string dateTimeString)
         {
             DateTime dt = default(DateTime);
             if (!string.IsNullOrWhiteSpace(dateTimeString))
             {
-                DateTime.TryParse(dateTimeString, DateTimeCultureInfo, DateTimeStyles.None, out dt);
+                if (!DateTime.TryParse(dateTimeString, DateTimeCultureInfo, DateTimeStyles.None, out dt))
+                {
+                    return null;
+                }
             }
             return dt;
         }

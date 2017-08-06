@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using Android.App;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.View.Droid.Abstract.ViewHolders;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
+using Justus.QuestApp.ViewModelLayer.ViewModels;
 
 namespace Justus.QuestApp.View.Droid.Abstract.Adapters
 {
@@ -15,7 +14,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Adapters
     /// </summary>
     public abstract class BaseQuestsAdapter <TViewHolder, TViewModel> : RecyclerView.Adapter
         where TViewHolder : PositionedViewHolder
-        where TViewModel : IQuestCompositeModel
+        where TViewModel : QuestListViewModel
     {
         protected readonly TViewModel QuestsViewModel;
         protected readonly Activity ActivityRef;

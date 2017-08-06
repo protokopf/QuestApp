@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Views;
 using Android.Widget;
@@ -15,8 +10,8 @@ using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.Fragments.Dialogs;
-using Justus.QuestApp.View.Droid.Fragments.Quest;
 using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails;
+using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails.Abstract;
 
 namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
 {
@@ -47,8 +42,6 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
         protected Button DeadlineDateButton;
 
         protected FloatingActionButton SaveButton;
-
-        private readonly DateTime _defaultDateTime = default(DateTime);
 
         /// <summary>
         /// Default constructor. Resolves dependency on view model state handler.
@@ -129,19 +122,23 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
         {
             if (resultCode == (int)Result.Ok)
             {
-                DateTime receivedDateTime = DateTimePickerFragment.GetItsDateTime(data.Extras);
-                string receivedDateTimeString = StringifyDateTime(receivedDateTime);
+                DateTime? receivedDateTime = DateTimePickerFragment.GetItsDateTime(data.Extras);
 
-                switch (requestCode)
+                if (receivedDateTime != null)
                 {
-                    case DateTimePickerStartRequestCode:
-                        ViewModel.QuestViewModel.StartTime = receivedDateTime;
-                        StartDateButton.Text = receivedDateTimeString;
-                        break;
-                    case DateTimePickerDeadlineRequestCode:
-                        ViewModel.QuestViewModel.Deadline = receivedDateTime;
-                        DeadlineDateButton.Text = receivedDateTimeString;
-                        break;
+                    string receivedDateTimeString = StringifyDateTime(receivedDateTime.Value);
+
+                    switch (requestCode)
+                    {
+                        case DateTimePickerStartRequestCode:
+                            ViewModel.QuestViewModel.StartTime = receivedDateTime;
+                            StartDateButton.Text = receivedDateTimeString;
+                            break;
+                        case DateTimePickerDeadlineRequestCode:
+                            ViewModel.QuestViewModel.Deadline = receivedDateTime;
+                            DeadlineDateButton.Text = receivedDateTimeString;
+                            break;
+                    }
                 }
             }
         }
@@ -157,10 +154,10 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
 
         #region Private methods
 
-        private void ShowDateTimePickerFragment(int requestCode, DateTime startDateTime)
+        private void ShowDateTimePickerFragment(int requestCode, DateTime? startDateTime)
         {
             DateTimePickerFragment fragment = DateTimePickerFragment.NewInstance(
-                startDateTime == _defaultDateTime ? DateTime.Now : startDateTime,
+                startDateTime ?? DateTime.Now,
                 this,
                 requestCode);
             fragment.Show(FragmentManager, DateTimePickerId);
@@ -236,9 +233,9 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
         {
             if (DeadlineDateButton != null)
             {
-                if (ViewModel.QuestViewModel.Deadline != _defaultDateTime)
+                if (ViewModel.QuestViewModel.Deadline != null)
                 {
-                    DeadlineDateButton.Text = StringifyDateTime(ViewModel.QuestViewModel.Deadline);
+                    DeadlineDateButton.Text = StringifyDateTime(ViewModel.QuestViewModel.Deadline.Value);
                 }
                 if (ViewModel.QuestViewModel.UseDeadline)
                 {
@@ -254,9 +251,9 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
         {
             if (StartDateButton != null)
             {
-                if (ViewModel.QuestViewModel.StartTime != _defaultDateTime)
+                if (ViewModel.QuestViewModel.StartTime != null)
                 {
-                    StartDateButton.Text = StringifyDateTime(ViewModel.QuestViewModel.StartTime);
+                    StartDateButton.Text = StringifyDateTime(ViewModel.QuestViewModel.StartTime.Value);
                 }
                 if (ViewModel.QuestViewModel.UseStartTime)
                 {

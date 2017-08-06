@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Android.OS;
 using Android.Support.V7.Widget;
 using Android.Views;
@@ -11,7 +10,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
 {
     /// <summary>
     /// Base class for fragment, which displays list of quests. 
-    /// Contains references to bac button and current quest title textview.
+    /// Contains references to back button and current quest title text view.
     /// </summary>
     /// <typeparam name="TViewModel"></typeparam>
     /// <typeparam name="TViewHolder"></typeparam>
@@ -30,7 +29,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         protected Button BackButton;
 
         /// <summary>
-        /// Defaul quest title.
+        /// Default quest title.
         /// </summary>
         protected string TitleTextDefault;
 
@@ -66,7 +65,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         {
             //if (ViewModel.InTopRoot)
             //{
-                ViewModel.ResetChildren();
+                //ViewModel.ResetChildren();
             //}
             //else
             //{
@@ -144,7 +143,7 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         protected virtual async void DeleteHandler(int position)
         {
             await ViewModel.DeleteQuest(position);
-            ViewModel.ResetChildren();
+            ViewModel.Refresh();
             QuestsAdapter.NotifyItemRemoved(position);
             QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
             Toast.MakeText(this.Context, $"Quest in {position} position was deleted.", ToastLength.Short).Show();

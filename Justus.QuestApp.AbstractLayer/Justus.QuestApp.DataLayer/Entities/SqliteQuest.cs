@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using SQLite;
+using SQLite.Net.Attributes;
 
 namespace Justus.QuestApp.DataLayer.Entities
 {
@@ -12,19 +13,8 @@ namespace Justus.QuestApp.DataLayer.Entities
 
         ///<inheritdoc/>
         [PrimaryKey]
+        [AutoIncrement]
         public override int Id { get; set; }
-
-        ///<inheritdoc/>
-        public override int ParentId { get; set; }
-
-        ///<inheritdoc/>
-        public override string Title { get; set; }
-
-        ///<inheritdoc/>
-        public override string Description { get; set; }
-
-        ///<inheritdoc/>
-        public override DateTime Deadline { get; set; }
 
         ///<inheritdoc/>
         [Ignore]

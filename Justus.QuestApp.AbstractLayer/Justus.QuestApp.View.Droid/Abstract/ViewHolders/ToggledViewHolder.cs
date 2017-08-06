@@ -2,7 +2,6 @@ using System;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Justus.QuestApp.View.Droid.Abstract.ViewHolders;
 
 namespace Justus.QuestApp.View.Droid.Abstract.ViewHolders
 {

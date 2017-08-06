@@ -1,8 +1,6 @@
 ﻿using System;
-using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
-using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using Justus.QuestApp.ModelLayer.Validators.Actions;
 using NUnit.Framework;
@@ -26,10 +24,10 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
             Assert.AreEqual("quest", ex.ParamName);
         }
 
-        [TestCase(QuestState.Failed)]
-        [TestCase(QuestState.Done)]
-        [TestCase(QuestState.Idle)]
-        public void ValidateQuestWithWrongStateTest(QuestState state)
+        [TestCase(State.Failed)]
+        [TestCase(State.Done)]
+        [TestCase(State.Idle)]
+        public void ValidateQuestWithWrongStateTest(State state)
         {
             //Arrange
             FinishQuestVaidator validator = new FinishQuestVaidator();
@@ -50,9 +48,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         {
             //Arrange
             FinishQuestVaidator validator = new FinishQuestVaidator();
-            Quest quest = QuestHelper.CreateQuest(QuestState.Progress);
-            quest.Children.Add(QuestHelper.CreateQuest(QuestState.Done));
-            quest.Children.Add(QuestHelper.CreateQuest(QuestState.Done));
+            Quest quest = QuestHelper.CreateQuest(State.Progress);
+            quest.Children.Add(QuestHelper.CreateQuest(State.Done));
+            quest.Children.Add(QuestHelper.CreateQuest(State.Done));
 
             //Act
             StringResponse result = validator.Validate(quest);
@@ -67,7 +65,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         {
             //Arrange
             FinishQuestVaidator validator = new FinishQuestVaidator();
-            Quest quest = QuestHelper.CreateQuest(QuestState.Progress);
+            Quest quest = QuestHelper.CreateQuest(State.Progress);
 
             //Act
             StringResponse result = validator.Validate(quest);
@@ -82,9 +80,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.ActionsTest
         {
             //Arrange
             FinishQuestVaidator validator = new FinishQuestVaidator();
-            Quest quest = QuestHelper.CreateQuest(QuestState.Progress);
-            quest.Children.Add(QuestHelper.CreateQuest(QuestState.Done));
-            quest.Children.Add(QuestHelper.CreateQuest(QuestState.Progress));
+            Quest quest = QuestHelper.CreateQuest(State.Progress);
+            quest.Children.Add(QuestHelper.CreateQuest(State.Done));
+            quest.Children.Add(QuestHelper.CreateQuest(State.Progress));
 
             //Act
             StringResponse result = validator.Validate(quest);

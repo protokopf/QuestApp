@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Validators;
 
 namespace Justus.QuestApp.ModelLayer.Validators.Actions
@@ -16,10 +17,7 @@ namespace Justus.QuestApp.ModelLayer.Validators.Actions
         ///<inheritdoc/>
         public StringResponse Validate(Quest quest)
         {
-            if (quest == null)
-            {
-                throw new ArgumentNullException(nameof(quest));
-            }
+            quest.ThrowIfNull(nameof(quest));
             StringResponse result = new StringResponse();
             if (quest.State != State.Progress)
             {

@@ -61,7 +61,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
             holder.ItemPosition = position;
             holder.Title.Text = questData.Title;
             holder.Description.Text = questData.Description;
-            holder.StartButton.Visibility = questData.Parent == null ? ViewStates.Visible : ViewStates.Gone;
+            holder.StartButton.Visibility = QuestsViewModel.InTopRoot ? ViewStates.Visible : ViewStates.Gone;
             holder.ChildrenButton.Enabled = questData.Children != null;
         } 
 

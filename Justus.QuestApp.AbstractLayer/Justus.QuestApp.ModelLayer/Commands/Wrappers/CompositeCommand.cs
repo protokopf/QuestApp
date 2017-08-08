@@ -1,5 +1,6 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Commands;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
 {
@@ -16,10 +17,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
         /// <param name="commands"></param>
         public CompositeCommand(ICommand[] commands)
         {
-            if (commands == null)
-            {
-                throw new ArgumentNullException(nameof(commands));
-            }
+            commands.ThrowIfNull(nameof(commands));         
             _commands = commands;
         }
 

@@ -46,7 +46,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         {
             holder.Collapse();
             holder.ItemPosition = position;
-            holder.RestartButton.Visibility = questData.Parent == null ? ViewStates.Visible : ViewStates.Gone;
+            holder.RestartButton.Visibility = QuestsViewModel.InTopRoot ? ViewStates.Visible : ViewStates.Gone;
             holder.Title.Text = questData.Title;
             holder.Description.Text = questData.Description;
             holder.ChildrenButton.Enabled = questData.Children != null;

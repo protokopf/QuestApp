@@ -1,5 +1,6 @@
 using System;
 using Android.OS;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails.Abstract;
 
@@ -24,10 +25,8 @@ namespace Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels
         /// <param name="dateTimeStateHandler"></param>
         public QuestViewModelStateHandler(IEntityStateHandler<DateTime?> dateTimeStateHandler)
         {
-            if (dateTimeStateHandler == null)
-            {
-                throw new ArgumentNullException(nameof(dateTimeStateHandler));
-            }
+            dateTimeStateHandler.ThrowIfNull(nameof(dateTimeStateHandler));
+
             _dateTimeStateHandler = dateTimeStateHandler;
         }
 

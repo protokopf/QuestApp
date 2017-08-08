@@ -2,6 +2,7 @@
 using Justus.QuestApp.AbstractLayer.Entities.Errors;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Validators;
 
 namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
@@ -38,11 +39,8 @@ namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
         ///<inheritdoc/>
         public ClarifiedResponse<TMessage> Validate(Quest quest)
         {
-            if (quest == null)
-            {
-                throw new ArgumentNullException(nameof(quest));
-            }
-            
+            quest.ThrowIfNull(nameof(quest));
+
             ClarifiedResponse<TMessage> response  = new ClarifiedResponse<TMessage>();
 
             DateTime? start = quest.StartTime;

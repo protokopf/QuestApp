@@ -199,6 +199,15 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
             ViewModel.QuestViewModel.Title = TitleEditText.Text;
             ViewModel.QuestViewModel.Description = DescriptionEditText.Text;
 
+            if (!ViewModel.QuestViewModel.UseStartTime)
+            {
+                ViewModel.QuestViewModel.StartTime = null;
+            }
+            if (!ViewModel.QuestViewModel.UseDeadline)
+            {
+                ViewModel.QuestViewModel.Deadline = null;
+            }
+
             ClarifiedResponse<int> validationResult = ViewModel.Validate();
             if (validationResult.IsSuccessful)
             {

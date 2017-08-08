@@ -121,6 +121,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
         {
             if (ViewModel.InTopRoot)
             {
+                ViewModel.Refresh();
                 QuestsAdapter.NotifyItemRemoved(position);
                 QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
             }

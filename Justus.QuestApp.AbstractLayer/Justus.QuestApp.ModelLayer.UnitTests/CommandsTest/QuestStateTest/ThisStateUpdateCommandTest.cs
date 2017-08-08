@@ -7,7 +7,7 @@ using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.StateTest
+namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
 {
     [TestFixture]
     class ThisStateUpdateCommandTest

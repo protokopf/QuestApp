@@ -3,10 +3,11 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.State;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
+using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.StateTest
+namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
 {
     [TestFixture]
     class UpHierarchyStateUpdateCommandTest
@@ -15,10 +16,16 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.StateTest
         public void ExecuteStandaloneQuestTest()
         {
             //Arrange
-            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Once();
-
+            Quest root = new FakeQuest();
             Quest parent = QuestHelper.CreateQuest(State.Progress);
+            parent.Parent = root;
+
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).
+                Repeat.Once();
+            repository.Expect(r => r.Root).
+                Repeat.Twice().
+                Return(root);
 
             ICommand command = new UpHierarchyQuestCommand(parent, State.Done,  repository);
 
@@ -35,11 +42,18 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.StateTest
         public void UndoStandaloneQuestTest()
         {
             //Arrange
-            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Once();
-            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).Repeat.Once();
-
+            Quest root = new FakeQuest();
             Quest parent = QuestHelper.CreateQuest(State.Progress);
+            parent.Parent = root;
+
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).
+                Repeat.Once();
+            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).
+                Repeat.Once();
+            repository.Expect(r => r.Root).
+                Repeat.Twice().
+                Return(root);
 
             ICommand command = new UpHierarchyQuestCommand(parent,State.Done,  repository);
 
@@ -57,11 +71,17 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.StateTest
         public void ExecuteAllParentHierarchyTest()
         {
             //Arrange
-            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Times(3);
-
+            Quest root = new FakeQuest();
             Quest parent = QuestHelper.CreateCompositeQuest(2, 3, State.Done);
             parent.State = State.Progress;
+            parent.Parent = root;
+
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).
+                Repeat.Times(3);
+            repository.Expect(r => r.Root).
+                Return(root).
+                Repeat.Times(4);
 
             Quest current = parent;
             while (current.Children.Count != 0)
@@ -87,12 +107,19 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.StateTest
         public void UndoAllParentHierarchyTest()
         {
             //Arrange
-            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Times(3);
-            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).Repeat.Times(3);
-
+            Quest root = new FakeQuest();
             Quest parent = QuestHelper.CreateCompositeQuest(2, 3, State.Done);
             parent.State = State.Progress;
+            parent.Parent = root;
+
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).
+                Repeat.Times(3);
+            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).
+                Repeat.Times(3);
+            repository.Expect(r => r.Root).
+                Return(root).
+                Repeat.Times(4);
 
             Quest current = parent;
             while (current.Children.Count != 0)
@@ -119,11 +146,17 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.StateTest
         public void ExecuteOnlyChildTest()
         {
             //Arrange
-            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Times(1);
-
+            Quest root = new FakeQuest();
             Quest parent = QuestHelper.CreateCompositeQuest(2, 3, State.Done);
             parent.State = State.Progress;
+            parent.Parent = root;
+
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).
+                Repeat.Times(1);
+            repository.Expect(r => r.Root).
+                Return(root).
+                Repeat.Times(2);
 
             Quest current = parent;
             current.Children[0].Children[1].State = State.Progress;
@@ -150,12 +183,19 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.StateTest
         public void UndoOnlyChildTest()
         {
             //Arrange
-            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).Repeat.Times(1);
-            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).Repeat.Times(1);
-
+            Quest root = new FakeQuest();
             Quest parent = QuestHelper.CreateCompositeQuest(2, 3, State.Done);
             parent.State = State.Progress;
+            parent.Parent = root;
+
+            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).
+                Repeat.Times(1);
+            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).
+                Repeat.Times(1);
+            repository.Expect(r => r.Root).
+                Return(root).
+                Repeat.Times(2);
 
             Quest current = parent;
             current.Children[0].Children[1].State = State.Progress;

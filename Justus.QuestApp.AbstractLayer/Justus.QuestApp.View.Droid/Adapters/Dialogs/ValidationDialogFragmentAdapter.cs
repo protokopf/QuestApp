@@ -4,6 +4,7 @@ using Android.Content;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Errors;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.View.Droid.ViewHolders.Error;
 
 namespace Justus.QuestApp.View.Droid.Adapters.Dialogs
@@ -23,14 +24,9 @@ namespace Justus.QuestApp.View.Droid.Adapters.Dialogs
         /// <param name="clarifiedErrors"></param>
         public ValidationDialogFragmentAdapter(Context validationDialogFragmentAdapterContext, IList<ClarifiedError<int>> clarifiedErrors)
         {
-            if (clarifiedErrors == null)
-            {
-                throw new ArgumentNullException(nameof(clarifiedErrors));
-            }
-            if (validationDialogFragmentAdapterContext == null)
-            {
-                throw new ArgumentNullException(nameof(validationDialogFragmentAdapterContext));
-            }
+            clarifiedErrors.ThrowIfNull(nameof(clarifiedErrors));
+            validationDialogFragmentAdapterContext.ThrowIfNull(nameof(validationDialogFragmentAdapterContext));
+
             _errors = clarifiedErrors;
             _context = validationDialogFragmentAdapterContext;
         }

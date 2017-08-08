@@ -29,37 +29,17 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.Progress
             Assert.AreEqual("quest", ex.ParamName);
         }
 
-        [TestCase(State.Progress)]
-        [TestCase(State.Done)]
-        [TestCase(State.Failed)]
-        [TestCase(State.Idle)]
-        public void QuestWithoutParentTest(State state)
-        {
-            //Arrange
-            Quest q = QuestHelper.CreateQuest(state);
-            q.Parent = null;
-
-            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(rp => rp.Update(Arg<Quest>.Is.Equal(q))).Repeat.Once();
-
-            AllUpperQuestProgressRecounter recounter = new AllUpperQuestProgressRecounter(repository);
-
-
-            //Act
-            recounter.RecountProgress(q);
-
-            //Assert
-            Assert.AreEqual(state == State.Done ? 1 : 0, q.Progress);
-            repository.VerifyAllExpectations();
-        }
-
         [TestCase(true)]
         [TestCase(false)]
         public void QuestWithOneParentWithoutSiblingsTest(bool isQuestDone)
         {
             //Arrange
             double progress = isQuestDone ? 1 : 0;
+
+            Quest root = QuestHelper.CreateQuest();
+
             Quest parent = QuestHelper.CreateQuest();
+            parent.Parent = root;
             parent.Children = new List<Quest>()
             {
                 QuestHelper.CreateQuest()
@@ -70,8 +50,13 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.Progress
 
 
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(rp => rp.Update(Arg<Quest>.Is.Equal(parent))).Repeat.Once();
-            repository.Expect(rp => rp.Update(Arg<Quest>.Is.Equal(onlyChild))).Repeat.Once();
+            repository.Expect(rp => rp.Update(Arg<Quest>.Is.Equal(parent))).
+                Repeat.Once();
+            repository.Expect(rp => rp.Update(Arg<Quest>.Is.Equal(onlyChild))).
+                Repeat.Once();
+            repository.Expect(rp => rp.Root).
+                Return(root).
+                Repeat.Times(3);
 
             AllUpperQuestProgressRecounter recounter = new AllUpperQuestProgressRecounter(repository);
 
@@ -91,12 +76,18 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.Progress
         {
             //Arrange
             int count = progresses.Length;
+            Quest root = QuestHelper.CreateQuest();
 
             Quest parent = QuestHelper.CreateQuest();
+            parent.Parent = root;
             parent.Children = new List<Quest>();
 
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(rp => rp.Update(Arg<Quest>.Is.Equal(parent))).Repeat.Once();
+            repository.Expect(rp => rp.Update(Arg<Quest>.Is.Equal(parent))).
+                Repeat.Once();
+            repository.Expect(rp => rp.Root).
+                Return(root).
+                Repeat.Times(3);
             
             AllUpperQuestProgressRecounter recounter = new AllUpperQuestProgressRecounter(repository);
 

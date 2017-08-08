@@ -49,7 +49,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.State
         {
             while (true)
             {
-                if (parent == null)
+                if (parent == QuestTree.Root)
                 {
                     break;
                 }

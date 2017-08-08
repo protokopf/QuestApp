@@ -1,5 +1,6 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Abstracts;
 
@@ -19,10 +20,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         /// <param name="questToUpdate"></param>
         public UpdateQuestCommand(IQuestTree tree, Quest questToUpdate) : base(tree)
         {
-            if(questToUpdate == null)
-            {
-                throw new ArgumentNullException(nameof(questToUpdate));
-            }
+            questToUpdate.ThrowIfNull(nameof(questToUpdate));
             _toUpdate = questToUpdate;
         }
 

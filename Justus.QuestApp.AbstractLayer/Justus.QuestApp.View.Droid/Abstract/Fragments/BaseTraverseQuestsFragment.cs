@@ -63,10 +63,10 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         ///<inheritdoc/>
         public override void OnSelect()
         {
-            //if (ViewModel.InTopRoot)
-            //{
-                //ViewModel.ResetChildren();
-            //}
+            if (ViewModel.InTopRoot)
+            {
+                ViewModel.Refresh();
+            }
             //else
             //{
             //    TraverseToRoot();

@@ -31,7 +31,7 @@ namespace Justus.QuestApp.ModelLayer.Model.Progress
             quest.ThrowIfNull(nameof(quest));
 
             Quest current = quest;
-            while (current != null)
+            while (current != _questTree.Root)
             {
                 if (current.Children != null && current.Children.Count != 0)
                 {

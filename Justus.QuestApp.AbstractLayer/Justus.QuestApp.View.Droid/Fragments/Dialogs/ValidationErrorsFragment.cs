@@ -6,6 +6,7 @@ using Android.OS;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Errors;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.Adapters.Dialogs;
@@ -29,10 +30,8 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
 
         public ValidationErrorsFragment(IList<ClarifiedError<int>> clarifiedErros) : base()
         {
-            if (clarifiedErros == null)
-            {
-                throw new ArgumentNullException(nameof(clarifiedErros));
-            }
+            clarifiedErros.ThrowIfNull(nameof(clarifiedErros));
+
             Bundle arguments = new Bundle();
             _clarifiedErrorsStateHandler = ServiceLocator.Resolve<IEntityStateHandler<IList<ClarifiedError<int>>>>();
             _clarifiedErrorsStateHandler.Save(ClarifiedErrorsKey, clarifiedErros, arguments);

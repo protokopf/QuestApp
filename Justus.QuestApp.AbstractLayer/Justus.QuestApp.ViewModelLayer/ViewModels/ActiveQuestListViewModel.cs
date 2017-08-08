@@ -46,7 +46,6 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
             {
                 return -1;
             }
-            quest.ThrowIfNull(nameof(quest));
             double progress = quest.Progress;
             int result = (int) Math.Floor(progress * 100);
             return result > 100 ? 100 : result;

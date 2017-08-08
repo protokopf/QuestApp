@@ -1,4 +1,5 @@
 using System;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.View.Droid.Abstract.Fragments.Factories;
 using Fragment = Android.Support.V4.App.Fragment;
 
@@ -19,10 +20,8 @@ namespace Justus.QuestApp.View.Droid.Fragments.Factories
         /// <param name="fragmentTitle"></param>
         public ParametrizedFragmentFactory(Func<Fragment> fragmentInitializer, string fragmentTitle)
         {
-            if (fragmentInitializer == null)
-            {
-                throw new ArgumentNullException(nameof(fragmentInitializer));
-            }
+            fragmentInitializer.ThrowIfNull(nameof(fragmentInitializer));
+
             if (string.IsNullOrWhiteSpace(fragmentTitle))
             {
                 throw new ArgumentException("Fragment title should not be empty or whitespace.", nameof(fragmentTitle));

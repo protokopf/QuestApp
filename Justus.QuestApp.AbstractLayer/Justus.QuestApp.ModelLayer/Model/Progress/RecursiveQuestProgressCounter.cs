@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Model;
 
 namespace Justus.QuestApp.ModelLayer.Model.Progress
@@ -35,10 +36,7 @@ namespace Justus.QuestApp.ModelLayer.Model.Progress
         ///<inheritdoc/>
         public ProgressValue CountProgress(Quest quest)
         {
-            if (quest == null)
-            {
-                throw new ArgumentNullException(nameof(quest));
-            }
+            quest.ThrowIfNull(nameof(quest));
 
             //1. Clear previous data about quest.
             _leafWeights.Clear();

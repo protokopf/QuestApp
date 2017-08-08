@@ -5,6 +5,7 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Java.Lang;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.EntityStateHandlers;
 using DialogFragment = Android.Support.V4.App.DialogFragment;
@@ -53,10 +54,8 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         /// <returns></returns>
         public static DateTimePickerFragment NewInstance(DateTime dateTime, Fragment targetFragment, int requestCode)
         {
-            if (targetFragment == null)
-            {
-                throw new ArgumentNullException(nameof(targetFragment));
-            }
+            targetFragment.ThrowIfNull(nameof(targetFragment));
+
             DateTimePickerFragment fragment = new DateTimePickerFragment(dateTime);
             fragment.SetTargetFragment(targetFragment, requestCode);
             return fragment;

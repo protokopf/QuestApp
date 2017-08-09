@@ -64,10 +64,19 @@ namespace Justus.QuestApp.View.Droid.ViewHolders.QuestItem
 
         #region ToggledViewHolder overriding
 
-        ///<inehritdoc/>
+        ///<inehritdoc cref="ToggledViewHolder"/>
         protected override int GetExpandDetailsId()
         {
             return Resource.Id.availableQuestItemDetails;
+        }
+
+        ///<inehritdoc cref="ToggledViewHolder"/>
+        public override void Refresh()
+        {
+            this.Title.Text = string.Empty;
+            this.Description.Text = string.Empty;
+            this.StartTime.Text = string.Empty;
+            this.Deadline.Text = string.Empty;       
         }
 
         #endregion

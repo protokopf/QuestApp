@@ -44,6 +44,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         ///<inheritdoc/>
         protected override void FillViewHolder(AvailableQuestViewHolder holder, Quest questData, int position)
         {
+            holder.Refresh();
             holder.Collapse();
 
             holder.HandleIsImportantButton(questData.IsImportant);

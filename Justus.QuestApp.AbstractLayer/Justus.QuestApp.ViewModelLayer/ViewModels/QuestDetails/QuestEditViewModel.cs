@@ -43,11 +43,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
         ///<inheritdoc cref="QuestAbstractActionViewModel"/>
         public override void Action()
         {
-            ICommand updateCommand = _commandsFactory.UpdateQuest(QuestViewModel.Model);
-            if (updateCommand.Execute())
-            {
-                updateCommand.Commit();
-            }
+            ExecuteCommand(_commandsFactory.UpdateQuest(QuestViewModel.Model));
         }
 
         ///<inheritdoc cref="QuestAbstractActionViewModel"/>

@@ -119,5 +119,210 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest.QuestDetails
             Assert.AreEqual(startTime, innerModel.StartTime);
             Assert.AreEqual(deadline, innerModel.Deadline);
         }
+
+        [Test]
+        public void UseStartTimeDeadlineNotNullModelSetterTest()
+        {
+            //Arrange
+            DateTime expectedStartTime = DateTime.Now;
+            DateTime expectedDeadline = DateTime.Now + new TimeSpan(1);
+
+            Quest model = new FakeQuest()
+            {
+                StartTime = expectedStartTime,
+                Deadline = expectedDeadline
+            };
+
+            QuestViewModel viewModel = new QuestViewModel
+            {
+                Model = model
+            };
+
+            //Act
+            bool useStartTime = viewModel.UseStartTime;
+            bool useDeadline = viewModel.UseDeadline;
+
+            //Assert
+            Assert.IsTrue(useStartTime);
+            Assert.IsTrue(useDeadline);
+        }
+
+        [Test]
+        public void UseStartTimeDeadlineNullModelSetterTest()
+        {
+            //Arrange
+            Quest model = new FakeQuest()
+            {
+                StartTime = null,
+                Deadline = null
+            };
+
+            QuestViewModel viewModel = new QuestViewModel
+            {
+                Model = model
+            };
+
+            //Act
+            bool useStartTime = viewModel.UseStartTime;
+            bool useDeadline = viewModel.UseDeadline;
+
+            //Assert
+            Assert.IsTrue(useStartTime);
+            Assert.IsTrue(useDeadline);
+        }
+
+        [Test]
+        public void UseStartTimeChangingTest()
+        {
+            //Arrange
+            DateTime? expectedStartTime = DateTime.Now;
+
+            Quest model = new FakeQuest
+            {
+                StartTime = expectedStartTime
+            };
+
+            QuestViewModel viewModel = new QuestViewModel
+            {
+                Model = model
+            };
+
+            //Act
+            DateTime? startBeforeAnyChanges = viewModel.StartTime;
+
+            viewModel.UseStartTime = false;
+            DateTime? startAfterUseFalse = viewModel.StartTime;
+            DateTime? modelStartAfterUseFalse = viewModel.Model.StartTime;
+
+            viewModel.UseStartTime = true;
+            DateTime? startAfterUseTrue = viewModel.StartTime;
+            DateTime? modelStartAfterUseTrue = viewModel.Model.StartTime;
+
+            //Assert
+            Assert.AreEqual(expectedStartTime, startBeforeAnyChanges);
+
+            Assert.AreEqual(expectedStartTime, startAfterUseFalse);
+            Assert.AreEqual(null, modelStartAfterUseFalse);
+
+            Assert.AreEqual(expectedStartTime, startAfterUseTrue);
+            Assert.AreEqual(expectedStartTime, modelStartAfterUseTrue);
+        }
+
+        [Test]
+        public void UseDeadlineChangingTest()
+        {
+            //Arrange
+            DateTime? expectedDeadline = DateTime.Now;
+
+            Quest model = new FakeQuest
+            {
+                Deadline = expectedDeadline
+            };
+
+            QuestViewModel viewModel = new QuestViewModel
+            {
+                Model = model
+            };
+
+            //Act
+            DateTime? deadBeforeAnyChanges = viewModel.Deadline;
+            viewModel.UseDeadline = false;
+
+            DateTime? deadAfterUseFalse = viewModel.Deadline;
+            DateTime? modelDeadAfterUseFalse = viewModel.Model.Deadline;
+
+            viewModel.UseDeadline = true;
+            DateTime? deadAfterUseTrue = viewModel.Deadline;
+            DateTime? modelDeadAfterUseTrue = viewModel.Model.Deadline;
+
+            //Assert
+            Assert.AreEqual(expectedDeadline, deadBeforeAnyChanges);
+
+            Assert.AreEqual(expectedDeadline, deadAfterUseFalse);
+            Assert.AreEqual(null, modelDeadAfterUseFalse);
+
+            Assert.AreEqual(expectedDeadline, deadAfterUseTrue);
+            Assert.AreEqual(expectedDeadline, modelDeadAfterUseTrue);
+        }
+
+        [Test]
+        public void CachedDeadlineTest()
+        {
+            //Arrange
+            DateTime? expectedDeadline = DateTime.Now;
+            DateTime? newDeadline = DateTime.MaxValue;
+
+            Quest model = new FakeQuest
+            {
+                Deadline = expectedDeadline
+            };
+
+            QuestViewModel viewModel = new QuestViewModel
+            {
+                Model = model
+            };
+
+            //Act
+            DateTime? deadBeforeAnyChanges = viewModel.Deadline;
+            viewModel.UseDeadline = false;
+
+            DateTime? deadAfterUseFalse = viewModel.Deadline;
+            DateTime? modelDeadAfterUseFalse = viewModel.Model.Deadline;
+
+            viewModel.Deadline = newDeadline;
+
+            viewModel.UseDeadline = true;
+            DateTime? deadAfterUseTrue = viewModel.Deadline;
+            DateTime? modelDeadAfterUseTrue = viewModel.Model.Deadline;
+
+            //Assert
+            Assert.AreEqual(expectedDeadline, deadBeforeAnyChanges);
+
+            Assert.AreEqual(expectedDeadline, deadAfterUseFalse);
+            Assert.AreEqual(null, modelDeadAfterUseFalse);
+
+            Assert.AreEqual(newDeadline, deadAfterUseTrue);
+            Assert.AreEqual(newDeadline, modelDeadAfterUseTrue);
+        }
+
+        [Test]
+        public void CachedStartTimeTest()
+        {
+            //Arrange
+            DateTime? expectedStartTime = DateTime.Now;
+            DateTime? newStartTime = DateTime.MaxValue;
+
+            Quest model = new FakeQuest
+            {
+                StartTime = expectedStartTime
+            };
+
+            QuestViewModel viewModel = new QuestViewModel
+            {
+                Model = model
+            };
+
+            //Act
+            DateTime? startBeforeAnyChanges = viewModel.StartTime;
+
+            viewModel.UseStartTime = false;
+            DateTime? startAfterUseFalse = viewModel.StartTime;
+            DateTime? modelStartAfterUseFalse = viewModel.Model.StartTime;
+
+            viewModel.StartTime = newStartTime;
+            viewModel.UseStartTime = true;
+
+            DateTime? startAfterUseTrue = viewModel.StartTime;
+            DateTime? modelStartAfterUseTrue = viewModel.Model.StartTime;
+
+            //Assert
+            Assert.AreEqual(expectedStartTime, startBeforeAnyChanges);
+
+            Assert.AreEqual(expectedStartTime, startAfterUseFalse);
+            Assert.AreEqual(null, modelStartAfterUseFalse);
+
+            Assert.AreEqual(newStartTime, startAfterUseTrue);
+            Assert.AreEqual(newStartTime, modelStartAfterUseTrue);
+        }
     }
 }

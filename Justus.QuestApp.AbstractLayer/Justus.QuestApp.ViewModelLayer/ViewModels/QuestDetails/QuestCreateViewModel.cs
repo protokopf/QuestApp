@@ -47,22 +47,8 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
 
             if (model != null)
             {
-                if (!QuestViewModel.UseStartTime)
-                {
-                    QuestViewModel.StartTime = null;
-                }
-                if (!QuestViewModel.UseDeadline)
-                {
-                    QuestViewModel.Deadline = null;
-                }
-
                 Quest parentOfModel = _questTree.Get(q => q.Id == ParentId);
-
-                ICommand addCommand = _commandsFactory.AddQuest(parentOfModel, model);
-                if (addCommand.Execute())
-                {
-                    addCommand.Commit();
-                }
+                ExecuteCommand(_commandsFactory.AddQuest(parentOfModel, model));
             }
         }
 

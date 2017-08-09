@@ -199,15 +199,6 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
             ViewModel.QuestViewModel.Title = TitleEditText.Text;
             ViewModel.QuestViewModel.Description = DescriptionEditText.Text;
 
-            if (!ViewModel.QuestViewModel.UseStartTime)
-            {
-                ViewModel.QuestViewModel.StartTime = null;
-            }
-            if (!ViewModel.QuestViewModel.UseDeadline)
-            {
-                ViewModel.QuestViewModel.Deadline = null;
-            }
-
             ClarifiedResponse<int> validationResult = ViewModel.Validate();
             if (validationResult.IsSuccessful)
             {
@@ -231,8 +222,21 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
         /// </summary>
         protected virtual void HandleUiElements()
         {
+            HandleStartTimeDealineCheckboxes();
             HandleStartDateButton();
             HandleDeadlineDateButton();
+        }
+
+        /// <summary>
+        /// Handles start time / deadline check boxes.
+        /// </summary>
+        private void HandleStartTimeDealineCheckboxes()
+        {
+            if (StartDateTimeCheckbox != null)
+            {
+                StartDateTimeCheckbox.Checked = ViewModel.QuestViewModel.UseStartTime;
+                DeadlineCheckbox.Checked = ViewModel.QuestViewModel.UseDeadline;
+            }
         }
 
         /// <summary>
@@ -244,7 +248,8 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments.QuestDetails
             {
                 if (ViewModel.QuestViewModel.Deadline != null)
                 {
-                    DeadlineDateButton.Text = StringifyDateTime(ViewModel.QuestViewModel.Deadline.Value);
+                    DeadlineDateButton.Text = StringifyDateTime(ViewModel.QuestViewModel.
+                        Deadline.Value);
                 }
                 if (ViewModel.QuestViewModel.UseDeadline)
                 {

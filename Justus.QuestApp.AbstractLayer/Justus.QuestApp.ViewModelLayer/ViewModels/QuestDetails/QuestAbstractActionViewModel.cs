@@ -1,4 +1,5 @@
-﻿using Justus.QuestApp.AbstractLayer.Entities.Responses;
+﻿using Justus.QuestApp.AbstractLayer.Commands;
+using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ViewModelLayer.Factories;
@@ -54,6 +55,21 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
         public virtual void Initialize()
         {
             QuestViewModel = _questViewModelFactory.CreateQuestViewModel();
+        }
+
+        /// <summary>
+        /// Executes given command.
+        /// </summary>
+        /// <param name="command"></param>
+        protected void ExecuteCommand(ICommand command)
+        {
+            if (command != null)
+            {
+                if (command.Execute())
+                {
+                    command.Commit();
+                }
+            }
         }
     }
 }

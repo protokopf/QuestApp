@@ -6,7 +6,7 @@ using Android.Widget;
 namespace Justus.QuestApp.View.Droid.Abstract.ViewHolders
 {
     /// <summary>
-    /// Type for view, which can expand and have definit position.
+    /// Type for view, which can expand and have position.
     /// </summary>
     public abstract class ToggledViewHolder : PositionedViewHolder
     {

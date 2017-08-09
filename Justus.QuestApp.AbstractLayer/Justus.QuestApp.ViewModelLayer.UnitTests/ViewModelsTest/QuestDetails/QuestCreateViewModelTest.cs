@@ -64,24 +64,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest.QuestDetails
             questViewModel.Expect(qvm => qvm.Model).
                 Repeat.Once().
                 Return(quest);
-            questViewModel.Expect(qvm => qvm.UseStartTime).
-                Repeat.Once().
-                Return(useStartTime);
-            questViewModel.Expect(qvm => qvm.UseDeadline).
-                Repeat.Once().
-                Return(useDeadLine);
-            if (!useDeadLine)
-            {
-                questViewModel.Expect(qvm => qvm.Deadline).
-                    SetPropertyWithArgument(null).
-                    Repeat.Once();
-            }
-            if (!useStartTime)
-            {
-                questViewModel.Expect(qvm => qvm.StartTime).
-                    SetPropertyWithArgument(null).
-                    Repeat.Once();
-            }
 
             ICommand addCommand = MockRepository.GenerateStrictMock<ICommand>();
             addCommand.Expect(ac => ac.Execute()).
@@ -140,12 +122,6 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest.QuestDetails
             questViewModel.Expect(qvm => qvm.Model).
                 Repeat.Once().
                 Return(quest);
-            questViewModel.Expect(qvm => qvm.UseStartTime).
-                Repeat.Once().
-                Return(true);
-            questViewModel.Expect(qvm => qvm.UseDeadline).
-                Repeat.Once().
-                Return(true);
 
             ICommand addCommand = MockRepository.GenerateStrictMock<ICommand>();
             addCommand.Expect(ac => ac.Execute()).

@@ -153,9 +153,9 @@ namespace Justus.QuestApp.View.Droid.Fragments
             }
         }
 
-        private void StartHandler(int itemPosition)
+        private async void StartHandler(int itemPosition)
         {
-            ViewModel.StartQuest(itemPosition);
+            await ViewModel.StartQuest(itemPosition);
             ViewModel.Refresh();
             QuestsAdapter.NotifyItemRemoved(itemPosition);
             QuestsAdapter.NotifyItemRangeChanged(itemPosition, QuestsAdapter.ItemCount);

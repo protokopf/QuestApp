@@ -68,6 +68,15 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
             return false;
         }
 
+        public static void ExecuteForUpHierarchy(Quest quest, Action<Quest> action, Func<Quest, bool> stopCondition)
+        {
+            while (!stopCondition(quest))
+            {
+                action?.Invoke(quest);
+                quest = quest.Parent;
+            }
+        }
+
         public static int CountSubQuests(List<Quest> childs)
         {
             if (childs == null || childs.Count == 0)
@@ -156,6 +165,22 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
                 quests.Add(CreateQuest(i + 1));
             }
             return quests;
+        }
+
+        public static void GatherAllHierarchy(Quest parent, ref List<Quest> allQuests)
+        {
+            if (parent != null)
+            {
+                allQuests.Add(parent);
+                if (parent.Children != null)
+                {
+                    foreach (Quest child in parent.Children)
+                    {
+                        GatherAllHierarchy(child, ref allQuests);
+                    }
+                }
+            }
+
         }
     }
 }

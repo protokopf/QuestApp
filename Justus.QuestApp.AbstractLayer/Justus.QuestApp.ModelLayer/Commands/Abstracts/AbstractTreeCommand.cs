@@ -26,10 +26,10 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
         #region SwitchCommand overriding
 
         ///<inheritdoc cref="SwitchCommand"/>
-        public override bool Commit()
+        protected override bool InnerCommit()
         {
             QuestTree.Save();
-            return base.Commit();
+            return true;
         }
 
         #endregion

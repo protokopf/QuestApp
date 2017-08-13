@@ -22,8 +22,9 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
         {
             if (!_hasExecuted && !_hasCommited)
             {
+                bool result = InnerExecute();
                 _hasExecuted = true;
-                return InnerExecute();
+                return result;
             }
             return false;
         }
@@ -33,8 +34,9 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
         {
             if (_hasExecuted && !_hasCommited)
             {
+                bool result = InnerUndo();
                 _hasExecuted = false;
-                return InnerUndo();
+                return result;
             }
             return false;
         }
@@ -46,10 +48,16 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
         }
 
         ///<inheritdoc cref="ICommand"/>
-        public virtual bool Commit()
+        public bool Commit()
         {
-            _hasCommited = true;
-            return true;
+            bool result = false;
+            if (!_hasCommited)
+            {
+                result = InnerCommit();
+                _hasCommited = true;
+            }
+
+            return result;
         }
 
         #endregion
@@ -65,5 +73,11 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
         /// </summary>
         /// <returns></returns>
         protected abstract bool InnerUndo();
+
+        /// <summary>
+        /// Will be called only if command has not been commited.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract bool InnerCommit();
     }
 }

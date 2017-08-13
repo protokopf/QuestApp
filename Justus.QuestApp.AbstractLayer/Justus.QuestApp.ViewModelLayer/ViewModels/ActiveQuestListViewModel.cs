@@ -25,13 +25,13 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// Points, whether all quests are done or not.
         /// </summary>
         /// <returns></returns>
-        public bool IsRootDone()
+        public bool IsRootHasState(State state)
         {
             if (InTopRoot)
             {
                 return false;
             }
-            return QuestListModel.Parent.State == State.Done;
+            return QuestListModel.Parent.State == state;
         }
 
         /// <summary>

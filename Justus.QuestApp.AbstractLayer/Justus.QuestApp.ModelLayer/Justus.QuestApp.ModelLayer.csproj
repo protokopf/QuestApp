@@ -37,16 +37,26 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Abstracts\Hierarchy\DownHierarchyQuestCommand.cs" />
+    <Compile Include="Commands\Abstracts\Hierarchy\AbstractQuestCommand.cs" />
+    <Compile Include="Commands\Abstracts\Hierarchy\ThisQuestCommand.cs" />
+    <Compile Include="Commands\Abstracts\Hierarchy\UpHierarchyQuestCommand.cs" />
     <Compile Include="Commands\Abstracts\SwitchCommand.cs" />
     <Compile Include="Commands\Factories\Wrappers\RecountProgressTreeCommandsFactory.cs" />
     <Compile Include="Commands\Factories\Wrappers\RecountProgressStateCommandsFactory.cs" />
+    <Compile Include="Commands\State\CancelQuestCommand.cs" />
+    <Compile Include="Commands\State\Common\ChangeStateDownHierarchy.cs" />
+    <Compile Include="Commands\State\Common\ChangeStateDownHierarchyLoadUnload.cs" />
+    <Compile Include="Commands\State\Common\ChangeStateCurrent.cs" />
+    <Compile Include="Commands\State\Common\ChangeStateUpHierarchy.cs" />
+    <Compile Include="Commands\State\Common\ChangeStateUpHierarchyIfChildrenHaveTheSameState.cs" />
+    <Compile Include="Commands\State\DoneQuestCommand.cs" />
+    <Compile Include="Commands\State\FailQuestCommand.cs" />
+    <Compile Include="Commands\State\StartQuestCommand.cs" />
     <Compile Include="Commands\Wrappers\CompositeCommand.cs" />
     <Compile Include="Commands\Factories\DefaultTreeCommandsFactory.cs" />
     <Compile Include="Commands\Factories\DefaultStateCommandsFactory.cs" />
     <Compile Include="Commands\Abstracts\BaseQuestCommand.cs" />
-    <Compile Include="Commands\State\DownHierarchyQuestCommand.cs" />
-    <Compile Include="Commands\State\ThisQuestCommand.cs" />
-    <Compile Include="Commands\State\UpHierarchyQuestCommand.cs" />
     <Compile Include="Commands\Repository\AddQuestCommand.cs" />
     <Compile Include="Commands\Repository\DeleteQuestCommand.cs" />
     <Compile Include="Commands\Repository\RebindQuestCommand.cs" />

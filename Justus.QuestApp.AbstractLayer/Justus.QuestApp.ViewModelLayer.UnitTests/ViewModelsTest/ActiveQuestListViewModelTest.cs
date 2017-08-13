@@ -147,7 +147,7 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
 
             //Act
-            bool isRootDone = viewModel.IsRootDone();
+            bool isRootDone = viewModel.IsRootHasState(State.Done);
 
             //Assert
             Assert.IsFalse(isRootDone);
@@ -181,9 +181,9 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
 
             //Act
-            bool isRootDoneBefore = viewModel.IsRootDone();
+            bool isRootDoneBefore = viewModel.IsRootHasState(State.Done);
             root.State = State.Done;
-            bool isRootDoneAfter = viewModel.IsRootDone();
+            bool isRootDoneAfter = viewModel.IsRootHasState(State.Done);
 
             //Assert
             Assert.IsFalse(isRootDoneBefore);

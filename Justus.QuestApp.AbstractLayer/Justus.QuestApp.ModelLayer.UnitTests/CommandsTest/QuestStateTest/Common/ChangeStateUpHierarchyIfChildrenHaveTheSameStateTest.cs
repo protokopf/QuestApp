@@ -1,17 +1,35 @@
-﻿using Justus.QuestApp.AbstractLayer.Commands;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.State;
+using Justus.QuestApp.ModelLayer.Commands.State.Common;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using Rhino.Mocks;
 
-namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
+namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Common
 {
     [TestFixture]
-    class UpHierarchyStateUpdateCommandTest
+    class ChangeStateUpHierarchyIfChildrenHaveTheSameStateTest
     {
+        [Test]
+        public void BaseClassTest()
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
+            Assert.IsTrue(typeof(ChangeStateUpHierarchyIfChildrenHaveTheSameState).IsSubclassOf(typeof(Commands.Abstracts.Hierarchy.UpHierarchyQuestCommand)));
+        }
+
         [Test]
         public void ExecuteStandaloneQuestTest()
         {
@@ -27,14 +45,14 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
                 Repeat.Twice().
                 Return(root);
 
-            ICommand command = new UpHierarchyQuestCommand(parent, State.Done,  repository);
+            ICommand command = new ChangeStateUpHierarchyIfChildrenHaveTheSameState(parent, repository, State.Done);
 
             //Act
             command.Execute();
 
             //Assert
             Assert.AreEqual(State.Done, parent.State);
-            
+
             repository.VerifyAllExpectations();
         }
 
@@ -52,10 +70,10 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
             repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).
                 Repeat.Once();
             repository.Expect(r => r.Root).
-                Repeat.Twice().
+                Repeat.Times(2).
                 Return(root);
 
-            ICommand command = new UpHierarchyQuestCommand(parent,State.Done,  repository);
+            ICommand command = new ChangeStateUpHierarchyIfChildrenHaveTheSameState(parent,  repository, State.Done);
 
             //Act
             command.Execute();
@@ -90,7 +108,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
                 current = current.Children[0];
             }
 
-            ICommand command = new UpHierarchyQuestCommand(current, State.Done, repository);
+            ICommand command = new ChangeStateUpHierarchyIfChildrenHaveTheSameState(current,repository, State.Done);
 
             //Act
             command.Execute();
@@ -128,7 +146,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
                 current = current.Children[0];
             }
 
-            ICommand command = new UpHierarchyQuestCommand(current, State.Done, repository);
+            ICommand command = new ChangeStateUpHierarchyIfChildrenHaveTheSameState(current, repository, State.Done);
 
             //Act
             command.Execute();
@@ -166,7 +184,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
                 current = current.Children[0];
             }
 
-            ICommand command = new UpHierarchyQuestCommand(current, State.Done, repository);
+            ICommand command = new ChangeStateUpHierarchyIfChildrenHaveTheSameState(current, repository, State.Done);
 
             //Act
             command.Execute();
@@ -180,41 +198,30 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest
         }
 
         [Test]
-        public void UndoOnlyChildTest()
+        public void CommitTest()
         {
             //Arrange
             Quest root = new FakeQuest();
-            Quest parent = QuestHelper.CreateCompositeQuest(2, 3, State.Done);
-            parent.State = State.Progress;
+            Quest parent = QuestHelper.CreateQuest(State.Progress);
             parent.Parent = root;
 
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
+            repository.Expect(r => r.Save()).
+                Repeat.Once();
             repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).
-                Repeat.Times(1);
-            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).
-                Repeat.Times(1);
+                Repeat.Once();
             repository.Expect(r => r.Root).
-                Return(root).
-                Repeat.Times(2);
+                Repeat.Twice().
+                Return(root);
 
-            Quest current = parent;
-            current.Children[0].Children[1].State = State.Progress;
-            while (current.Children.Count != 0)
-            {
-                current.Children[0].State = State.Progress;
-                current = current.Children[0];
-            }
-
-            ICommand command = new UpHierarchyQuestCommand(current, State.Done, repository);
+            ICommand command = new ChangeStateUpHierarchyIfChildrenHaveTheSameState(parent, repository, State.Done);
 
             //Act
             command.Execute();
-            command.Undo();
+            command.Commit();
 
             //Assert
-            Assert.AreEqual(State.Progress, current.State);
-            Assert.AreEqual(State.Progress, parent.State);
-            Assert.IsFalse(QuestHelper.CheckThatAllQuestsHierarchyMatchPredicate(parent.Children, q => q.State == State.Done));
+            Assert.AreEqual(State.Done, parent.State);
 
             repository.VerifyAllExpectations();
         }

@@ -11,7 +11,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// </summary>
     public class UpdateQuestCommand : AbstractTreeCommand
     {
-        private Quest _toUpdate;
+        private readonly Quest _toUpdate;
 
         /// <summary>
         /// Receives tree and reference to quest to update.

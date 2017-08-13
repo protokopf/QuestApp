@@ -754,7 +754,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.QuestTree
             //Assert
             Quest removedInRootChildren = root.Children.Find(q => q == toRemove);
             Assert.IsNull(removedInRootChildren);
-            Assert.AreEqual(null, toRemove.ParentId);
+            Assert.AreEqual(TopRootId, toRemove.ParentId);
             Assert.AreEqual(null, toRemove.Parent);
 
             Quest removedInTree = tree.Get(q => q == toRemove);
@@ -870,7 +870,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.QuestTree
             //Assert
             Quest removedInRootChildren = root.Children.Find(q => q == toRemove);
             Assert.IsNull(removedInRootChildren);
-            Assert.AreEqual(null, toRemove.ParentId);
+            Assert.AreEqual(TopRootId, toRemove.ParentId);
             Assert.AreEqual(null, toRemove.Parent);
 
             dataLayer.VerifyAllExpectations();
@@ -938,7 +938,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.QuestTree
             //Assert
             Quest removedInRootChildren = root.Children.Find(q => q == toRemove);
             Assert.IsNull(removedInRootChildren);
-            Assert.AreEqual(null, toRemove.ParentId);
+            Assert.AreEqual(TopRootId, toRemove.ParentId);
             Assert.AreEqual(null, toRemove.Parent);
 
             Quest removedInTree = tree.Get(q => q == toRemove);
@@ -1015,7 +1015,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.ModelTest.QuestTree
             //Assert
             Quest added = root.Children.Find(q => q.Id == addedId);
             Assert.IsNull(added);
-            Assert.AreEqual(null, toAdd.ParentId);
+            Assert.AreEqual(TopRootId, toAdd.ParentId);
             Assert.AreEqual(null, toAdd.Parent);
 
             Quest addedFromTree = tree.Get(q => q.Id == addedId);

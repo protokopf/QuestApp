@@ -82,7 +82,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private async void RestartHandler(int position)
         {
-            await ViewModel.StartQuest(position);
+            await ViewModel.RestartQuest(position);
             ViewModel.Refresh();
             //Only top level quests can be restarted, so they will be removed from Result category.
             QuestsAdapter.NotifyItemRemoved(position);

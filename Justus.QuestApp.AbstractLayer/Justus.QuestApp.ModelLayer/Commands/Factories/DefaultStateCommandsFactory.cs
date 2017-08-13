@@ -30,28 +30,28 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         public ICommand DoneQuest(Quest quest)
         {
             quest.ThrowIfNull(nameof(quest));
-            return new UpHierarchyQuestCommand(quest, AbstractLayer.Entities.Quest.State.Done, _questTree);
+            return new DoneQuestCommand(quest, _questTree);
         }
 
         ///<inheritdoc/>
         public ICommand FailQuest(Quest quest)
         {
             quest.ThrowIfNull(nameof(quest));
-            return new UpHierarchyQuestCommand(quest, AbstractLayer.Entities.Quest.State.Failed, _questTree);
+            return new FailQuestCommand(quest, _questTree);
         }
 
         ///<inheritdoc/>
         public ICommand StartQuest(Quest quest)
         {
             quest.ThrowIfNull(nameof(quest));
-            return new ThisQuestCommand(quest, AbstractLayer.Entities.Quest.State.Progress, _questTree);
+            return new StartQuestCommand(quest, _questTree);
         }
 
         ///<inheritdoc/>
         public ICommand CancelQuest(Quest quest)
         {
             quest.ThrowIfNull(nameof(quest));
-            return new DownHierarchyQuestCommand(quest, AbstractLayer.Entities.Quest.State.Idle, _questTree);
+            return new CancelQuestCommand(quest, _questTree);
         } 
 
 

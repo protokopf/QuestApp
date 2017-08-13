@@ -103,10 +103,9 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestTree
         ///<inheritdoc cref="IQuestTree"/>
         public void LoadChildren(Quest quest)
         {
+            quest.ThrowIfNull(nameof(quest));
             lock (_locker)
             {
-                quest.ThrowIfNull(nameof(quest));
-
                 //TODO: Load quest children from repository. Add them to frat list and quest children.
                 using (_dataLayer)
                 {
@@ -119,9 +118,9 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestTree
         ///<inheritdoc cref="IQuestTree"/>
         public void UnloadChildren(Quest quest)
         {
+            quest.ThrowIfNull(nameof(quest));
             lock (_locker)
             {
-                quest.ThrowIfNull(nameof(quest));
                 //TODO: Unload should also be recursive?
                 quest.Children.Clear();
                 _flatQuestTree.RemoveAll(q => q.ParentId == quest.Id && q.Parent == quest);
@@ -131,12 +130,10 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestTree
         ///<inheritdoc cref="IQuestTree"/>
         public void AddChild(Quest parent, Quest child)
         {
+            parent.ThrowIfNull(nameof(parent));
+            child.ThrowIfNull(nameof(child));
             lock (_locker)
             {
-                parent.ThrowIfNull(nameof(parent));
-                child.ThrowIfNull(nameof(child));
-
-
                 BindChildAndParent(child, parent);
 
                 _flatQuestTree.Add(child);
@@ -155,17 +152,16 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestTree
         ///<inheritdoc cref="IQuestTree"/>
         public void RemoveChild(Quest parent, Quest child)
         {
+            parent.ThrowIfNull(nameof(parent));
+            child.ThrowIfNull(nameof(child));
             //TODO: find way how to optimize deleting quests
             lock (_locker)
             {
-                parent.ThrowIfNull(nameof(parent));
-                child.ThrowIfNull(nameof(child));
-
                 List<Quest> toRemoveQuests = new List<Quest>() {child};
                 GatherAllHierarchy(child, ref toRemoveQuests);
                 foreach (Quest quest in toRemoveQuests)
                 {
-                    InnerRemoveChildren(quest.Parent, quest);
+                    InnerRemoveChild(quest.Parent, quest);
                 }
             }
         }
@@ -173,9 +169,9 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestTree
         ///<inheritdoc cref="IQuestTree"/>
         public void Update(Quest entity)
         {
+            entity.ThrowIfNull(nameof(entity));
             lock (_locker)
-            {
-                entity.ThrowIfNull(nameof(entity));
+            {                
                 if (_flatQuestTree.Contains(entity) && !_toAdd.Contains(entity))
                 {
                     _toUpdate.Add(entity);
@@ -186,9 +182,9 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestTree
         ///<inheritdoc cref="IQuestTree"/>
         public void RevertUpdate(Quest entity)
         {
+            entity.ThrowIfNull(nameof(entity));
             lock (_locker)
             {
-                entity.ThrowIfNull(nameof(entity));
                 _toUpdate.Remove(entity);
             }
         }
@@ -254,7 +250,7 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestTree
             }
         }
 
-        private void InnerRemoveChildren(Quest parent, Quest child)
+        private void InnerRemoveChild(Quest parent, Quest child)
         {
             UnbindChildAndParent(child, parent);
             _flatQuestTree.Remove(child);
@@ -309,7 +305,6 @@ namespace Justus.QuestApp.ModelLayer.Model.QuestTree
         private static void UnbindChildAndParent(Quest child, Quest parent)
         {
             parent?.Children.Remove(child);
-            child.ParentId = null;
             child.Parent = null;
         }
 

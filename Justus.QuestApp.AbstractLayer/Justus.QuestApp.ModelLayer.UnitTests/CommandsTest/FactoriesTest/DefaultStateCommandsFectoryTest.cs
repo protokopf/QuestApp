@@ -101,7 +101,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             ICommand command = factory.DoneQuest(quest);
 
             //Assert
-            Assert.IsTrue(command is UpHierarchyQuestCommand);
+            Assert.AreEqual(typeof(DoneQuestCommand), command.GetType());
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             ICommand command = factory.FailQuest(quest);
 
             //Assert
-            Assert.IsTrue(command is UpHierarchyQuestCommand);
+            Assert.AreEqual(typeof(FailQuestCommand), command.GetType());
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             ICommand command = factory.CancelQuest(quest);
 
             //Assert
-            Assert.IsTrue(command is DownHierarchyQuestCommand);
+            Assert.AreEqual(typeof(CancelQuestCommand),command.GetType());
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             ICommand command = factory.StartQuest(quest);
 
             //Assert
-            Assert.IsTrue(command is ThisQuestCommand);
+            Assert.AreEqual(typeof(StartQuestCommand), command.GetType());
         }
     }
 }

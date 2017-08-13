@@ -14,6 +14,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest
         {
             public event Func<bool> OnInnerExecute;
             public event Func<bool> OnInnerUndo;
+            public event Func<bool> OnInnerCommit; 
 
 
             protected override bool InnerExecute()
@@ -30,6 +31,15 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest
                 if (OnInnerUndo != null)
                 {
                     return OnInnerUndo();
+                }
+                return false;
+            }
+
+            protected override bool InnerCommit()
+            {
+                if (OnInnerCommit != null)
+                {
+                    return OnInnerCommit();
                 }
                 return false;
             }
@@ -170,13 +180,43 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest
         public void CommitTest()
         {
             //Arrange
+            bool hasInnerCommitExecuted = false;
+
             SwitchCommandMock mock = new SwitchCommandMock();
+            mock.OnInnerCommit += () =>
+            {
+                return hasInnerCommitExecuted = true;
+            };
 
             //Act
             bool commitResult = mock.Commit();
 
             //Assert
+            Assert.IsTrue(hasInnerCommitExecuted);
             Assert.IsTrue(commitResult);
+        }
+
+        [Test]
+        public void DoubleCommitTest()
+        {
+            //Arrange
+            int innerCommitCallCounter = 0;
+
+            SwitchCommandMock mock = new SwitchCommandMock();
+            mock.OnInnerCommit += () =>
+            {
+                innerCommitCallCounter++;
+                return true;
+            };
+
+            //Act
+            bool firstCommitResult = mock.Commit();
+            bool secondCommitResult = mock.Commit();
+
+            //Assert
+            Assert.AreEqual(1, innerCommitCallCounter);
+            Assert.IsTrue(firstCommitResult);
+            Assert.IsFalse(secondCommitResult);
         }
     }
 }

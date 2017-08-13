@@ -26,5 +26,21 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         {
             
         }
+
+        public Task RestartQuest(int position)
+        {
+            Quest quest = GetQuestByPosition(position);
+            if (quest == null)
+            {
+                return null;
+            }
+            return RunCommand(
+                new CompositeCommand(
+                    new[]
+                    {
+                        StateCommads.CancelQuest(quest),
+                        StateCommads.StartQuest(quest)
+                    }));
+        }
     }
 }

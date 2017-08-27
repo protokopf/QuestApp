@@ -29,9 +29,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Commo
             //Arrange
             Quest quest = QuestHelper.CreateQuest(State.Progress);
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Equal(quest))).
-                Repeat.Once();
-
 
             ICommand command = new ChangeStateCurrent(quest, repository, State.Failed);
 
@@ -54,9 +51,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Commo
                 QuestHelper.CreateQuest(State.Progress)
             };
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Equal(quest))).
-                Repeat.Once();
-
 
             ICommand command = new ChangeStateCurrent(quest, repository, State.Failed);
 
@@ -77,10 +71,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Commo
             //Arrange
             Quest quest = QuestHelper.CreateQuest(State.Progress);
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Equal(quest))).
-                Repeat.Once();
-            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Equal(quest))).
-                Repeat.Once();
 
             ICommand command = new ChangeStateCurrent(quest, repository, State.Failed);
 
@@ -100,21 +90,13 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Commo
             //Arrange
             Quest quest = QuestHelper.CreateQuest(State.Progress);
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Equal(quest))).
-                Repeat.Once();
-            repository.Expect(r => r.Save()).
-                Repeat.Once();
-
 
             ICommand command = new ChangeStateCurrent(quest, repository, State.Failed);
 
             //Act
-            command.Execute();
             command.Commit();
 
             //Assert
-            Assert.AreEqual(State.Failed, quest.State);
-
             repository.VerifyAllExpectations();
         }
     }

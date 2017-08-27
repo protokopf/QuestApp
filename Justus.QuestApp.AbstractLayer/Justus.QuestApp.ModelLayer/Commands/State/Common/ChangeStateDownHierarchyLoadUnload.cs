@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Justus.QuestApp.AbstractLayer.Entities.Quest;
+﻿using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 
 namespace Justus.QuestApp.ModelLayer.Commands.State.Common
@@ -34,10 +29,10 @@ namespace Justus.QuestApp.ModelLayer.Commands.State.Common
         }
 
         ///<inheritdoc cref="ChangeStateDownHierarchy"/>
-        protected override bool InnerCommit()
+        public override bool Commit()
         {
             TraverseDownHierarhy(QuestRef, null, QuestTree.UnloadChildren);
-            return base.InnerCommit();
+            return base.Commit();
         }
 
         #endregion

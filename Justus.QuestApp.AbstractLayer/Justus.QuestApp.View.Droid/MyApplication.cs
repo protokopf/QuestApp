@@ -14,13 +14,11 @@ using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
-using Justus.QuestApp.ModelLayer.Commands.Factories.Wrappers;
 using Justus.QuestApp.ModelLayer.Factories;
 using Justus.QuestApp.ModelLayer.Model.Progress;
 using Justus.QuestApp.ModelLayer.Validators.QuestItself;
 using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails;
 using Justus.QuestApp.DataLayer.Data;
-using Justus.QuestApp.DataLayer.Platform;
 using Justus.QuestApp.ModelLayer.Model.QuestList;
 using Justus.QuestApp.ModelLayer.Model.QuestTree;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
@@ -73,25 +71,17 @@ namespace Justus.QuestApp.View.Droid
                 ServiceLocator.Resolve<IQuestFactory>()
             ));
 
-            //Quest progress recounter.
-            ServiceLocator.Register<IQuestProgressRecounter>(() => 
-                new AllUpperQuestProgressRecounter(
-                    ServiceLocator.Resolve<IQuestTree>()));
-
-
             //Quest state commands factory. Used to produce commands for changing quest state.
             ServiceLocator.Register<IStateCommandsFactory>(() => 
-                new RecountProgressStateCommandsFactory(
                     new DefaultStateCommandsFactory(
-                        ServiceLocator.Resolve<IQuestTree>()), 
-                    ServiceLocator.Resolve<IQuestProgressRecounter>()));
+                        ServiceLocator.Resolve<IQuestTree>())
+                    );
 
             //Quest repository commands factory. Used to produce commands for changing quest trees.
             ServiceLocator.Register<ITreeCommandsFactory>(() =>
-                new RecountProgressTreeCommandsFactory(
                     new DefaultTreeCommandsFactory(
-                        ServiceLocator.Resolve<IQuestTree>()),
-                    ServiceLocator.Resolve<IQuestProgressRecounter>()));
+                        ServiceLocator.Resolve<IQuestTree>())
+                    );
 
             InitializeQuestValidators();
         }

@@ -1,18 +1,27 @@
 ﻿using Justus.QuestApp.AbstractLayer.Commands;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 
-namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
+namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
 {
     /// <summary>
     /// ICommand, that can be or execute, or reverted. It won't be executed, if it is executed already. 
     /// It won't be reverted, if it is reverted already.
     /// </summary>
-    public abstract class SwitchCommand : ICommand
+    public class SwitchCommand : ICommand
     {
-        /// <summary>
-        /// Points if command has been executed.
-        /// </summary>
-        private bool _hasExecuted;
+        private readonly ICommand _innerCommand;
 
+        /// <summary>
+        /// Receives inner command to execute.
+        /// </summary>
+        /// <param name="innerCommand"></param>
+        public SwitchCommand(ICommand innerCommand)
+        {
+            innerCommand.ThrowIfNull(nameof(innerCommand));
+            _innerCommand = innerCommand;
+        }
+
+        private bool _hasExecuted;
         private bool _hasCommited;
 
         #region ICommand implementation
@@ -22,7 +31,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
         {
             if (!_hasExecuted && !_hasCommited)
             {
-                bool result = InnerExecute();
+                bool result = _innerCommand.Execute();
                 _hasExecuted = true;
                 return result;
             }
@@ -34,7 +43,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
         {
             if (_hasExecuted && !_hasCommited)
             {
-                bool result = InnerUndo();
+                bool result = _innerCommand.Undo();
                 _hasExecuted = false;
                 return result;
             }
@@ -42,9 +51,9 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
         }
 
         ///<inheritdoc cref="ICommand"/>
-        public virtual bool IsValid()
+        public bool IsValid()
         {
-            return true;
+            return _innerCommand.IsValid();
         }
 
         ///<inheritdoc cref="ICommand"/>
@@ -53,7 +62,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
             bool result = false;
             if (!_hasCommited)
             {
-                result = InnerCommit();
+                result = _innerCommand.Commit();
                 _hasCommited = true;
             }
 
@@ -61,23 +70,5 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts
         }
 
         #endregion
-
-        /// <summary>
-        /// Will be called only if command has not been already executed.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract bool InnerExecute();
-
-        /// <summary>
-        /// Will be called only if command has not been already reverted.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract bool InnerUndo();
-
-        /// <summary>
-        /// Will be called only if command has not been commited.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract bool InnerCommit();
     }
 }

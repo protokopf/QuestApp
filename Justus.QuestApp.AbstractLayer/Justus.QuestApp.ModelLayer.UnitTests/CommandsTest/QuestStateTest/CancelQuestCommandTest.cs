@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.State;
 using Justus.QuestApp.ModelLayer.Commands.State.Common;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using Rhino.Mocks;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest

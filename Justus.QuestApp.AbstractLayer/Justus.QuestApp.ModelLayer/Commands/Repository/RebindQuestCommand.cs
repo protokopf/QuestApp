@@ -1,4 +1,5 @@
-﻿using Justus.QuestApp.AbstractLayer.Entities.Quest;
+﻿using Justus.QuestApp.AbstractLayer.Commands;
+using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Abstracts;
@@ -8,7 +9,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// <summary>
     /// Rebind quest from old parent to new one.
     /// </summary>
-    public class RebindQuestCommand : AbstractTreeCommand
+    public class RebindQuestCommand : ICommand
     {
         private readonly Quest _oldParent;
         private readonly Quest _questToBind;
@@ -17,12 +18,10 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         /// <summary>
         /// Receives tree, parent and quest.
         /// </summary>
-        /// <param name="tree"></param>
         /// <param name="questToBind"></param>
         /// <param name="newParent"></param>
         /// <param name="oldParent"></param>
-        public RebindQuestCommand(IQuestTree tree, Quest questToBind, Quest newParent, Quest oldParent) :
-            base(tree)
+        public RebindQuestCommand(Quest questToBind, Quest newParent, Quest oldParent)
         {
             questToBind.ThrowIfNull(nameof(questToBind));
             newParent.ThrowIfNull(nameof(newParent));
@@ -32,23 +31,33 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
             _oldParent = oldParent;
         }
 
-        #region AbstractTreeCommand overriding
+        #region ICommand overriding
 
-        ///<inheritdoc/>
-        protected override bool InnerExecute()
+        ///<inheritdoc cref="ICommand"/>
+        public bool Execute()
         {
             BreakWithParent(_oldParent, _questToBind);
             ConnectWithParent(_newParent, _questToBind);
-            QuestTree.Update(_questToBind);
             return true;
         }
 
-        ///<inheritdoc/>
-        protected override bool InnerUndo()
+        ///<inheritdoc cref="ICommand"/>
+        public bool Undo()
         {
             BreakWithParent(_newParent, _questToBind);
             ConnectWithParent(_oldParent, _questToBind);
-            QuestTree.RevertUpdate(_questToBind);
+            return true;
+        }
+
+        ///<inheritdoc cref="ICommand"/>
+        public bool Commit()
+        {
+            return true;
+        }
+
+        ///<inheritdoc cref="ICommand"/>
+        public bool IsValid()
+        {
             return true;
         }
 

@@ -9,7 +9,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.State.Common
     /// <summary>
     /// Changes state of quest and traverse up only if all children of this quest has the same state. 
     /// </summary>
-    public class ChangeStateUpHierarchyIfChildrenHaveTheSameState : Abstracts.Hierarchy.UpHierarchyQuestCommand
+    public class ChangeStateUpHierarchyIfChildrenHaveTheSameState : UpHierarchyQuestCommand
     {
         private readonly IQuestTree _questTree;
         private readonly AbstractLayer.Entities.Quest.State _newState;
@@ -27,14 +27,14 @@ namespace Justus.QuestApp.ModelLayer.Commands.State.Common
 
         ///<inheritdoc cref="UpHierarchyQuestCommand"/>
         /// Overwritten to match requirements.
-        protected override bool InnerUndo()
+        public override bool Undo()
         {
             RevertChanges();
             return true;
         }
 
         ///<inheritdoc cref="UpHierarchyQuestCommand"/>
-        protected override bool InnerCommit()
+        public override bool Commit()
         {
             _questTree.Save();
             _questsStateDictionary.Clear();
@@ -52,7 +52,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.State.Common
         ///<inheritdoc cref="UpHierarchyQuestCommand"/>
         protected override void UndoOnQuest(Quest quest)
         {
-            //Won't be called because InnerUndo is overwritten.
+            //Won't be called because Undo is overwritten.
         }
 
         ///<inheritdoc cref="UpHierarchyQuestCommand"/>

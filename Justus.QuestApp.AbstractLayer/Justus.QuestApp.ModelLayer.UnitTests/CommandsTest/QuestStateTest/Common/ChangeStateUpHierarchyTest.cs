@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Justus.QuestApp.AbstractLayer.Commands;
+﻿using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy;
@@ -11,7 +6,6 @@ using Justus.QuestApp.ModelLayer.Commands.State.Common;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using Rhino.Mocks;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Common
@@ -39,8 +33,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Commo
             parent.Parent = root;
 
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).
-                Repeat.Once();
             repository.Expect(r => r.Root).
                 Repeat.Twice().
                 Return(root);
@@ -65,10 +57,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Commo
             parent.Parent = root;
 
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).
-                Repeat.Once();
-            repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Anything)).
-                Repeat.Once();
             repository.Expect(r => r.Root).
                 Repeat.Times(4).
                 Return(root);
@@ -96,11 +84,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Commo
             parent = parent.Children[0].Children[0];
 
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-
-            QuestHelper.ExecuteForUpHierarchy(
-                quest: parent, 
-                action: q => repository.Expect(r => r.Update(Arg<Quest>.Is.Equal(q))).Repeat.Once(),
-                stopCondition: q => q == root);
 
             repository.Expect(r => r.Root).
                 Return(root).
@@ -133,16 +116,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Commo
 
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
 
-            QuestHelper.ExecuteForUpHierarchy(
-                quest: parent,
-                action:
-                q =>
-                {
-                    repository.Expect(r => r.Update(Arg<Quest>.Is.Equal(q))).Repeat.Once();
-                    repository.Expect(r => r.RevertUpdate(Arg<Quest>.Is.Equal(q))).Repeat.Once();
-                },
-                stopCondition: q => q == root);
-
             repository.Expect(r => r.Root).
                 Return(root).
                 Repeat.Times(8);
@@ -168,13 +141,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.QuestStateTest.Commo
             parent.Parent = root;
 
             IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-            repository.Expect(r => r.Update(Arg<Quest>.Is.Anything)).
-                Repeat.Once();
             repository.Expect(r => r.Root).
                 Repeat.Twice().
                 Return(root);
-            repository.Expect(r => r.Save()).
-                Repeat.Once();
 
             ICommand command = new ChangeStateUpHierarchy(parent, repository, State.Done);
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
-using Justus.QuestApp.ModelLayer.Commands.Abstracts;
+using Justus.QuestApp.ModelLayer.Commands.Classic.Common.Abstracts;
 using NUnit.Framework;
 using Rhino.Mocks;
 

@@ -60,7 +60,6 @@
     <Compile Include="Helpers\Behaviours\IRefreshable.cs" />
     <Compile Include="Model\Composite\IComposable.cs" />
     <Compile Include="Model\IQuestOrderPolicy.cs" />
-    <Compile Include="Model\IQuestProgressRecounter.cs" />
     <Compile Include="Model\IQuestProgressCounter.cs" />
     <Compile Include="Model\IQuestListModel.cs" />
     <Compile Include="Model\QuestTree\IQuestTree.cs" />

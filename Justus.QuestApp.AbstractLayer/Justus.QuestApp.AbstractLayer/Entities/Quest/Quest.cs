@@ -57,5 +57,10 @@ namespace Justus.QuestApp.AbstractLayer.Entities.Quest
         /// Progress of quest.
         /// </summary>
         public double Progress { get; set; }
+
+        /// <summary>
+        /// Points whether quest has children.
+        /// </summary>
+        public bool IsLeaf { get; set; }
     }
 }

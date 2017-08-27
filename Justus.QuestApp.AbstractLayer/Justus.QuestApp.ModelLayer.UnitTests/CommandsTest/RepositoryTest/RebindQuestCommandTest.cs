@@ -3,10 +3,8 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using NUnit.Framework;
-using Rhino.Mocks;
 using System;
 using System.Collections.Generic;
-using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
 {
@@ -20,10 +18,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             Quest toAdd = null;
             Quest parent = QuestHelper.CreateQuest();
             Quest oldParent = QuestHelper.CreateQuest();
-            IQuestTree repository = MockRepository.GenerateMock<IQuestTree>();
 
             //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(repository, toAdd, parent, oldParent));
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(toAdd, parent, oldParent));
 
             //Assert
             Assert.IsNotNull(ex);
@@ -37,10 +34,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             Quest toAdd = QuestHelper.CreateQuest();
             Quest parent = null;
             Quest oldParent = QuestHelper.CreateQuest();
-            IQuestTree repository = MockRepository.GenerateMock<IQuestTree>();
 
             //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(repository, toAdd, parent, oldParent));
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(toAdd, parent, oldParent));
 
             //Assert
             Assert.IsNotNull(ex);
@@ -54,10 +50,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             Quest toAdd = QuestHelper.CreateQuest();
             Quest oldParent = null;
             Quest parent = QuestHelper.CreateQuest();
-            IQuestTree repository = MockRepository.GenerateMock<IQuestTree>();
 
             //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(repository, toAdd, parent, oldParent));
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(toAdd, parent, oldParent));
 
             //Assert
             Assert.IsNotNull(ex);
@@ -68,8 +63,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
         public void ExecuteTest()
         {
             //Arrange
-            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-
             int oldParentId = 12;
             int newParentId = 42;
             int rebindId = 144;
@@ -82,10 +75,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             oldParent.Children.Add(toRebind);
             
 
-            repository.Expect(rep => rep.Update(Arg<Quest>.Is.Equal(toRebind))).
-                Repeat.Once();
-
-            ICommand command = new RebindQuestCommand(repository, toRebind, newParent, oldParent);
+            ICommand command = new RebindQuestCommand(toRebind, newParent, oldParent);
 
             //Act
             command.Execute();
@@ -98,16 +88,12 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             Assert.IsTrue(newParent.Children.Contains(toRebind));
             Assert.IsTrue(toRebind.Parent == newParent);
             Assert.IsTrue(toRebind.ParentId == newParentId);
-
-            repository.VerifyAllExpectations();
         }
 
         [Test]
         public void UndoTest()
         {
             //Arrange
-            IQuestTree repository = MockRepository.GenerateStrictMock<IQuestTree>();
-
             int oldParentId = 12;
             int newParentId = 42;
             int rebindId = 144;
@@ -118,14 +104,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             Quest toRebind = new Quest() { Id = rebindId, Parent = oldParent, ParentId = oldParentId };
 
             oldParent.Children.Add(toRebind);
-
-
-            repository.Expect(rep => rep.Update(Arg<Quest>.Is.Equal(toRebind))).
-                Repeat.Once();
-            repository.Expect(rep => rep.RevertUpdate(Arg<Quest>.Is.Equal(toRebind))).
-                Repeat.Once();
-
-            ICommand command = new RebindQuestCommand(repository, toRebind, newParent, oldParent);
+            ICommand command = new RebindQuestCommand(toRebind, newParent, oldParent);
 
             //Act
             command.Execute();
@@ -139,8 +118,40 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             Assert.IsFalse(newParent.Children.Contains(toRebind));
             Assert.IsFalse(toRebind.Parent == newParent);
             Assert.IsFalse(toRebind.ParentId == newParentId);
+        }
 
-            repository.VerifyAllExpectations();
+        [Test]
+        public void CommitTest()
+        {
+            //Arrange
+            Quest oldParent = new Quest();
+            Quest newParent = new Quest();
+            Quest toRebind = new Quest();
+
+            ICommand command = new RebindQuestCommand(toRebind, newParent, oldParent);
+
+            //Act
+            bool result = command.Commit();
+
+            //Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void IsValidTest()
+        {
+            //Arrange
+            Quest oldParent = new Quest();
+            Quest newParent = new Quest();
+            Quest toRebind = new Quest();
+
+            ICommand command = new RebindQuestCommand(toRebind, newParent, oldParent);
+
+            //Act
+            bool result = command.IsValid();
+
+            //Assert
+            Assert.IsTrue(result);
         }
     }
 }

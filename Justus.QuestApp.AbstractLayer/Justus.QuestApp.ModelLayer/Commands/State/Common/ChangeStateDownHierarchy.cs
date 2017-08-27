@@ -26,7 +26,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.State.Common
         #region DownHierarchyQuestCommand overriding
 
         ///<inheritdoc cref="DownHierarchyQuestCommand"/>
-        protected override bool InnerCommit()
+        public override bool Commit()
         {
             QuestTree.Save();
             _questsStateDictionary.Clear();

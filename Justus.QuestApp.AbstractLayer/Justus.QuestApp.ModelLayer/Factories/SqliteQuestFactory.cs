@@ -25,6 +25,7 @@ namespace Justus.QuestApp.ModelLayer.Factories
                 Deadline = null,
                 StartTime = null,
                 IsImportant = false,
+                IsLeaf = true,
                 ParentId = null,
                 Parent = null
             };

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy;
+using Justus.QuestApp.ModelLayer.Commands.Classic.Common.Abstracts.Hierarchy;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -20,7 +20,10 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             {
             }
 
-
+            protected override bool InnerCommit()
+            {
+                throw new NotImplementedException();
+            }
 
             protected override void ExecuteOnQuest(Quest quest)
             {
@@ -46,10 +49,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             public event Action<Quest> OnUndoOnQuest;
             public event Action<Quest> OnExecuteOnQuestAfterTraverse;
             public event Action<Quest> OnUndoOnQuestAfterTraverse;
-            public override bool Commit()
-            {
-                throw new NotImplementedException();
-            }
         }
 
         [Test]

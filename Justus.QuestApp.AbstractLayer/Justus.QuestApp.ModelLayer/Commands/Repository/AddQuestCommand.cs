@@ -33,14 +33,14 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
         #region AbstractTreeCommand overriding
 
         ///<inheritdoc/>
-        protected override bool InnerExecute()
+        public override bool Execute()
         {
             QuestTree.AddChild(Parent, ChildToAdd);
             return true;
         }
 
         ///<inheritdoc/>
-        protected override bool InnerUndo()
+        public override bool Undo()
         {
             QuestTree.RemoveChild(Parent, ChildToAdd);
             return true;

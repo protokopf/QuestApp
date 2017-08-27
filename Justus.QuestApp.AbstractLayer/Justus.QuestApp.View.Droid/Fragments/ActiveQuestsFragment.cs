@@ -122,6 +122,15 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
         }
 
+        protected override void DeleteHandler(int position)
+        {
+            base.DeleteHandler(position);
+            while (ViewModel.IsRootHasState(State.Failed) || ViewModel.IsRootHasState(State.Done))
+            {
+                TraverseToParent();
+            }
+        }
+
         private void ReactOnChangeItemThatRemovedOnlyFromRoot(int position)
         {
             if (ViewModel.InTopRoot)

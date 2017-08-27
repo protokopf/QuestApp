@@ -6,6 +6,7 @@ using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using NUnit.Framework;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
 using Justus.QuestApp.ModelLayer.Commands.State;
+using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 using Rhino.Mocks;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
@@ -101,7 +102,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             ICommand command = factory.DoneQuest(quest);
 
             //Assert
-            Assert.AreEqual(typeof(DoneQuestCommand), command.GetType());
+            Assert.AreEqual(typeof(CompositeCommand), command.GetType());
         }
 
         [Test]
@@ -117,7 +118,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             ICommand command = factory.FailQuest(quest);
 
             //Assert
-            Assert.AreEqual(typeof(FailQuestCommand), command.GetType());
+            Assert.AreEqual(typeof(CompositeCommand), command.GetType());
         }
 
         [Test]
@@ -133,7 +134,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             ICommand command = factory.CancelQuest(quest);
 
             //Assert
-            Assert.AreEqual(typeof(CancelQuestCommand),command.GetType());
+            Assert.AreEqual(typeof(CompositeCommand),command.GetType());
         }
 
         [Test]
@@ -149,7 +150,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
             ICommand command = factory.StartQuest(quest);
 
             //Assert
-            Assert.AreEqual(typeof(StartQuestCommand), command.GetType());
+            Assert.AreEqual(typeof(CompositeCommand), command.GetType());
         }
     }
 }

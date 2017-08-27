@@ -23,17 +23,17 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy
         {
         }
 
-        #region BaseQuestCommand overriding
+        #region AbstractQuestCommand overriding
 
-        ///<inheritdoc cref="BaseQuestCommand"/>
-        protected override bool InnerExecute()
+        ///<inheritdoc cref="AbstractQuestCommand"/>
+        public override bool Execute()
         {
             TraverseUpHierarchy(QuestRef, ExecuteOnQuest);
             return true;
         }
 
-        ///<inheritdoc cref="BaseQuestCommand"/>
-        protected override bool InnerUndo()
+        ///<inheritdoc cref="AbstractQuestCommand"/>
+        public override bool Undo()
         {
             TraverseUpHierarchy(QuestRef, UndoOnQuest);
             return true;

@@ -48,14 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandsTest\AbstractTest\AbstractTreeCommandTest.cs" />
-    <Compile Include="CommandsTest\AbstractTest\BaseStateUpdateCommandTest.cs" />
     <Compile Include="CommandsTest\AbstractTest\Hierarchy\AbstractQuestCommandTest.cs" />
     <Compile Include="CommandsTest\AbstractTest\Hierarchy\DownHierarchyQuestCommandTest.cs" />
     <Compile Include="CommandsTest\AbstractTest\Hierarchy\ThisQuestCommandQuestTest.cs" />
     <Compile Include="CommandsTest\AbstractTest\Hierarchy\UpHierarchyQuestCommandTest.cs" />
-    <Compile Include="CommandsTest\AbstractTest\SwitchCommandTest.cs" />
-    <Compile Include="CommandsTest\FactoriesTest\Wrappers\RecountProgressRepositoryCommandsFactoryTest.cs" />
-    <Compile Include="CommandsTest\FactoriesTest\Wrappers\RecountProgressStateCommandsFactoryTest.cs" />
+    <Compile Include="CommandsTest\RepositoryTest\UpdateUpHierarchyCommandTest.cs" />
+    <Compile Include="CommandsTest\WrapersTest\SwitchCommandTest.cs" />
     <Compile Include="CommandsTest\QuestStateTest\CancelQuestCommandTest.cs" />
     <Compile Include="CommandsTest\QuestStateTest\Common\ChangeStateDownHierarchyLoadUnloadTest.cs" />
     <Compile Include="CommandsTest\QuestStateTest\Common\ChangeStateDownHierarchyTest.cs" />
@@ -72,12 +70,12 @@
     <Compile Include="CommandsTest\RepositoryTest\DeleteQuestCommandTest.cs" />
     <Compile Include="CommandsTest\RepositoryTest\RebindQuestCommandTest.cs" />
     <Compile Include="CommandsTest\RepositoryTest\UpdateQuestTest.cs" />
-    <Compile Include="CommandsTest\WrapersTest\RecountQuestProgressCommandWrapperTest.cs" />
+    <Compile Include="CommandsTest\OtherTest\IsLeafAdjustCommandTest.cs" />
+    <Compile Include="CommandsTest\OtherTest\RecountQuestProgressCommandTest.cs" />
     <Compile Include="FactoriesTest\SqliteQuestCreatorTest.cs" />
     <Compile Include="HelpersTest\ServiceLocatorTest.cs" />
     <Compile Include="Helpers\QuestHelper.cs" />
     <Compile Include="ModelTest\Order\TimeLeftOrderStrategyTest.cs" />
-    <Compile Include="ModelTest\Progress\AllUpperQuestProgressRecounterTest.cs" />
     <Compile Include="ModelTest\QuestList\QuestListModelTopChildrenPredicateTest.cs" />
     <Compile Include="ModelTest\QuestTree\QuestTreeInMemoryTest.cs" />
     <Compile Include="ModelTest\Progress\RecursiveQuestProgressCounterTest.cs" />

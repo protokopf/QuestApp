@@ -4,6 +4,10 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
 using System;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
+using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.ModelLayer.Commands.Other;
+using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Factories
 {
@@ -20,10 +24,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         /// <param name="repository"></param>
         public DefaultTreeCommandsFactory(IQuestTree repository)
         {
-            if (repository == null)
-            {
-                throw new ArgumentNullException(nameof(repository));
-            }
+            repository.ThrowIfNull(nameof(repository));
             _repository = repository;
         }
 
@@ -32,13 +33,23 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         ///<inheritdoc/>
         public ICommand AddQuest(Quest parent, Quest quest)
         {
-            return new AddQuestCommand(_repository, parent, quest);
+            return new CompositeCommand(new ICommand[]{
+                new AddQuestCommand(_repository, parent, quest),
+                new IsLeafAdjustCommand(parent),
+                new RecountQuestProgressCommand(quest, _repository), 
+                new UpdateUpHierarchyCommand(parent, _repository)
+             });
         }
 
         ///<inheritdoc/>
         public ICommand DeleteQuest(Quest parent, Quest quest)
         {
-            return new DeleteQuestCommand(_repository,parent, quest);
+            return new CompositeCommand(new ICommand[]{
+                new DeleteQuestCommand(_repository, parent, quest),
+                new IsLeafAdjustCommand(parent),
+                new RecountQuestProgressCommand(parent, _repository),
+                new UpdateUpHierarchyCommand(parent, _repository)
+            });
         }
 
         ///<inheritdoc/> 

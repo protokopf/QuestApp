@@ -5,6 +5,7 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
+using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -42,7 +43,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
 
             //Assert
             Assert.IsNotNull(addCommand);
-            Assert.IsTrue(addCommand is AddQuestCommand);
+            Assert.IsTrue(addCommand is CompositeCommand);
         }
 
         [Test]
@@ -78,7 +79,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
 
             //Assert
             Assert.IsNotNull(addCommand);
-            Assert.IsTrue(addCommand is DeleteQuestCommand);
+            Assert.IsTrue(addCommand is CompositeCommand);
         }
     }
 }

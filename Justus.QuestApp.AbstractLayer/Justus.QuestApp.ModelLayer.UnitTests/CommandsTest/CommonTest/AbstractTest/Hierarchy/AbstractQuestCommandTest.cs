@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.ModelLayer.Commands.Abstracts;
-using Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy;
+using Justus.QuestApp.ModelLayer.Commands.Classic.Common.Abstracts;
+using Justus.QuestApp.ModelLayer.Commands.Classic.Common.Abstracts.Hierarchy;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using NUnit.Framework;
 
@@ -20,17 +20,17 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             {
             }
 
-            public override bool Execute()
+            protected override bool InnerExecute()
             {
                 throw new NotImplementedException();
             }
 
-            public override bool Undo()
+            protected override bool InnerUndo()
             {
                 throw new NotImplementedException();
             }
 
-            public override bool Commit()
+            protected override bool InnerCommit()
             {
                 throw new NotImplementedException();
             }
@@ -56,7 +56,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             //Act
 
             //Assert
-            Assert.IsTrue(typeof(AbstractQuestCommand).IsSubclassOf(typeof(object)));
+            Assert.IsTrue(typeof(AbstractQuestCommand).IsSubclassOf(typeof(SwitchCommand)));
         }
 
         [Test]

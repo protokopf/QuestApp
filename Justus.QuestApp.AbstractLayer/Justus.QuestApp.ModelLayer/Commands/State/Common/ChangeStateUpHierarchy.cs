@@ -26,9 +26,8 @@ namespace Justus.QuestApp.ModelLayer.Commands.State.Common
         #region UpHierarchyQuestCommand overriding
 
         ///<inehritdo cref="UpHierarchyQuestCommand"/>
-        protected override bool InnerCommit()
+        public override bool Commit()
         {
-            _questTree.Save();
             _questsToStates.Clear();
             return true;
         }
@@ -38,7 +37,6 @@ namespace Justus.QuestApp.ModelLayer.Commands.State.Common
         {
             _questsToStates.Add(quest, quest.State);
             quest.State = _newState;
-            _questTree.Update(quest);
         }
 
         ///<inehritdo cref="UpHierarchyQuestCommand"/>
@@ -46,7 +44,6 @@ namespace Justus.QuestApp.ModelLayer.Commands.State.Common
         {
             quest.State = _questsToStates[quest];
             _questsToStates.Remove(quest);
-            _questTree.RevertUpdate(quest);
         }
 
         ///<inehritdo cref="UpHierarchyQuestCommand"/>

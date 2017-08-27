@@ -23,15 +23,15 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy
 
         #region AbstractQuestCommand overriding
 
-        ///<inehritdoc cref="SwitchCommand"/>
-        protected override bool InnerExecute()
+        ///<inehritdoc cref="AbstractQuestCommand"/>
+        public override bool Execute()
         {
             ExecuteOnQuest(QuestRef);
             return true;
         }
 
-        ///<inehritdoc cref="SwitchCommand"/>
-        protected override bool InnerUndo()
+        ///<inehritdoc cref="AbstractQuestCommand"/>
+        public override bool Undo()
         {
             UndoOnQuest(QuestRef);
             return true;

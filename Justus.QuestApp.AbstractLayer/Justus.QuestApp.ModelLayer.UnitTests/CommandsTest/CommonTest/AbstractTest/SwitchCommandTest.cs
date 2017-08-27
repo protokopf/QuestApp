@@ -1,5 +1,5 @@
 ﻿using System;
-using Justus.QuestApp.ModelLayer.Commands.Abstracts;
+using Justus.QuestApp.ModelLayer.Commands.Classic.Common.Abstracts;
 using NUnit.Framework;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest

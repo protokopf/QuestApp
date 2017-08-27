@@ -3,7 +3,10 @@ using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
+using Justus.QuestApp.ModelLayer.Commands.Other;
+using Justus.QuestApp.ModelLayer.Commands.Repository;
 using Justus.QuestApp.ModelLayer.Commands.State;
+using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Factories
 {
@@ -30,28 +33,45 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         public ICommand DoneQuest(Quest quest)
         {
             quest.ThrowIfNull(nameof(quest));
-            return new DoneQuestCommand(quest, _questTree);
+            return new CompositeCommand(new ICommand[]
+            {
+                new DoneQuestCommand(quest, _questTree),
+                new RecountQuestProgressCommand(quest, _questTree), 
+            });
         }
 
         ///<inheritdoc/>
         public ICommand FailQuest(Quest quest)
         {
             quest.ThrowIfNull(nameof(quest));
-            return new FailQuestCommand(quest, _questTree);
+            return new CompositeCommand(new ICommand[]
+            {
+                new FailQuestCommand(quest, _questTree),
+                new RecountQuestProgressCommand(quest, _questTree),
+            });
         }
 
         ///<inheritdoc/>
         public ICommand StartQuest(Quest quest)
         {
             quest.ThrowIfNull(nameof(quest));
-            return new StartQuestCommand(quest, _questTree);
+            return new CompositeCommand(new ICommand[]
+            {
+                new StartQuestCommand(quest, _questTree),
+                new RecountQuestProgressCommand(quest, _questTree),
+                new UpdateUpHierarchyCommand(quest, _questTree)
+            });
         }
 
         ///<inheritdoc/>
         public ICommand CancelQuest(Quest quest)
         {
             quest.ThrowIfNull(nameof(quest));
-            return new CancelQuestCommand(quest, _questTree);
+            return new CompositeCommand(new ICommand[]
+            {
+                new CancelQuestCommand(quest, _questTree),
+                new RecountQuestProgressCommand(quest, _questTree),
+            });
         } 
 
 

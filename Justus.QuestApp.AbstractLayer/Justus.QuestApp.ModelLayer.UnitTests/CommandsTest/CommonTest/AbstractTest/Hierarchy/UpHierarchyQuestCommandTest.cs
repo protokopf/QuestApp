@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
-using Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy;
+using Justus.QuestApp.ModelLayer.Commands.Classic.Common.Abstracts.Hierarchy;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -21,7 +21,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             {
             }
 
-            public override bool Commit()
+            protected override bool InnerCommit()
             {
                 throw new NotImplementedException();
             }

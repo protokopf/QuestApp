@@ -1,6 +1,6 @@
 ﻿using System;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
-using Justus.QuestApp.ModelLayer.Commands.Abstracts;
+using Justus.QuestApp.ModelLayer.Commands.Classic.Common.Abstracts;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -15,12 +15,12 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest
             {
             }
 
-            public override bool Execute()
+            protected override bool InnerExecute()
             {
                 throw new NotImplementedException();
             }
 
-            public override bool Undo()
+            protected override bool InnerUndo()
             {
                 throw new NotImplementedException();
             }
@@ -53,23 +53,6 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest
 
             //Assert
             Assert.IsTrue(commitResult);
-
-            tree.VerifyAllExpectations();
-        }
-
-        [Test]
-        public void IsValidTest()
-        {
-            //Arrange
-            IQuestTree tree = MockRepository.GenerateStrictMock<IQuestTree>();
-
-            AbstractTreeMock mock = new AbstractTreeMock(tree);
-
-            //Act
-            bool isValidResult = mock.IsValid();
-
-            //Assert
-            Assert.IsTrue(isValidResult);
 
             tree.VerifyAllExpectations();
         }

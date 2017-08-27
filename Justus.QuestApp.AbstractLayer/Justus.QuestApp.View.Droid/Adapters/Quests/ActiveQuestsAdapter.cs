@@ -89,7 +89,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
 
         private void HandleButtonsForProgress(ActiveQuestViewHolder holder, Quest questData)
         {
-            ViewStates doneFailState = questData.Children != null && questData.Children.Count != 0 ? ViewStates.Gone : ViewStates.Visible;
+            ViewStates doneFailState = questData.IsLeaf ? ViewStates.Visible : ViewStates.Gone;
 
             holder.StartButton.Visibility = ViewStates.Gone;
             holder.CancelButton.Visibility = ViewStates.Visible;

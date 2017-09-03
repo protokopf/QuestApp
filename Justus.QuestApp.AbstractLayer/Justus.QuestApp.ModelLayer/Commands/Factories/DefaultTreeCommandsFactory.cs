@@ -5,11 +5,9 @@ using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy;
-using Justus.QuestApp.ModelLayer.Commands.QuestCommands;
 using Justus.QuestApp.ModelLayer.Commands.QuestCommands.Property;
 using Justus.QuestApp.ModelLayer.Commands.QuestCommands.Tree;
 using Justus.QuestApp.ModelLayer.Commands.QuestCommands.Wrappers;
-using Justus.QuestApp.ModelLayer.Commands.QuestCommands.Wrappers.Hierarchy;
 using Justus.QuestApp.ModelLayer.Commands.QuestCommands.Wrappers.Logic;
 using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 using UpToRootQuestCommand = Justus.QuestApp.ModelLayer.Commands.QuestCommands.Wrappers.Hierarchy.UpToRootQuestCommand;
@@ -38,14 +36,13 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         ///<inheritdoc/>
         public ICommand AddQuest(Quest parent, Quest quest)
         {
-            return new CompositeCommand(new ICommand[]{
+            return new CompositeCommand(
                 new AddQuestCommand(_repository, parent, quest),
-                new CurrentQuestCommand(parent, new CompositeQuestCommand(new IQuestCommand[]
-                {
+                new CurrentQuestCommand(parent, new CompositeQuestCommand(             
                     new IsLeafAdjustQuestCommand(),
                     new UpdateQuestCommand(_repository)
-                }))
-             });
+                ))
+             );
         }
 
         ///<inheritdoc/>

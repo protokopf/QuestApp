@@ -36,18 +36,16 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
             quest.ThrowIfNull(nameof(quest));
             return new UpToRootQuestCommand(
                 quest, _questTree,
-                new CompositeQuestCommand(new IQuestCommand[]
-                {
+                new CompositeQuestCommand(                
                     new IfEachChildMatchQuestCommand(
                         q => q.State == State.Done,
                         new ChangeStateQuestCommand(State.Done)
                     ),
-                    new CompositeQuestCommand(new IQuestCommand[]
-                    {
+                    new CompositeQuestCommand(                   
                         new RecountProgressQuestCommand(),
                         new UpdateQuestCommand(_questTree)
-                    })
-                })
+                    )
+                )
             );
 
         }
@@ -57,18 +55,16 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         {
             quest.ThrowIfNull(nameof(quest));
             return new UpToRootQuestCommand(quest, _questTree,
-                new CompositeQuestCommand(new IQuestCommand[]
-                {
+                new CompositeQuestCommand(               
                     new IfEachChildMatchQuestCommand(
                         q => q.State == State.Failed,
                         new ChangeStateQuestCommand(State.Failed)
                     ),
-                    new CompositeQuestCommand(new IQuestCommand[]
-                    {
+                    new CompositeQuestCommand(                   
                         new RecountProgressQuestCommand(),
                         new UpdateQuestCommand(_questTree)
-                    })
-                })
+                    )
+                )
              );
         }
 
@@ -77,12 +73,10 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         {
             quest.ThrowIfNull(nameof(quest));
             return new UpToRootQuestCommand(quest, _questTree, 
-                new CompositeQuestCommand(new IQuestCommand[]
-                {
+                new CompositeQuestCommand(          
                     new ChangeStateQuestCommand(State.Progress),
-                    //new RecountProgressQuestCommand(),
                     new UpdateQuestCommand(_questTree) 
-                })
+                )
             );
         }
 
@@ -91,8 +85,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
         {
             quest.ThrowIfNull(nameof(quest));
             return new DownHierarchyQuestCommand(quest, 
-                beforeTraverseCommand: new CompositeQuestCommand(new IQuestCommand[]
-                {
+                beforeTraverseCommand: new CompositeQuestCommand(               
                     //Load
                     new LoadChildrenQuestCommand(_questTree), 
                     //ChangeState
@@ -101,14 +94,10 @@ namespace Justus.QuestApp.ModelLayer.Commands.Factories
                     new SetProgressToZeroQuestCommand(), 
                     //Update
                     new UpdateQuestCommand(_questTree)
-                }), 
-                afterTraverseCommand: new CompositeQuestCommand(new IQuestCommand[]
-                {
-                    //Unload
-                    new UnloadChildrenQuestCommand(_questTree)
-                }));
+                ), 
+                afterTraverseCommand: new UnloadChildrenQuestCommand(_questTree)
+                );
         } 
-
 
         #endregion
     }

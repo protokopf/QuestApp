@@ -15,7 +15,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
         /// Receives array of inner commands.
         /// </summary>
         /// <param name="commands"></param>
-        public CompositeCommand(ICommand[] commands)
+        public CompositeCommand(params ICommand[] commands)
         {
             commands.ThrowIfNull(nameof(commands));         
             _commands = commands;
@@ -35,7 +35,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Wrappers
                 if (!_commands[i].Execute())
                 {
                     result = false;
-                };
+                }
             }
 
             return result;

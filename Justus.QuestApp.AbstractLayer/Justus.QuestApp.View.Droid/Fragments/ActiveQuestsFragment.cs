@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 using Android.Graphics.Drawables;
 using Android.Support.V4.Content.Res;
@@ -122,9 +123,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
         }
 
-        protected override void DeleteHandler(int position)
+        protected override async void DeleteHandler(int position)
         {
-            base.DeleteHandler(position);
+            await ViewModel.DeleteQuest(position);
+            ViewModel.Refresh();
+            QuestsAdapter.NotifyItemRemoved(position);
+            QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
             while (ViewModel.IsRootHasState(State.Failed) || ViewModel.IsRootHasState(State.Done))
             {
                 TraverseToParent();

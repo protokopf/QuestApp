@@ -1,55 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
-using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy
 {
     /// <summary>
     /// Quest for traversing quest hierarchy and operate on each quest.
     /// </summary>
-    public abstract class DownHierarchyQuestCommand : AbstractQuestCommand
+    public class DownHierarchyQuestCommand : ICommand
     {
+        private readonly Quest _target;
+        private readonly IQuestCommand _beforeTraverseCommand;
+        private readonly IQuestCommand _afterTraverseCommand;
+
         /// <summary>
         /// Receives quest to traverse.
         /// </summary>
         /// <param name="quest"></param>
-        protected DownHierarchyQuestCommand(Quest quest) : base(quest)
+        /// <param name="beforeTraverseCommand"></param>
+        /// <param name="afterTraverseCommand"></param>
+        public DownHierarchyQuestCommand(Quest quest, IQuestCommand beforeTraverseCommand, IQuestCommand afterTraverseCommand)
         {
+            quest.ThrowIfNull(nameof(quest));
+            beforeTraverseCommand.ThrowIfNull(nameof(beforeTraverseCommand));
+            afterTraverseCommand.ThrowIfNull(nameof(afterTraverseCommand));
+            _target = quest;
+            _beforeTraverseCommand = beforeTraverseCommand;
+            _afterTraverseCommand = afterTraverseCommand;
         }
 
-        #region AbstractQuestCommand overriding
+        #region ICommand implementation
 
-        ///<inheritdoc cref="AbstractQuestCommand"/>
-        public override bool Execute()
+        ///<inheritdoc cref="ICommand"/>
+        public bool Execute()
         {
-            TraverseDownHierarhy(QuestRef, ExecuteOnQuest, ExecuteOnQuestAfterTraverse);
+            TraverseDownHierarhy(_target, _beforeTraverseCommand.Execute, _afterTraverseCommand.Execute);
             return true;
         }
 
-        ///<inheritdoc cref="AbstractQuestCommand"/>
-        public override bool Undo()
+        ///<inheritdoc cref="ICommand"/>
+        public bool Undo()
         {
-            TraverseDownHierarhy(QuestRef, UndoOnQuest, UndoOnQuestAfterTraverse);
+            TraverseDownHierarhy(_target, _beforeTraverseCommand.Undo, _afterTraverseCommand.Undo);
             return true;
         }
 
-        #endregion
+        ///<inheritdoc cref="ICommand"/>
+        public bool IsValid()
+        {
+            return true;
+        }
 
-        #region Protected abstract methods
-
-        /// <summary>
-        /// Called during command execution after traverse quest children. 
-        /// </summary>
-        /// <param name="quest"></param>
-        protected abstract void ExecuteOnQuestAfterTraverse(Quest quest);
-
-        /// <summary>
-        /// Called during command rollback after traverse quest children. 
-        /// </summary>
-        /// <param name="quest"></param>
-        protected abstract void UndoOnQuestAfterTraverse(Quest quest);
+        ///<inheritdoc cref="ICommand"/>
+        public bool Commit()
+        {
+            bool beforeCommandResult = _beforeTraverseCommand.Commit();
+            bool afterCommandResult = _afterTraverseCommand.Commit();
+            return beforeCommandResult && afterCommandResult;
+        }
 
         #endregion
 
@@ -59,13 +69,16 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy
         /// <param name="quest"></param>
         /// <param name="beforeTraverseAction"></param>
         /// <param name="afterTraverseAction"></param>
-        protected static void TraverseDownHierarhy(Quest quest, Action<Quest> beforeTraverseAction, Action<Quest> afterTraverseAction)
+        protected static void TraverseDownHierarhy(Quest quest, Func<Quest, bool> beforeTraverseAction, Func<Quest, bool> afterTraverseAction)
         {
             if (quest == null)
             {
                 return;
             }
-            beforeTraverseAction?.Invoke(quest);
+            if (!beforeTraverseAction.Invoke(quest))
+            {
+                return;
+            }
             List<Quest> children = quest.Children;
             if (children != null && children.Count != 0)
             {
@@ -74,7 +87,7 @@ namespace Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy
                 {
                     TraverseDownHierarhy(children[i], beforeTraverseAction, afterTraverseAction);
                 }
-                afterTraverseAction?.Invoke(quest);
+                afterTraverseAction.Invoke(quest);
             }
         }
     }

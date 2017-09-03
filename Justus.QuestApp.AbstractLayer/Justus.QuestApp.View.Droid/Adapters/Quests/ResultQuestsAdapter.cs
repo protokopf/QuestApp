@@ -49,7 +49,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
             holder.RestartButton.Visibility = QuestsViewModel.InTopRoot ? ViewStates.Visible : ViewStates.Gone;
             holder.Title.Text = questData.Title;
             holder.Description.Text = questData.Description;
-            holder.ChildrenButton.Enabled = questData.Children != null;
+            holder.ChildrenButton.Enabled = !questData.IsLeaf;
             switch (questData.State)
             {
                 case State.Done:

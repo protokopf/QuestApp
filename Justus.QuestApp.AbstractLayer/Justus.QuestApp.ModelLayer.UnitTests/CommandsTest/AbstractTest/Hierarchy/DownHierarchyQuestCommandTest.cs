@@ -1,57 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy;
-using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
+using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
+using Rhino.Mocks;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarchy
 {
     [TestFixture]
     class DownHierarchyQuestCommandTest
     {
-        private class MockDownHierarchyQuestCommand : DownHierarchyQuestCommand
-        {
-            public MockDownHierarchyQuestCommand(Quest quest) : base(quest)
-            {
-            }
-
-
-
-            protected override void ExecuteOnQuest(Quest quest)
-            {
-                OnExecuteOnQuest?.Invoke(quest);
-            }
-
-            protected override void UndoOnQuest(Quest quest)
-            {
-                OnUndoOnQuest?.Invoke(quest);
-            }
-
-            protected override void ExecuteOnQuestAfterTraverse(Quest quest)
-            {
-                OnExecuteOnQuestAfterTraverse?.Invoke(quest);
-            }
-
-            protected override void UndoOnQuestAfterTraverse(Quest quest)
-            {
-                OnUndoOnQuestAfterTraverse?.Invoke(quest);
-            }
-
-            public event Action<Quest> OnExecuteOnQuest;
-            public event Action<Quest> OnUndoOnQuest;
-            public event Action<Quest> OnExecuteOnQuestAfterTraverse;
-            public event Action<Quest> OnUndoOnQuestAfterTraverse;
-            public override bool Commit()
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         [Test]
         public void BaseClassTest()
         {
@@ -60,147 +20,223 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             //Act
 
             //Assert
-            Assert.IsTrue(typeof(DownHierarchyQuestCommand).IsSubclassOf(typeof(AbstractQuestCommand)));
+            Assert.IsTrue(typeof(DownHierarchyQuestCommand).IsSubclassOf(typeof(object)));
+            Assert.IsTrue(typeof(ICommand).IsAssignableFrom(typeof(DownHierarchyQuestCommand)));
         }
 
         [Test]
-        public void ExecuteOnQuestWithoutChildrenTest()
+        public void CtorNullTest()
         {
             //Arrange
-            Quest quest = new FakeQuest();
-
-            MockDownHierarchyQuestCommand command = new MockDownHierarchyQuestCommand(quest);
-            command.OnExecuteOnQuest += (q) =>
-            {
-                Assert.AreEqual(quest, q);
-            };
+            IQuestCommand questCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            Quest targer = QuestHelper.CreateQuest();
 
             //Act
-            command.Execute();
+            ArgumentNullException targetEx = Assert.Throws<ArgumentNullException>(() => new DownHierarchyQuestCommand(null, questCommand, questCommand));
+            ArgumentNullException beforeQuestCommand = Assert.Throws<ArgumentNullException>(() => new DownHierarchyQuestCommand(targer, null, questCommand));
+            ArgumentNullException afterQuestCommand = Assert.Throws<ArgumentNullException>(() => new DownHierarchyQuestCommand(targer, questCommand, null));
 
             //Assert
+            Assert.IsNotNull(targetEx);
+            Assert.AreEqual("quest", targetEx.ParamName);
+
+            Assert.IsNotNull(beforeQuestCommand);
+            Assert.AreEqual("beforeTraverseCommand", beforeQuestCommand.ParamName);
+
+            Assert.IsNotNull(afterQuestCommand);
+            Assert.AreEqual("afterTraverseCommand", afterQuestCommand.ParamName);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ExecuteOnQuestWithoutChildrenTest(bool beforeCommandResult)
+        {
+            //Arrange
+            Quest quest = QuestHelper.CreateQuest();
+            IQuestCommand beforeQuestCommanduestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            beforeQuestCommanduestCommand.Expect(bqc => bqc.Execute(Arg<Quest>.Is.Equal(quest)))
+                .Repeat.Once()
+                .Return(beforeCommandResult);
+
+            IQuestCommand afterQuestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            afterQuestCommand.Expect(aqc => aqc.Execute(Arg<Quest>.Is.Equal(quest)))
+                .Repeat.Never();
+
+            DownHierarchyQuestCommand command = new DownHierarchyQuestCommand(quest, beforeQuestCommanduestCommand,
+                afterQuestCommand);
+
+            //Act
+            bool result = command.Execute();
+
+            //Assert
+            Assert.IsTrue(result);
+
+            beforeQuestCommanduestCommand.VerifyAllExpectations();
+            afterQuestCommand.VerifyAllExpectations();
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ExecuteOnQuestWithChildrenTest(bool beforeCommandResult)
+        {
+            //Arrange
+            Quest child = QuestHelper.CreateQuest();
+            Quest quest = QuestHelper.CreateQuest();
+            quest.Children = new List<Quest> {child};
+
+            IQuestCommand beforeQuestCommanduestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            beforeQuestCommanduestCommand.Expect(bqc => bqc.Execute(Arg<Quest>.Is.Equal(quest)))
+                .Repeat.Once()
+                .Return(beforeCommandResult);
+            if (beforeCommandResult)
+            {
+                beforeQuestCommanduestCommand.Expect(bqc => bqc.Execute(Arg<Quest>.Is.Equal(child)))
+                    .Repeat.Once()
+                    .Return(true);
+            }
+
+            IQuestCommand afterQuestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            if(beforeCommandResult)
+            {
+                afterQuestCommand.Expect(aqc => aqc.Execute(Arg<Quest>.Is.Equal(quest)))
+                    .Repeat.Once()
+                    .Return(true);
+            }
+
+            DownHierarchyQuestCommand command = new DownHierarchyQuestCommand(quest, beforeQuestCommanduestCommand,
+                afterQuestCommand);
+
+            //Act
+            bool result = command.Execute();
+
+            //Assert
+            Assert.IsTrue(result);
+
+            beforeQuestCommanduestCommand.VerifyAllExpectations();
+            afterQuestCommand.VerifyAllExpectations();
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void UndoOnQuestWithoutChildrenTest(bool beforeCommandResult)
+        {
+            //Arrange
+            Quest quest = QuestHelper.CreateQuest();
+            IQuestCommand beforeQuestCommanduestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            beforeQuestCommanduestCommand.Expect(bqc => bqc.Undo(Arg<Quest>.Is.Equal(quest)))
+                .Repeat.Once()
+                .Return(beforeCommandResult);
+
+            IQuestCommand afterQuestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            afterQuestCommand.Expect(aqc => aqc.Undo(Arg<Quest>.Is.Equal(quest)))
+                .Repeat.Never();
+
+            DownHierarchyQuestCommand command = new DownHierarchyQuestCommand(quest, beforeQuestCommanduestCommand,
+                afterQuestCommand);
+
+            //Act
+            bool result = command.Undo();
+
+            //Assert
+            Assert.IsTrue(result);
+
+            beforeQuestCommanduestCommand.VerifyAllExpectations();
+            afterQuestCommand.VerifyAllExpectations();
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void UndoOnQuestWithChildrenTest(bool beforeCommandResult)
+        {
+            //Arrange
+            Quest child = QuestHelper.CreateQuest();
+            Quest quest = QuestHelper.CreateQuest();
+            quest.Children = new List<Quest> { child };
+
+            IQuestCommand beforeQuestCommanduestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            beforeQuestCommanduestCommand.Expect(bqc => bqc.Undo(Arg<Quest>.Is.Equal(quest)))
+                .Repeat.Once()
+                .Return(beforeCommandResult);
+            if (beforeCommandResult)
+            {
+                beforeQuestCommanduestCommand.Expect(bqc => bqc.Undo(Arg<Quest>.Is.Equal(child)))
+                    .Repeat.Once()
+                    .Return(true);
+            }
+
+            IQuestCommand afterQuestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            if (beforeCommandResult)
+            {
+                afterQuestCommand.Expect(aqc => aqc.Undo(Arg<Quest>.Is.Equal(quest)))
+                    .Repeat.Once()
+                    .Return(true);
+            }
+
+            DownHierarchyQuestCommand command = new DownHierarchyQuestCommand(quest, beforeQuestCommanduestCommand,
+                afterQuestCommand);
+
+            //Act
+            bool result = command.Undo();
+
+            //Assert
+            Assert.IsTrue(result);
+
+            beforeQuestCommanduestCommand.VerifyAllExpectations();
+            afterQuestCommand.VerifyAllExpectations();
         }
 
         [Test]
-        public void ExecuteOnQuestWithChildrenTest()
+        public void IsValidTest()
         {
             //Arrange
-            Quest child = new FakeQuest();
-            Quest quest = new FakeQuest()
-            {
-                Children = new List<Quest>() {child, null}
-            };
+            Quest quest = QuestHelper.CreateQuest();
 
-            int executedOnParentCount = 0;
-            int executedOnChildCount = 0;
+            IQuestCommand beforeQuestCommanduestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            IQuestCommand afterQuestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
 
-            int executedAfterTraverseParentCount = 0;
-            int executedAfterTraverseChildCount = 0;
-
-            MockDownHierarchyQuestCommand command = new MockDownHierarchyQuestCommand(quest);
-            command.OnExecuteOnQuest += (q) =>
-            {
-                if (q == quest)
-                {
-                    executedOnParentCount++;
-                }
-                if (q == child)
-                {
-                    executedOnChildCount++;
-                }
-            };
-            command.OnExecuteOnQuestAfterTraverse += (q) =>
-            {
-                if (q == quest)
-                {
-                    executedAfterTraverseParentCount++;
-                }
-                if (q == child)
-                {
-                    executedAfterTraverseChildCount++;
-                }
-            };
+            DownHierarchyQuestCommand command = new DownHierarchyQuestCommand(quest, beforeQuestCommanduestCommand,
+                afterQuestCommand);
 
             //Act
-            command.Execute();
+            bool result = command.IsValid();
 
             //Assert
-            Assert.AreEqual(1, executedOnParentCount);
-            Assert.AreEqual(1, executedOnChildCount);
+            Assert.IsTrue(result);
 
-            Assert.AreEqual(1, executedAfterTraverseParentCount);
-            Assert.AreEqual(0, executedAfterTraverseChildCount);
+            beforeQuestCommanduestCommand.VerifyAllExpectations();
+            afterQuestCommand.VerifyAllExpectations();
         }
 
-        [Test]
-        public void UndoOnQuestWithoutChildrenTest()
+        [TestCase(true, true)]
+        [TestCase(true,false)]
+        [TestCase(false, true)]
+        [TestCase(false, false)]
+        public void CommitTestTest(bool beforeCommitResult, bool afterCommitResult)
         {
             //Arrange
-            Quest quest = new FakeQuest();
+            Quest quest = QuestHelper.CreateQuest();
 
-            MockDownHierarchyQuestCommand command = new MockDownHierarchyQuestCommand(quest);
-            command.OnUndoOnQuest += (q) =>
-            {
-                Assert.AreEqual(quest, q);
-            };
+            IQuestCommand beforeQuestCommanduestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            beforeQuestCommanduestCommand.Expect(bqc => bqc.Commit()).
+                Repeat.Once().
+                Return(beforeCommitResult);
 
-            //Act
-            command.Execute();
-            command.Undo();
+            IQuestCommand afterQuestCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            afterQuestCommand.Expect(aqc => aqc.Commit()).
+                Repeat.Once().
+                Return(afterCommitResult);
 
-            //Assert
-        }
-
-        [Test]
-        public void UndoOnQuestWithChildrenTest()
-        {
-            //Arrange
-            Quest child = new FakeQuest();
-            Quest quest = new FakeQuest()
-            {
-                Children = new List<Quest>() { child, null }
-            };
-
-            int undoOnParentCount = 0;
-            int undoOnChildCount = 0;
-
-            int undoAfterTraverseParentCount = 0;
-            int undoAfterTraverseChildCount = 0;
-
-            MockDownHierarchyQuestCommand command = new MockDownHierarchyQuestCommand(quest);
-            command.OnUndoOnQuest += (q) =>
-            {
-                if (q == quest)
-                {
-                    undoOnParentCount++;
-                }
-                if (q == child)
-                {
-                    undoOnChildCount++;
-                }
-            };
-            command.OnUndoOnQuestAfterTraverse += (q) =>
-            {
-                if (q == quest)
-                {
-                    undoAfterTraverseParentCount++;
-                }
-                if (q == child)
-                {
-                    undoAfterTraverseChildCount++;
-                }
-            };
+            DownHierarchyQuestCommand command = new DownHierarchyQuestCommand(quest, beforeQuestCommanduestCommand,
+                afterQuestCommand);
 
             //Act
-            command.Execute();
-            command.Undo();
+            bool result = command.Commit();
 
             //Assert
-            Assert.AreEqual(1, undoOnParentCount);
-            Assert.AreEqual(1, undoOnChildCount);
+            Assert.AreEqual(beforeCommitResult && afterCommitResult, result);
 
-            Assert.AreEqual(1, undoAfterTraverseParentCount);
-            Assert.AreEqual(0, undoAfterTraverseChildCount);
+            beforeQuestCommanduestCommand.VerifyAllExpectations();
+            afterQuestCommand.VerifyAllExpectations();
         }
     }
 }

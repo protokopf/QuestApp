@@ -40,6 +40,7 @@
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\Factories\ITreeCommandsFactory.cs" />
     <Compile Include="Commands\Factories\IStateCommandsFactory.cs" />
+    <Compile Include="Commands\IQuestCommand.cs" />
     <Compile Include="Data\IConnectionStringProvider.cs" />
     <Compile Include="Data\IQuestDataLayer.cs" />
     <Compile Include="Entities\Errors\ClarifiedError.cs" />

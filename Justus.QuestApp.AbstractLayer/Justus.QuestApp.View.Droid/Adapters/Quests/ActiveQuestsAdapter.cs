@@ -59,7 +59,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
             }
             
             holder.Progress.Progress = QuestsViewModel.CountProgress(position);
-            holder.ChildrenButton.Enabled = questData.Children != null;
+            holder.ChildrenButton.Enabled = !questData.IsLeaf;
             holder.ItemPosition = position;
 
             switch (questData.State)

@@ -5,7 +5,6 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using NUnit.Framework;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
-using Justus.QuestApp.ModelLayer.Commands.State;
 using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 using Rhino.Mocks;
 

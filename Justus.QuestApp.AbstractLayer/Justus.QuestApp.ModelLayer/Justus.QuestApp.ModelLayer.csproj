@@ -38,21 +38,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Abstracts\Hierarchy\DownHierarchyQuestCommand.cs" />
-    <Compile Include="Commands\Abstracts\Hierarchy\AbstractQuestCommand.cs" />
-    <Compile Include="Commands\Abstracts\Hierarchy\ThisQuestCommand.cs" />
+    <Compile Include="Commands\Abstracts\Hierarchy\CurrentQuestCommand.cs" />
     <Compile Include="Commands\Abstracts\Hierarchy\UpHierarchyQuestCommand.cs" />
-    <Compile Include="Commands\Other\IsLeafAdjustCommand.cs" />
-    <Compile Include="Commands\Repository\UpdateUpHierarchyCommand.cs" />
+    <Compile Include="Commands\Abstracts\Hierarchy\UpToRootQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Property\ChangeStateQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Property\IsLeafAdjustQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Property\PropertyChangeQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Property\RecountProgressQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Property\SetProgressToZeroQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Wrappers\CompositeQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Wrappers\Hierarchy\UpToRootQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Wrappers\Logic\IfEachChildMatchQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Tree\LoadChildrenQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Tree\UnloadChildrenQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Tree\UpdateQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Wrappers\Logic\IfElseQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Wrappers\Logic\IfMatchQuestCommand.cs" />
     <Compile Include="Commands\Wrappers\SwitchCommand.cs" />
-    <Compile Include="Commands\State\CancelQuestCommand.cs" />
-    <Compile Include="Commands\State\Common\ChangeStateDownHierarchy.cs" />
-    <Compile Include="Commands\State\Common\ChangeStateDownHierarchyLoadUnload.cs" />
-    <Compile Include="Commands\State\Common\ChangeStateCurrent.cs" />
-    <Compile Include="Commands\State\Common\ChangeStateUpHierarchy.cs" />
-    <Compile Include="Commands\State\Common\ChangeStateUpHierarchyIfChildrenHaveTheSameState.cs" />
-    <Compile Include="Commands\State\DoneQuestCommand.cs" />
-    <Compile Include="Commands\State\FailQuestCommand.cs" />
-    <Compile Include="Commands\State\StartQuestCommand.cs" />
     <Compile Include="Commands\Wrappers\CompositeCommand.cs" />
     <Compile Include="Commands\Factories\DefaultTreeCommandsFactory.cs" />
     <Compile Include="Commands\Factories\DefaultStateCommandsFactory.cs" />
@@ -60,8 +62,6 @@
     <Compile Include="Commands\Repository\DeleteQuestCommand.cs" />
     <Compile Include="Commands\Repository\RebindQuestCommand.cs" />
     <Compile Include="Commands\Abstracts\AbstractTreeCommand.cs" />
-    <Compile Include="Commands\Repository\UpdateQuestCommand.cs" />
-    <Compile Include="Commands\Other\RecountQuestProgressCommand.cs" />
     <Compile Include="Factories\SqliteQuestFactory.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Model\Order\TimeLeftOrderStrategy.cs" />

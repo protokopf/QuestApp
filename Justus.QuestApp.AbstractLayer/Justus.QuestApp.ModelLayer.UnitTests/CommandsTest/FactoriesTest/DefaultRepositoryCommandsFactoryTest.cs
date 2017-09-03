@@ -3,6 +3,7 @@ using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model.QuestTree;
+using Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
 using Justus.QuestApp.ModelLayer.Commands.Wrappers;
@@ -60,7 +61,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.FactoriesTest
 
             //Assert
             Assert.IsNotNull(addCommand);
-            Assert.IsTrue(addCommand is UpdateQuestCommand);
+            Assert.IsTrue(addCommand is CurrentQuestCommand);
         }
 
         [Test]

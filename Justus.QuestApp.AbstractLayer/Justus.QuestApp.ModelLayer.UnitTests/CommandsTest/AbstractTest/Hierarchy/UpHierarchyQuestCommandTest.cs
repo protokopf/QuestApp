@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy;
+using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -15,35 +12,16 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
     [TestFixture]
     class UpHierarchyQuestCommandTest
     {
-        private class MockUpHierarchyQuestCommand : UpHierarchyQuestCommand
+        private class UpHierarchyQuestCommandMock : UpHierarchyQuestCommand
         {
-            public MockUpHierarchyQuestCommand(Quest quest) : base(quest)
+            public UpHierarchyQuestCommandMock(Quest quest, IQuestCommand questCommand) : base(quest, questCommand)
             {
-            }
-
-            public override bool Commit()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override void ExecuteOnQuest(Quest quest)
-            {
-                OnExecuteOnQuest?.Invoke(quest);
-            }
-
-            protected override void UndoOnQuest(Quest quest)
-            {
-                OnUndoOnQuest?.Invoke(quest);
             }
 
             protected override bool ShouldStopTraversing(Quest quest)
             {
-                return quest.Parent == null;
+                return quest == null;
             }
-
-            public event Action<Quest> OnExecuteOnQuest;
-
-            public event Action<Quest> OnUndoOnQuest;
         }
 
         [Test]
@@ -54,7 +32,27 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             //Act
 
             //Assert
-            Assert.IsTrue(typeof(UpHierarchyQuestCommand).IsSubclassOf(typeof(AbstractQuestCommand)));
+            Assert.IsTrue(typeof(UpHierarchyQuestCommand).IsSubclassOf(typeof(object)));
+            Assert.IsTrue(typeof(ICommand).IsAssignableFrom(typeof(UpHierarchyQuestCommand)));
+        }
+
+        [Test]
+        public void CtorNullTest()
+        {
+            //Arrange
+            IQuestCommand questCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            Quest targer = QuestHelper.CreateQuest();
+
+            //Act
+            ArgumentNullException targetEx = Assert.Throws<ArgumentNullException>(() => new UpHierarchyQuestCommandMock(null, questCommand));
+            ArgumentNullException questCommandEx = Assert.Throws<ArgumentNullException>(() => new UpHierarchyQuestCommandMock(targer, null));
+
+            //Assert
+            Assert.IsNotNull(targetEx);
+            Assert.AreEqual("quest", targetEx.ParamName);
+
+            Assert.IsNotNull(questCommandEx);
+            Assert.AreEqual("questCommand", questCommandEx.ParamName);
         }
 
         [Test]
@@ -70,41 +68,53 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             parent1.Parent = parent0;
             parent2.Parent = parent1;
 
-            bool hasExecutedOnRoot = false;
-            bool hasExecutedOnParent0 = false;
-            bool hasExecutedOnParent1 = false;
-            bool hasExecutedOnParent2 = false;
+            IQuestCommand innerCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(parent2))).Repeat.Once().Return(true);
+            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(parent1))).Repeat.Once().Return(true);
+            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(parent0))).Repeat.Once().Return(true);
+            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(root))).Repeat.Once().Return(true);
 
+            UpHierarchyQuestCommandMock command = new UpHierarchyQuestCommandMock(parent2, innerCommand);
 
-            MockUpHierarchyQuestCommand command = new MockUpHierarchyQuestCommand(parent2);
-            command.OnExecuteOnQuest += (q) =>
-            {
-                if (q == root)
-                {
-                    hasExecutedOnRoot = true;
-                }
-                else if (q == parent0)
-                {
-                    hasExecutedOnParent0 = true;
-                }
-                else if (q == parent1)
-                {
-                    hasExecutedOnParent1 = true;
-                }
-                else if (q == parent2)
-                {
-                    hasExecutedOnParent2 = true;
-                }
-            };
 
             //Act
-            command.Execute();
+            bool result = command.Execute();
 
             //Assert
-            Assert.IsFalse(hasExecutedOnRoot);
-            Assert.IsTrue(hasExecutedOnParent0);
-            Assert.IsTrue(hasExecutedOnParent1);
-            Assert.IsTrue(hasExecutedOnParent2);
+            Assert.IsTrue(result);
+
+            innerCommand.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void ExecuteWithParentsOneReturnsFalseTest()
+        {
+            //Arrange
+            Quest root = new FakeQuest();
+            Quest parent0 = new FakeQuest();
+            Quest parent1 = new FakeQuest();
+            Quest parent2 = new FakeQuest();
+            root.Parent = null;
+            parent0.Parent = root;
+            parent1.Parent = parent0;
+            parent2.Parent = parent1;
+
+            IQuestCommand innerCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(parent2))).Repeat.Once().Return(true);
+            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(parent1))).Repeat.Once().Return(false);
+            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(parent0))).Repeat.Never();
+            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(root))).Repeat.Never();
+
+            UpHierarchyQuestCommandMock command = new UpHierarchyQuestCommandMock(parent2, innerCommand);
+
+
+            //Act
+            bool result = command.Execute();
+
+            //Assert
+            Assert.IsTrue(result);
+
+            innerCommand.VerifyAllExpectations();
         }
 
         [Test]
@@ -115,47 +125,97 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             Quest parent0 = new FakeQuest();
             Quest parent1 = new FakeQuest();
             Quest parent2 = new FakeQuest();
-
             root.Parent = null;
             parent0.Parent = root;
             parent1.Parent = parent0;
             parent2.Parent = parent1;
 
-            bool hasUndoOnRoot = false;
-            bool hasUndoOnParent0 = false;
-            bool hasUndoOnParent1 = false;
-            bool hasUndoOnParent2 = false;
+            IQuestCommand innerCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(parent2))).Repeat.Once().Return(true);
+            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(parent1))).Repeat.Once().Return(true);
+            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(parent0))).Repeat.Once().Return(true);
+            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(root))).Repeat.Once().Return(true);
 
-            MockUpHierarchyQuestCommand command = new MockUpHierarchyQuestCommand(parent2);
-            command.OnUndoOnQuest += (q) =>
-            {
-                if (q == root)
-                {
-                    hasUndoOnRoot = true;
-                }
-                else if (q == parent0)
-                {
-                    hasUndoOnParent0 = true;
-                }
-                else if (q == parent1)
-                {
-                    hasUndoOnParent1 = true;
-                }
-                else if (q == parent2)
-                {
-                    hasUndoOnParent2 = true;
-                }
-            };
+            UpHierarchyQuestCommandMock command = new UpHierarchyQuestCommandMock(parent2, innerCommand);
+
 
             //Act
-            command.Execute();
-            command.Undo();
+            bool result = command.Undo();
 
             //Assert
-            Assert.IsFalse(hasUndoOnRoot);
-            Assert.IsTrue(hasUndoOnParent0);
-            Assert.IsTrue(hasUndoOnParent1);
-            Assert.IsTrue(hasUndoOnParent2);
+            Assert.IsTrue(result);
+
+            innerCommand.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void UndoWithParentsOneReturnsFalseTest()
+        {
+            //Arrange
+            Quest root = new FakeQuest();
+            Quest parent0 = new FakeQuest();
+            Quest parent1 = new FakeQuest();
+            Quest parent2 = new FakeQuest();
+            root.Parent = null;
+            parent0.Parent = root;
+            parent1.Parent = parent0;
+            parent2.Parent = parent1;
+
+            IQuestCommand innerCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(parent2))).Repeat.Once().Return(true);
+            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(parent1))).Repeat.Once().Return(false);
+            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(parent0))).Repeat.Never();
+            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(root))).Repeat.Never();
+
+            UpHierarchyQuestCommandMock command = new UpHierarchyQuestCommandMock(parent2, innerCommand);
+
+
+            //Act
+            bool result = command.Undo();
+
+            //Assert
+            Assert.IsTrue(result);
+
+            innerCommand.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void CommitTest()
+        {
+            //Arrange
+            Quest quest = new FakeQuest();
+
+            IQuestCommand innerCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+            innerCommand.Expect(ic => ic.Commit()).Repeat.Once().Return(true);
+
+            UpHierarchyQuestCommandMock command = new UpHierarchyQuestCommandMock(quest, innerCommand);
+
+            //Act
+            bool result = command.Commit();
+
+            //Assert
+            Assert.IsTrue(result);
+
+            innerCommand.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void IsValidTest()
+        {
+            //Arrange
+            Quest quest = new FakeQuest();
+
+            IQuestCommand innerCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
+
+            UpHierarchyQuestCommandMock command = new UpHierarchyQuestCommandMock(quest, innerCommand);
+
+            //Act
+            bool result = command.IsValid();
+
+            //Assert
+            Assert.IsTrue(result);
+
+            innerCommand.VerifyAllExpectations();
         }
     }
 }

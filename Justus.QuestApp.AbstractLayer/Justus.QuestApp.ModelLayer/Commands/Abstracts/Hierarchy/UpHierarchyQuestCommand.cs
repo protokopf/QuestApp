@@ -1,62 +1,78 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
-using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Abstracts.Hierarchy
 {
     /// <summary>
     /// Traverse up quest hierarchy.
     /// </summary>
-    public abstract class UpHierarchyQuestCommand : AbstractQuestCommand
+    public abstract class UpHierarchyQuestCommand : ICommand
     {
+        private readonly Quest _target;
+        private readonly IQuestCommand _command;
+
         /// <summary>
         /// Receives quest to traverse and quest tree.
         /// </summary>
         /// <param name="quest"></param>
-        /// <param name="tree"></param>
-        protected UpHierarchyQuestCommand(Quest quest) : base(quest)
+        /// <param name="questCommand"></param>
+        protected UpHierarchyQuestCommand(Quest quest, IQuestCommand questCommand)
         {
+            quest.ThrowIfNull(nameof(quest));
+            questCommand.ThrowIfNull(nameof(questCommand));
+            _target = quest;
+            _command = questCommand;
         }
 
-        #region AbstractQuestCommand overriding
+        #region ICommand implementation
 
-        ///<inheritdoc cref="AbstractQuestCommand"/>
-        public override bool Execute()
+        ///<inheritdoc cref="ICommand"/>
+        public bool Execute()
         {
-            TraverseUpHierarchy(QuestRef, ExecuteOnQuest);
+            TraverseUpHierarchy(_target, _command.Execute);
             return true;
         }
 
-        ///<inheritdoc cref="AbstractQuestCommand"/>
-        public override bool Undo()
+        ///<inheritdoc cref="ICommand"/>
+        public bool Undo()
         {
-            TraverseUpHierarchy(QuestRef, UndoOnQuest);
+            TraverseUpHierarchy(_target, _command.Undo);
             return true;
+        }
+
+        ///<inheritdoc cref="ICommand"/>
+        public bool IsValid()
+        {
+            return true;
+        }
+
+        ///<inheritdoc cref="ICommand"/>
+        public bool Commit()
+        {
+            return _command.Commit();
         }
 
         #endregion
 
-        #region Protected virtual methods
-
         /// <summary>
-        /// Points, whether command should traverse up for current quest.
+        /// Checks, whether traversing should stop on given quest.
         /// </summary>
         /// <param name="quest"></param>
         /// <returns></returns>
         protected abstract bool ShouldStopTraversing(Quest quest);
 
-        #endregion
-
-        private void TraverseUpHierarchy(Quest quest, Action<Quest> questAction)
+        /// <summary>
+        /// Traverse up to the hierarchy.
+        /// </summary>
+        /// <param name="quest"></param>
+        /// <param name="questAction"></param>
+        private void TraverseUpHierarchy(Quest quest, Func<Quest, bool> questAction)
         {
             while (!ShouldStopTraversing(quest))
             {
-                questAction?.Invoke(quest);
+                questAction.Invoke(quest);
                 quest = quest.Parent;
             }
         }

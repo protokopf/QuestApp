@@ -102,8 +102,8 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             IQuestCommand innerCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
             innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(parent2))).Repeat.Once().Return(true);
             innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(parent1))).Repeat.Once().Return(false);
-            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(parent0))).Repeat.Never();
-            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(root))).Repeat.Never();
+            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(parent0))).Repeat.Once().Return(true);
+            innerCommand.Expect(ic => ic.Execute(Arg<Quest>.Is.Equal(root))).Repeat.Once().Return(true);
 
             UpHierarchyQuestCommandMock command = new UpHierarchyQuestCommandMock(parent2, innerCommand);
 
@@ -164,8 +164,8 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.AbstractTest.Hierarc
             IQuestCommand innerCommand = MockRepository.GenerateStrictMock<IQuestCommand>();
             innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(parent2))).Repeat.Once().Return(true);
             innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(parent1))).Repeat.Once().Return(false);
-            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(parent0))).Repeat.Never();
-            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(root))).Repeat.Never();
+            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(parent0))).Repeat.Once().Return(false);
+            innerCommand.Expect(ic => ic.Undo(Arg<Quest>.Is.Equal(root))).Repeat.Once().Return(false);
 
             UpHierarchyQuestCommandMock command = new UpHierarchyQuestCommandMock(parent2, innerCommand);
 

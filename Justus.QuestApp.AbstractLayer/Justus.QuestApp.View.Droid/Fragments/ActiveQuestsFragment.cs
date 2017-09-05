@@ -99,32 +99,39 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private async void DoneHandler(int viewPosition)
         {
+            ViewModel.IsBusy = true;
             await ViewModel.DoneQuest(viewPosition);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
             while(ViewModel.IsRootHasState(State.Done))
             {
                 TraverseToParent();
             }
+            ViewModel.IsBusy = false;
         }
 
         private async void FailHandler(int viewPosition)
         {
+            ViewModel.IsBusy = true;
             await ViewModel.FailQuest(viewPosition);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
             while (ViewModel.IsRootHasState(State.Failed))
             {
                 TraverseToParent();
             }
+            ViewModel.IsBusy = false;
         }
 
         private async void CancelHandler(int viewPosition)
         {
+            ViewModel.IsBusy = true;
             await ViewModel.CancelQuest(viewPosition);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
+            ViewModel.IsBusy = false;
         }
 
         protected override async void DeleteHandler(int position)
         {
+            ViewModel.IsBusy = true;
             await ViewModel.DeleteQuest(position);
             ViewModel.Refresh();
             QuestsAdapter.NotifyItemRemoved(position);
@@ -133,6 +140,7 @@ namespace Justus.QuestApp.View.Droid.Fragments
             {
                 TraverseToParent();
             }
+            ViewModel.IsBusy = false;
         }
 
         private void ReactOnChangeItemThatRemovedOnlyFromRoot(int position)

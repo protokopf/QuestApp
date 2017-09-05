@@ -142,10 +142,12 @@ namespace Justus.QuestApp.View.Droid.Abstract.Fragments
         /// <param name="position"></param>
         protected virtual async void DeleteHandler(int position)
         {
+            ViewModel.IsBusy = true;
             await ViewModel.DeleteQuest(position);
             ViewModel.Refresh();
             QuestsAdapter.NotifyItemRemoved(position);
             QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
+            ViewModel.IsBusy = false;
             Toast.MakeText(this.Context, $"Quest in {position} position was deleted.", ToastLength.Short).Show();
         }
 

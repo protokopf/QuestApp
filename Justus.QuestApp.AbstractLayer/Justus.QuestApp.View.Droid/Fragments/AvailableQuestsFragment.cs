@@ -155,10 +155,12 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private async void StartHandler(int itemPosition)
         {
+            ViewModel.IsBusy = true;
             await ViewModel.StartQuest(itemPosition);
             ViewModel.Refresh();
             QuestsAdapter.NotifyItemRemoved(itemPosition);
             QuestsAdapter.NotifyItemRangeChanged(itemPosition, QuestsAdapter.ItemCount);
+            ViewModel.IsBusy = false;
         }
 
         private void ChildrenHandler(int itemPosition)

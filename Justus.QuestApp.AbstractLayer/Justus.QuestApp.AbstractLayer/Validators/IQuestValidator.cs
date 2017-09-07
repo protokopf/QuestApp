@@ -1,5 +1,4 @@
-﻿using Justus.QuestApp.AbstractLayer.Entities;
-using Justus.QuestApp.AbstractLayer.Entities.Quest;
+﻿using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
 
 namespace Justus.QuestApp.AbstractLayer.Validators

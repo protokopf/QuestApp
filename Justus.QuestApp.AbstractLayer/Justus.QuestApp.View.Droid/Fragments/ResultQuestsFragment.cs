@@ -1,15 +1,12 @@
 using System;
 using Android.Graphics.Drawables;
-using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.Content.Res;
 using Android.Support.V7.Widget;
 using Android.Views;
-using Android.Widget;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.Adapters.Quests;
-using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.View.Droid.ViewHolders.QuestItem;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -83,13 +80,16 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         #region Handlers
 
-        private void RestartHandler(int position)
+        private async void RestartHandler(int position)
         {
-            ViewModel.RestartQuest(ViewModel.Leaves[position]);
-
+            ViewModel.IsBusy = true;
+            await ViewModel.RestartQuest(position);
+            ViewModel.Refresh();
             //Only top level quests can be restarted, so they will be removed from Result category.
             QuestsAdapter.NotifyItemRemoved(position);
             QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
+            //RedrawQuests();
+            ViewModel.IsBusy = false;
         }
 
         private void ChildrenHandler(int position)

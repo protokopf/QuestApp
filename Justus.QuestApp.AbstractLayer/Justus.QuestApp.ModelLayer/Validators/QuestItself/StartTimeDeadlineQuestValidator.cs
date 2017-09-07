@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Errors;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Validators;
 
 namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
@@ -37,25 +34,20 @@ namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
             _deadlineLessThanNowClar = deadlineLessThanNowClar;
         }
 
-        private readonly DateTime _defaultDateTime = default(DateTime);
-
         #region IQuestValidator implementation
 
         ///<inheritdoc/>
         public ClarifiedResponse<TMessage> Validate(Quest quest)
         {
-            if (quest == null)
-            {
-                throw new ArgumentNullException(nameof(quest));
-            }
-            
+            quest.ThrowIfNull(nameof(quest));
+
             ClarifiedResponse<TMessage> response  = new ClarifiedResponse<TMessage>();
 
-            DateTime start = quest.StartTime;
-            DateTime deadline = quest.Deadline;
+            DateTime? start = quest.StartTime;
+            DateTime? deadline = quest.Deadline;
 
 
-            if (deadline < DateTime.Now && deadline != _defaultDateTime)
+            if (deadline != null && deadline < DateTime.Now)
             {
                 response.Errors.Add(new ClarifiedError<TMessage>
                 {
@@ -64,7 +56,7 @@ namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
                 });
             }
             
-            if (start > deadline && deadline != _defaultDateTime)
+            if (deadline != null && start > deadline)
             {
                 response.Errors.Add(new ClarifiedError<TMessage>()
                 {

@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Errors;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.ModelLayer.UnitTests.Stubs;
 using Justus.QuestApp.ModelLayer.Validators.QuestItself;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.ValidatorsTest.QuestItselfTest
 {

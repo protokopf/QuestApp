@@ -1,7 +1,7 @@
 ﻿using Justus.QuestApp.ViewModelLayer.ViewModels;
 using NUnit.Framework;
 
-namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModels
+namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
 {
     [TestFixture]
     class BaseViewModelTest

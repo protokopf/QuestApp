@@ -1,15 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Android.App;
-using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.View;
 using Android.Views;
 using Justus.QuestApp.View.Droid.Abstract.Activities;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.Fragments.Factories;
-using Justus.QuestApp.View.Droid.Adapters;
 using Justus.QuestApp.View.Droid.Adapters.Fragments;
 using Justus.QuestApp.View.Droid.Fragments;
 using Justus.QuestApp.View.Droid.Fragments.Factories;
@@ -18,9 +14,8 @@ using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace Justus.QuestApp.View.Droid.Activities
 {
-
     /// <summary>
-    /// Main activity, that hosts fragments in separates tabs.
+    /// Main activity, that hosts fragments in separate tabs.
     /// </summary>
     [Activity(Label = "@string/MainActivityLabel")]
     public class MainTabbedActivity : BaseTabbedActivity

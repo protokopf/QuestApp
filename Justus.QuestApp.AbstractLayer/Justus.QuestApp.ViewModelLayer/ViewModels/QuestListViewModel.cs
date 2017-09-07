@@ -1,113 +1,62 @@
 ﻿using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
-using Justus.QuestApp.ModelLayer.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
-using Justus.QuestApp.AbstractLayer.Entities;
-using Justus.QuestApp.AbstractLayer.Helpers;
+using Justus.QuestApp.AbstractLayer.Helpers.Behaviours;
+using Justus.QuestApp.AbstractLayer.Helpers.Extensions;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
-using Justus.QuestApp.AbstractLayer.Model.Composite;
-using Justus.QuestApp.ModelLayer.Commands.Repository;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
     /// <summary>
     /// Base type for view models, that works with quest items.
     /// </summary>
-    public class QuestListViewModel : BaseViewModel, IQuestCompositeModel, ICompositeTraversing
+    public class QuestListViewModel : BaseViewModel, IRefreshable
     {
-        private readonly List<Quest> _emptyList;
-
-        private List<Quest> _currentChildren;
-
-        private bool _shouldResetChildren;
-
-        protected IQuestRepository QuestRepository;
-        protected IStateCommandsFactory StateCommads;
-        protected IRepositoryCommandsFactory RepositoryCommands;
-        protected Command LastCommand;
+        protected readonly IQuestListModel QuestListModel;
+        protected readonly IStateCommandsFactory StateCommads;
+        protected readonly ITreeCommandsFactory TreeCommands;
 
         /// <summary>
-        /// Default constructor. Resolves references to quest repository and command manager.
+        /// Default constructor. Resolves references to quest list model and command factories.
         /// </summary>
         public QuestListViewModel(
-            IQuestRepository repository, 
+            IQuestListModel questListModel, 
             IStateCommandsFactory stateCommandsFactory, 
-            IRepositoryCommandsFactory repositoryCommandsFactory)
+            ITreeCommandsFactory treeCommandsFactory)
         {
-            if (repository == null)
-            {
-                throw new ArgumentNullException(nameof(repository));
-            }
-            if (stateCommandsFactory == null)
-            {
-                throw new ArgumentNullException(nameof(stateCommandsFactory));
-            }
-            if (repositoryCommandsFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repositoryCommandsFactory));
-            }
+            questListModel.ThrowIfNull(nameof(questListModel));
+            stateCommandsFactory.ThrowIfNull(nameof(stateCommandsFactory));
+            treeCommandsFactory.ThrowIfNull(nameof(treeCommandsFactory));
 
-            QuestRepository = repository;
+            QuestListModel = questListModel;
             StateCommads = stateCommandsFactory;
-            RepositoryCommands = repositoryCommandsFactory;
-            _emptyList = new List<Quest>();
-
-            _currentChildren = new List<Quest>();
-
-            _shouldResetChildren = true;
+            TreeCommands = treeCommandsFactory;
         }
 
-        #region IQuestCompositeModel implementation
+        #region IRefreshable implementation
 
-        ///<inheritdoc/>
-        public Quest Root { get; set; }
-
-        ///<inheritdoc/>
-        public List<Quest> Leaves
+        ///<inehritdoc cref="IRefreshable"/>
+        public void Refresh()
         {
-            get
-            {
-                if (_shouldResetChildren)
-                {
-                    _shouldResetChildren = false;
-
-                    List<Quest> children = InTopRoot ? QuestRepository.GetAll(quest => quest.Parent == null) : Root.Children;
-                    
-                    if (children == null || children.Count == 0)
-                    {
-                        return _currentChildren = _emptyList;
-                    }
-                    
-                    return _currentChildren = HandleQuests(children);
-                }
-                return _currentChildren;
-            }
+            QuestListModel.Refresh();
         }
 
         #endregion
 
-        #region ICompositeTraversing implementation
+        /// <summary>
+        /// Returns leaves of list model.
+        /// </summary>
+        public List<Quest> Leaves => QuestListModel.Leaves;
 
         /// <summary>
         /// Traverse to root of current quest hierarchy.
         /// </summary>
         public bool TraverseToRoot()
         {
-            bool atLeastOneTraverse = false;
-            while (!InTopRoot)
-            {
-                Root = Root.Parent;
-                atLeastOneTraverse = true;
-            }
-            if (atLeastOneTraverse)
-            {
-                ResetChildren();
-            }
-            return atLeastOneTraverse;
+            return QuestListModel.TraverseToRoot();
         }
 
         /// <summary>
@@ -115,13 +64,7 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// </summary>
         public bool TraverseToParent()
         {
-            if (!InTopRoot)
-            {
-                Root = Root.Parent;
-                ResetChildren();
-                return true;
-            }
-            return false;
+            return QuestListModel.TraverseToParent();
         }
 
         /// <summary>
@@ -130,64 +73,47 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <param name="leafNumber"></param>
         public bool TraverseToLeaf(int leafNumber)
         {
-            if (leafNumber < 0 || leafNumber > Leaves.Count - 1)
-            {
-                return false;
-            }
-            Root = Leaves[leafNumber];
-            ResetChildren();
-            return true;
+            return QuestListModel.TraverseToLeaf(leafNumber);
         }
-
-        #endregion
 
         /// <summary>
         /// Get name of current parent quest.
         /// </summary>
-        public string QuestsListTitle => Root?.Title;
+        public string QuestsListTitle => QuestListModel.IsInTheRoot ? null : QuestListModel.Parent?.Title;
 
         /// <summary>
         /// Points, whether current quest hierarchy in root.
         /// </summary>
-        public bool InTopRoot => Root == null;
+        public bool InTopRoot => QuestListModel.IsInTheRoot;
 
         /// <summary>
-        /// Returns id of root quest. Otherwise returns 0.
+        /// Returns id of parent quest.
         /// </summary>
-        public int RootId => InTopRoot ? 0 : Root.Id;
+        public int RootId => QuestListModel.Parent.Id;
 
         /// <summary>
         /// Returns id of leaf.
         /// </summary>
         /// <param name="leafPosition"></param>
         /// <returns></returns>
-        public int GetLeafId(int leafPosition)
+        public int? GetLeafId(int leafPosition)
         {
-            if (!Leaves.InRange(leafPosition))
+            List<Quest> leaves = Leaves;
+            if (!leaves.InRange(leafPosition))
             {
-                return 0;
+                return null;
             }
-            return Leaves[leafPosition].Id;
+            return leaves[leafPosition].Id;
         }
 
         /// <summary>
-        /// Undo last made command.
+        /// Starts given quest.
         /// </summary>
-        public void UndoLastCommand()
+        /// <param name="position"></param>
+        public Task StartQuest(int position)
         {
-            if (LastCommand != null)
-            {
-                LastCommand.Undo();
-                LastCommand = null;
-            }
-        }
-
-        /// <summary>
-        /// Makes view model reset children within next call Leaves property.
-        /// </summary>
-        public void ResetChildren()
-        {
-            _shouldResetChildren = true;
+            Quest quest = GetQuestByPosition(position);
+            return quest == null ? null : RunCommand(StateCommads.StartQuest(quest));
         }
 
         /// <summary>
@@ -196,19 +122,15 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         /// <param name="position"></param>
         public Task DeleteQuest(int position)
         {
-            Quest quest = Leaves[position];
-            LastCommand = RepositoryCommands.DeleteQuest(quest);
-            return Task.Run(() =>
+            Quest quest = GetQuestByPosition(position);
+            if (quest == null)
             {
-                LastCommand.Execute();
-                QuestRepository.Save();
-            });
+                return null;
+            }
+            Quest parent = QuestListModel.Parent;
+            return RunCommand(TreeCommands.DeleteQuest(parent, quest));
         }
 
-        /// <summary>
-        /// Handles changing IsImpotrant field for quest in particular position.
-        /// </summary>
-        /// <param name="position"></param>
         //public async Task<int> ToggleImportance(int position)
         //{
         //    List<Quest> leaves = Leaves;
@@ -230,8 +152,8 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         //            leaves = HandleQuests(leaves);
 
         //            newPosition = leaves.FindIndex(q => q == currentQuest);
-              
-        //            LastCommand = RepositoryCommands.UpdateQuest(currentQuest);
+
+        //            LastCommand = TreeCommands.UpdateQuest(currentQuest);
         //            LastCommand.Execute();
         //            QuestRepository.Action();
         //        });
@@ -244,13 +166,32 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
         #region Protected methods
 
         /// <summary>
-        /// Filters quests.
+        /// Returns quest by position. If position is wrong, null is returned.
         /// </summary>
-        /// <param name="quests"></param>
+        /// <param name="position"></param>
         /// <returns></returns>
-        protected virtual List<Quest> HandleQuests(List<Quest> quests)
+        protected Quest GetQuestByPosition(int position)
         {
-            return quests;
+            List<Quest> leaves = Leaves;
+            if (!leaves.InRange(position))
+            {
+                return null;
+            }
+            return leaves[position];
+        }
+
+        /// <summary>
+        /// Execute and commit ICommand implementation within Task.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        protected Task RunCommand(ICommand command)
+        {
+            return Task.Run(() =>
+            {
+                command.Execute();
+                command.Commit();
+            });
         }
 
         #endregion

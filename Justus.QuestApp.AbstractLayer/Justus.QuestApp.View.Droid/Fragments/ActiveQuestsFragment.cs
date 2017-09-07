@@ -1,16 +1,10 @@
 using System;
-using Android.OS;
-using Android.Views;
-using Android.Widget;
-using Justus.QuestApp.AbstractLayer.Services;
-using Justus.QuestApp.View.Droid.Services.ViewServices;
-using Justus.QuestApp.View.Droid.ViewHolders;
-using Justus.QuestApp.ViewModelLayer.ViewModels;
 using System.Threading.Tasks;
+using Justus.QuestApp.ViewModelLayer.ViewModels;
 using Android.Graphics.Drawables;
-using Android.Support.Design.Widget;
 using Android.Support.V4.Content.Res;
 using Android.Support.V7.Widget;
+using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.Abstract.Fragments;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
 using Justus.QuestApp.View.Droid.Adapters.Quests;
@@ -98,42 +92,62 @@ namespace Justus.QuestApp.View.Droid.Fragments
 
         private async void StartHandler(int itemPosition)
         {
-            await ViewModel.StartQuest(ViewModel.Leaves[itemPosition]);
+            await ViewModel.StartQuest(itemPosition);
             //Staring quest won't removing it from sequence, so we just notifying adapter about changes.
             QuestsAdapter.NotifyItemChanged(itemPosition);
         }
 
         private async void DoneHandler(int viewPosition)
         {
-            await ViewModel.DoneQuest(ViewModel.Leaves[viewPosition]);
+            ViewModel.IsBusy = true;
+            await ViewModel.DoneQuest(viewPosition);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
-            while(ViewModel.IsRootDone())
+            while(ViewModel.IsRootHasState(State.Done))
             {
                 TraverseToParent();
             }
-        }
-
-        private void Undo(Android.Views.View view)
-        {
-            ViewModel.UndoLastCommand();
+            ViewModel.IsBusy = false;
         }
 
         private async void FailHandler(int viewPosition)
         {
-            await ViewModel.FailQuest(ViewModel.Leaves[viewPosition]);
+            ViewModel.IsBusy = true;
+            await ViewModel.FailQuest(viewPosition);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
+            while (ViewModel.IsRootHasState(State.Failed))
+            {
+                TraverseToParent();
+            }
+            ViewModel.IsBusy = false;
         }
 
         private async void CancelHandler(int viewPosition)
         {
-            await ViewModel.CancelQuest(ViewModel.Leaves[viewPosition]);
+            ViewModel.IsBusy = true;
+            await ViewModel.CancelQuest(viewPosition);
             ReactOnChangeItemThatRemovedOnlyFromRoot(viewPosition);
+            ViewModel.IsBusy = false;
+        }
+
+        protected override async void DeleteHandler(int position)
+        {
+            ViewModel.IsBusy = true;
+            await ViewModel.DeleteQuest(position);
+            ViewModel.Refresh();
+            QuestsAdapter.NotifyItemRemoved(position);
+            QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
+            while (ViewModel.IsRootHasState(State.Failed) || ViewModel.IsRootHasState(State.Done))
+            {
+                TraverseToParent();
+            }
+            ViewModel.IsBusy = false;
         }
 
         private void ReactOnChangeItemThatRemovedOnlyFromRoot(int position)
         {
             if (ViewModel.InTopRoot)
             {
+                ViewModel.Refresh();
                 QuestsAdapter.NotifyItemRemoved(position);
                 QuestsAdapter.NotifyItemRangeChanged(position, QuestsAdapter.ItemCount);
             }

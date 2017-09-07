@@ -1,6 +1,6 @@
-﻿using System;
-using Justus.QuestApp.AbstractLayer.Model;
-using Justus.QuestApp.AbstractLayer.Entities.Quest;
+﻿using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.ModelLayer.Commands.Abstracts;
 
 namespace Justus.QuestApp.ModelLayer.Commands.Repository
@@ -9,81 +9,45 @@ namespace Justus.QuestApp.ModelLayer.Commands.Repository
     /// Adds quest to parent. If received quest has parent - command breaks relation between given
     /// quest and old parent and create new relations.
     /// </summary>
-    public class AddQuestCommand : AbstractRepositoryCommand
+    public class AddQuestCommand : AbstractTreeCommand
     {
         protected readonly Quest Parent;
         protected readonly Quest ChildToAdd;
 
         /// <summary>
-        /// Receives reference to repository, parent and new child.
+        /// Receives reference to tree, parent and new child.
         /// </summary>
-        /// <param name="repository"></param>
+        /// <param name="tree"></param>
+        /// <param name="parent"></param>
         /// <param name="childToAdd"></param>
-        public AddQuestCommand(IQuestRepository repository, Quest childToAdd) : 
-            base(repository)
+        public AddQuestCommand(IQuestTree tree, Quest parent, Quest childToAdd) : 
+            base(tree)
         {
-            if(childToAdd == null)
-            {
-                throw new ArgumentNullException(nameof(childToAdd));
-            }
-            Parent = repository.Get(q => q.Id == childToAdd.ParentId);
+            parent.ThrowIfNull(nameof(parent));
+            childToAdd.ThrowIfNull(nameof(childToAdd));
+
+            Parent = parent;
             ChildToAdd = childToAdd;
         }
 
-        #region AbstractRepositoryCommand overriding
+        #region AbstractTreeCommand overriding
 
         ///<inheritdoc/>
-        public override void Execute()
+        public override bool Execute()
         {
-            if(!HasExecuted)
-            {
-                if (Parent != null)
-                {
-                    ConnectWithParent(Parent, ChildToAdd);
-                }
-                Repository.Insert(ChildToAdd);               
-                HasExecuted = true;
-            }
+            QuestTree.AddChild(Parent, ChildToAdd);
+            return true;
         }
 
         ///<inheritdoc/>
-        public override void Undo()
+        public override bool Undo()
         {
-            if(HasExecuted)
-            {
-                if (Parent != null)
-                {
-                    BreakWithParent(Parent, ChildToAdd);
-                }
-                Repository.RevertInsert(ChildToAdd);
-                HasExecuted = false;
-            }
+            QuestTree.RemoveChild(Parent, ChildToAdd);
+            return true;
         }
 
         #endregion
 
-        /// <summary>
-        /// Breaks connection between parent and child.
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        protected void BreakWithParent(Quest parent, Quest child)
-        {
-            parent.Children.Remove(child);
-            child.Parent = null;
-            child.ParentId = 0;
-        }
 
-        /// <summary>
-        /// Establishes connection between parent and child.
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        protected void ConnectWithParent(Quest parent, Quest child)
-        {
-            child.Parent = parent;
-            child.ParentId = parent.Id;
-            parent.Children.Add(child);
-        }
     }
 }

@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
 using Justus.QuestApp.AbstractLayer.Model;
-using Justus.QuestApp.ModelLayer.Commands;
-using Justus.QuestApp.ModelLayer.Commands.Repository;
+using Justus.QuestApp.ModelLayer.Commands.Wrappers;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels
 {
@@ -16,56 +13,34 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels
     public class ResultsQuestListViewModel : QuestListViewModel
     {
         /// <summary>
-        /// Receives references to repository, stateCommands and repositoryCommands factories.
+        /// Receives references to list model, stateCommands and treeCommands factories.
         /// </summary>
-        /// <param name="repository"></param>
+        /// <param name="questListModel"></param>
         /// <param name="stateCommandsFactory"></param>
-        /// <param name="repositoryCommandsFactory"></param>
+        /// <param name="treeCommandsFactory"></param>
         public ResultsQuestListViewModel(
-            IQuestRepository repository,
+            IQuestListModel questListModel,
             IStateCommandsFactory stateCommandsFactory,
-            IRepositoryCommandsFactory repositoryCommandsFactory) : 
-            base(repository, stateCommandsFactory, repositoryCommandsFactory)
+            ITreeCommandsFactory treeCommandsFactory) : 
+            base(questListModel, stateCommandsFactory, treeCommandsFactory)
         {
             
         }
 
-        #region QuestListViewModel overriding
-
-        ///<inheritdoc/>
-        protected override List<Quest> HandleQuests(List<Quest> quests)
+        public Task RestartQuest(int position)
         {
-            return
-                quests.Where(FilterItem)
-                    .ToList();
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Restarts quest.
-        /// </summary>
-        /// <param name="quest"></param>
-        public void RestartQuest(Quest quest)
-        {
-            Command cancel = StateCommads.CancelQuest(quest);
-            Command start = StateCommads.StartQuest(quest);
-            LastCommand = new CompositeCommand(new[] { cancel, start });
-            LastCommand.Execute();
-            ResetChildren();
-        }
-
-        #region Private methods
-
-        private bool FilterItem(Quest quest)
-        {
-            if (quest.Parent == null)
+            Quest quest = GetQuestByPosition(position);
+            if (quest == null)
             {
-                return quest.CurrentState == QuestState.Done || quest.CurrentState == QuestState.Failed;
+                return null;
             }
-            return true;
+            return RunCommand(
+                new CompositeCommand(
+                    new[]
+                    {
+                        StateCommads.CancelQuest(quest),
+                        StateCommads.StartQuest(quest)
+                    }));
         }
-
-        #endregion
     }
 }

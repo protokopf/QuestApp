@@ -35,30 +35,39 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <Folder Include="Entities\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CompositeCommand.cs" />
-    <Compile Include="Commands\Factories\DefaultRepositoryCommandsFactory.cs" />
+    <Compile Include="Commands\Abstracts\Hierarchy\DownHierarchyQuestCommand.cs" />
+    <Compile Include="Commands\Abstracts\Hierarchy\CurrentQuestCommand.cs" />
+    <Compile Include="Commands\Abstracts\Hierarchy\UpHierarchyQuestCommand.cs" />
+    <Compile Include="Commands\Abstracts\Hierarchy\UpToRootQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Property\ChangeStateQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Property\IsLeafAdjustQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Property\PropertyChangeQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Property\RecountProgressQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Property\SetProgressToZeroQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Wrappers\CompositeQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Wrappers\Hierarchy\UpToRootQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Wrappers\Logic\IfEachChildMatchQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Tree\LoadChildrenQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Tree\UnloadChildrenQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Tree\UpdateQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Wrappers\Logic\IfElseQuestCommand.cs" />
+    <Compile Include="Commands\QuestCommands\Wrappers\Logic\IfMatchQuestCommand.cs" />
+    <Compile Include="Commands\Wrappers\SwitchCommand.cs" />
+    <Compile Include="Commands\Wrappers\CompositeCommand.cs" />
+    <Compile Include="Commands\Factories\DefaultTreeCommandsFactory.cs" />
     <Compile Include="Commands\Factories\DefaultStateCommandsFactory.cs" />
-    <Compile Include="Commands\Management\CommandCyclingManager.cs" />
-    <Compile Include="Commands\Abstracts\BaseStateUpdateCommand.cs" />
-    <Compile Include="Commands\State\DownHierarchyStateUpdateCommand.cs" />
-    <Compile Include="Commands\State\ThisStateUpdateCommand.cs" />
-    <Compile Include="Commands\State\UpHierarchyStateUpdateCommand.cs" />
     <Compile Include="Commands\Repository\AddQuestCommand.cs" />
     <Compile Include="Commands\Repository\DeleteQuestCommand.cs" />
     <Compile Include="Commands\Repository\RebindQuestCommand.cs" />
-    <Compile Include="Commands\Abstracts\AbstractRepositoryCommand.cs" />
-    <Compile Include="Commands\Repository\UpdateQuestCommand.cs" />
-    <Compile Include="Factories\SqliteQuestCreator.cs" />
-    <Compile Include="Helpers\DefaultDataKeeper.cs" />
+    <Compile Include="Commands\Abstracts\AbstractTreeCommand.cs" />
+    <Compile Include="Factories\SqliteQuestFactory.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
-    <Compile Include="Helpers\AutoStartTaskWrapper.cs" />
-    <Compile Include="Model\QuestTimeLeftCounter.cs" />
-    <Compile Include="Model\RecursiveQuestActionManager.cs" />
-    <Compile Include="Model\RecursiveQuestProgressCounter.cs" />
-    <Compile Include="Model\RecursiveQuestRepository.cs" />
+    <Compile Include="Model\Order\TimeLeftOrderStrategy.cs" />
+    <Compile Include="Model\QuestList\QuestListModelTopChildrenPredicate.cs" />
+    <Compile Include="Model\QuestTree\QuestTreeInMemory.cs" />
+    <Compile Include="Model\Progress\RecursiveQuestProgressCounter.cs" />
     <Compile Include="Validators\Actions\FailQuestValidator.cs" />
     <Compile Include="Validators\Actions\FinishQuestVaidator.cs" />
     <Compile Include="Validators\Actions\IdleQuestValidator.cs" />

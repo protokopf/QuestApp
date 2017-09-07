@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Model.Composite;
 using Justus.QuestApp.AbstractLayer.Validators;
 
@@ -21,10 +19,7 @@ namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
         /// <param name="questValidators"></param>
         public CompositeQuestValidator(IEnumerable<IQuestValidator<TResponse>> questValidators)
         {
-            if (questValidators == null)
-            {
-                throw new ArgumentNullException(nameof(questValidators));
-            }
+            questValidators.ThrowIfNull(nameof(questValidators));
             _innerValidators = questValidators;
         }
 
@@ -33,10 +28,7 @@ namespace Justus.QuestApp.ModelLayer.Validators.QuestItself
         ///<inheritdoc/>
         public TResponse Validate(Quest quest)
         {
-            if (quest == null)
-            {
-                throw new ArgumentNullException(nameof(quest));
-            }
+            quest.ThrowIfNull(nameof(quest));
             TResponse response = new TResponse();
             foreach (IQuestValidator<TResponse> validator in _innerValidators)
             {

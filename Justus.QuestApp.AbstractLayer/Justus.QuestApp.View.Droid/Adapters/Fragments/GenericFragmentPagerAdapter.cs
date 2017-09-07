@@ -1,16 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
-using Android.Views;
-using Android.Widget;
 using Java.Lang;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.View.Droid.Abstract.Fragments.Factories;
 using Fragment = Android.Support.V4.App.Fragment;
 using FragmentManager = Android.Support.V4.App.FragmentManager;
@@ -35,10 +28,8 @@ namespace Justus.QuestApp.View.Droid.Adapters.Fragments
         /// <param name="fragmentFactories"></param>
         public GenericFragmentPagerAdapter(FragmentManager fm, IList<IFragmentFactory> fragmentFactories) : base(fm)
         {
-            if (fragmentFactories == null)
-            {
-                throw new ArgumentNullException(nameof(fragmentFactories));
-            }
+            fragmentFactories.ThrowIfNull(nameof(fragmentFactories));
+
             _fragmentFactories = fragmentFactories;
         }
 

@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Android.App;
 using Android.Runtime;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
@@ -11,18 +11,22 @@ using Justus.QuestApp.AbstractLayer.Entities.Responses;
 using Justus.QuestApp.AbstractLayer.Factories;
 using Justus.QuestApp.ModelLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Model;
+using Justus.QuestApp.AbstractLayer.Model.QuestTree;
 using Justus.QuestApp.AbstractLayer.Validators;
 using Justus.QuestApp.ModelLayer.Commands.Factories;
 using Justus.QuestApp.ModelLayer.Factories;
-using Justus.QuestApp.ModelLayer.Model;
+using Justus.QuestApp.ModelLayer.Model.Progress;
 using Justus.QuestApp.ModelLayer.Validators.QuestItself;
-using Justus.QuestApp.ServiceLayer.DataServices;
+using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails;
+using Justus.QuestApp.DataLayer.Data;
+using Justus.QuestApp.ModelLayer.Model.QuestList;
+using Justus.QuestApp.ModelLayer.Model.QuestTree;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
+using Justus.QuestApp.View.Droid.Data.Platform;
 using Justus.QuestApp.View.Droid.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.EntityStateHandlers.VIewModels;
+using Justus.QuestApp.ViewModelLayer.Factories;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
-using Justus.QuestApp.View.Droid.StubServices;
-using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails;
 
 namespace Justus.QuestApp.View.Droid
 {
@@ -43,66 +47,102 @@ namespace Justus.QuestApp.View.Droid
         public override void OnCreate()
         {
             base.OnCreate();
+            InitializeDataLayerServices();
             InitializeModelServices();
             InitializeViewModelServices();
             InitializeApplicationServices();
         }
 
+        private void InitializeDataLayerServices()
+        {
+            //Quest data access layer.
+            //ServiceLocator.Register(() => new StubQuestRepositoryService(12, 1, 3));
+            string pathToStorage = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+                "test.db3");
+            ServiceLocator.Register<IQuestDataLayer>(() => new SqliteOrmQuestDataLayer(pathToStorage, new AndroidPlatformSqliteFactory()));
+            ServiceLocator.Register<IQuestFactory>(() => new SqliteQuestFactory());
+        }
+
         private void InitializeModelServices()
         {
-            ServiceLocator.Register(() => new StubQuestRepositoryService(12, 1, 3));
-            ServiceLocator.Register(() => new RecursiveQuestRepository(
-                ServiceLocator.Resolve<IDataAccessInterface<Quest>>(),
-                "some connection string"
-                ));
-            ServiceLocator.Register(() => new SqliteQuestCreator());
-            //ServiceLocator.Register<IQuestRepository>(() => new RecursiveQuestRepository(
-            //    new RestDataStorage(), "http://192.168.0.104/api/Quests"));
-            ServiceLocator.Register(() => new RecursiveQuestProgressCounter());
-            ServiceLocator.Register(() => new DefaultStateCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
-            ServiceLocator.Register(() => new DefaultRepositoryCommandsFactory(ServiceLocator.Resolve<IQuestRepository>()));
-            InitializeQuestValidators();
+            //Quest tree. Model layer.
+            ServiceLocator.Register<IQuestTree>(() => new QuestTreeInMemory(
+                ServiceLocator.Resolve<IQuestDataLayer>(),
+                ServiceLocator.Resolve<IQuestFactory>()
+            ));
 
+            //Quest state commands factory. Used to produce commands for changing quest state.
+            ServiceLocator.Register<IStateCommandsFactory>(() => 
+                    new DefaultStateCommandsFactory(
+                        ServiceLocator.Resolve<IQuestTree>())
+                    );
+
+            //Quest repository commands factory. Used to produce commands for changing quest trees.
+            ServiceLocator.Register<ITreeCommandsFactory>(() =>
+                    new DefaultTreeCommandsFactory(
+                        ServiceLocator.Resolve<IQuestTree>())
+                    );
+
+            InitializeQuestValidators();
         }
 
         private void InitializeViewModelServices()
         {
+            ServiceLocator.Register<IQuestViewModelFactory>(() => new QuestViewModelFactory(
+                ServiceLocator.Resolve<IQuestFactory>()));
+
+            IQuestListModel activeListModel = new QuestListModelTopChildrenPredicate(
+                ServiceLocator.Resolve<IQuestTree>(),
+                q => q.State == State.Progress);
+
+            activeListModel.Initialize();
+
             ServiceLocator.Register(() => new ActiveQuestListViewModel(
-                ServiceLocator.Resolve<IQuestRepository>(),
-                ServiceLocator.Resolve<IStateCommandsFactory>(),
-                ServiceLocator.Resolve<IRepositoryCommandsFactory>(),
-                ServiceLocator.Resolve<IQuestProgressCounter>()
-                ));
+                activeListModel,
+                ServiceLocator.Resolve<IStateCommandsFactory>(), 
+                ServiceLocator.Resolve<ITreeCommandsFactory>()));
+
+            IQuestListModel resultsListModel = new QuestListModelTopChildrenPredicate(
+                ServiceLocator.Resolve<IQuestTree>(),
+                q => q.State == State.Done || q.State == State.Failed);
+            resultsListModel.Initialize();
 
             ServiceLocator.Register(() => new ResultsQuestListViewModel(
-                ServiceLocator.Resolve<IQuestRepository>(),
+                resultsListModel,
                 ServiceLocator.Resolve<IStateCommandsFactory>(),
-                ServiceLocator.Resolve<IRepositoryCommandsFactory>()));
+                ServiceLocator.Resolve<ITreeCommandsFactory>()));
+
+            IQuestListModel availableListModel = new QuestListModelTopChildrenPredicate(
+                ServiceLocator.Resolve<IQuestTree>(),
+                q => q.State == State.Idle);
+            availableListModel.Initialize();
 
             ServiceLocator.Register(() => new AvailableQuestListViewModel(
-                ServiceLocator.Resolve<IQuestRepository>(),
+                availableListModel,
                 ServiceLocator.Resolve<IStateCommandsFactory>(),
-                ServiceLocator.Resolve<IRepositoryCommandsFactory>()));
+                ServiceLocator.Resolve<ITreeCommandsFactory>()));
 
             ServiceLocator.Register(() => new QuestCreateViewModel(
-                ServiceLocator.Resolve<IQuestCreator>(),
+                ServiceLocator.Resolve<IQuestViewModelFactory>(),
                 ServiceLocator.Resolve<IQuestValidator<ClarifiedResponse<int>>>(),
-                ServiceLocator.Resolve<IRepositoryCommandsFactory>()), useLikeFactory: true);
+                ServiceLocator.Resolve<IQuestTree>(),
+                ServiceLocator.Resolve<ITreeCommandsFactory>()), useLikeFactory: true);
 
             ServiceLocator.Register(() => new QuestEditViewModel(
-                ServiceLocator.Resolve<IQuestRepository>(),
+                ServiceLocator.Resolve<IQuestViewModelFactory>(),
                 ServiceLocator.Resolve<IQuestValidator<ClarifiedResponse<int>>>(),
-                ServiceLocator.Resolve<IRepositoryCommandsFactory>()), useLikeFactory: true);
+                ServiceLocator.Resolve<IQuestTree>(),
+                ServiceLocator.Resolve<ITreeCommandsFactory>()), useLikeFactory: true);
         }
 
         private void InitializeApplicationServices()
         {
             ServiceLocator.Register(() => new DateTimeStateHandler(), useLikeFactory: true);
             ServiceLocator.Register<IEntityStateHandler<IList<ClarifiedError<int>>>>(
-                () => new ListOfClarifiedErrorIntStateHandler());            
+                () => new ListOfClarifiedErrorIntStateHandler());
             ServiceLocator.Register(
                 () => new QuestViewModelStateHandler(
-                    ServiceLocator.Resolve<IEntityStateHandler<DateTime>>()));
+                    ServiceLocator.Resolve<IEntityStateHandler<DateTime?>>()));
         }
 
         private void InitializeQuestValidators()

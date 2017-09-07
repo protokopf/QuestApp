@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Commands.Factories;
-using Justus.QuestApp.AbstractLayer.Entities;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Model;
-using Justus.QuestApp.ModelLayer.Helpers;
-using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using Justus.QuestApp.ViewModelLayer.UnitTests.Stubs;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 using NUnit.Framework;
@@ -18,147 +16,145 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
     [TestFixture]
     class ActiveQuestListViewModelTest
     {
-
-        #region Helper methods
-
-        private void HandleQuests(List<Quest> quests, Action<Quest> childrenHandler)
+        [Test]
+        public void CountProgressWrongPosition()
         {
-            foreach (Quest child in quests)
-            {
-                childrenHandler(child);
-            }
+            //Arrange
+            int expected = -1;
+            int position = 1;
+            List<Quest> leaves = new List<Quest>();
+
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(m => m.Leaves).
+                Repeat.Once().
+                Return(leaves);
+
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
+
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
+
+
+            //Act
+            int progressInt = viewModel.CountProgress(position);
+
+            //Assert
+            Assert.AreEqual(expected, progressInt);
+
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
         }
 
-        #endregion
-
-        [Test]
-        public void FilterQuest()
+        [TestCase(0)]
+        [TestCase(0.33333)]
+        [TestCase(0.5)]
+        [TestCase(0.75)]
+        [TestCase(1)]
+        public void CountProgressTest(double progress)
         {
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            //Arrange
+            int expected = (int)Math.Floor(progress * 100);
+            int position = 0;
 
-            List<Quest> fromRepository = new List<Quest>()
+            Quest quest = new Quest()
             {
-                new FakeQuest {CurrentState = QuestState.Done},
-                new FakeQuest {CurrentState = QuestState.Failed},
-                new FakeQuest {CurrentState = QuestState.Idle},
-                new FakeQuest {CurrentState = QuestState.Progress}
+                Progress = progress
             };
 
-            repository.Expect(rep => rep.GetAll(Arg<Predicate<Quest>>.Is.NotNull)).Repeat.Once().Return(fromRepository);
-
-            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
-            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
-            IQuestProgressCounter counter = MockRepository.GenerateStrictMock<IQuestProgressCounter>();
-
-
-            QuestListViewModel viewModel = new ActiveQuestListViewModel(repository, stateCommands, repoCommands, counter);
-
-            //Act
-            List<Quest> quests = viewModel.Leaves;
-
-            //Assert
-            Assert.IsNotNull(quests);
-            Assert.AreEqual(1, quests.Count);
-            Assert.AreEqual(QuestState.Progress, quests[0].CurrentState);
-
-            Assert.AreEqual(4, fromRepository.Count);
-            Assert.IsTrue(fromRepository.Any(quest => quest.CurrentState == QuestState.Done));
-            Assert.IsTrue(fromRepository.Any(quest => quest.CurrentState == QuestState.Failed));
-            Assert.IsTrue(fromRepository.Any(quest => quest.CurrentState == QuestState.Idle));
-            Assert.IsTrue(fromRepository.Any(quest => quest.CurrentState == QuestState.Progress));
-
-            repository.VerifyAllExpectations();
-        }
-
-        [Test]
-        public void FilterSubQuests()
-        {
-            //Arrange
-            Quest parent = new FakeQuest();
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-
-            List<Quest> fromRepository = new List<Quest>
+            List<Quest> leaves = new List<Quest>()
             {
-                new FakeQuest {CurrentState = QuestState.Done , Parent = parent},
-                new FakeQuest {CurrentState = QuestState.Failed , Parent = parent},
-                new FakeQuest {CurrentState = QuestState.Idle , Parent = parent},
-                new FakeQuest {CurrentState = QuestState.Progress , Parent = parent}
+                quest
             };
 
-            repository.Expect(rep => rep.GetAll(Arg<Predicate<Quest>>.Is.NotNull)).Repeat.Once().Return(fromRepository);
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(m => m.Leaves).
+                Repeat.Once().
+                Return(leaves);
+
 
             IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
-            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
-            IQuestProgressCounter counter = MockRepository.GenerateStrictMock<IQuestProgressCounter>();
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
 
 
-            QuestListViewModel viewModel = new ActiveQuestListViewModel(repository, stateCommands, repoCommands, counter);
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
+
 
             //Act
-            List<Quest> quests = viewModel.Leaves;
+            int progressInt = viewModel.CountProgress(position);
 
             //Assert
-            Assert.IsNotNull(quests);
-            Assert.AreEqual(4, quests.Count);
-            Assert.IsTrue(quests.Any(q => q.CurrentState == QuestState.Done));
-            Assert.IsTrue(quests.Any(q => q.CurrentState == QuestState.Failed));
-            Assert.IsTrue(quests.Any(q => q.CurrentState == QuestState.Idle));
-            Assert.IsTrue(quests.Any(q => q.CurrentState == QuestState.Progress));
+            Assert.AreEqual(expected, progressInt);
 
-            Assert.AreEqual(4, fromRepository.Count);
-            Assert.IsTrue(fromRepository.Any(quest => quest.CurrentState == QuestState.Done));
-            Assert.IsTrue(fromRepository.Any(quest => quest.CurrentState == QuestState.Failed));
-            Assert.IsTrue(fromRepository.Any(quest => quest.CurrentState == QuestState.Idle));
-            Assert.IsTrue(fromRepository.Any(quest => quest.CurrentState == QuestState.Progress));
-
-            repository.VerifyAllExpectations();
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
         }
 
-        [Test]
-        public void CountProgressTest()
+        [TestCase(1.1)]
+        [TestCase(2.1)]
+        public void CountProgressMoreThanOne(double progress)
         {
             //Arrange
-            IQuestProgressCounter counter = MockRepository.GenerateStrictMock<IQuestProgressCounter>();
-            counter.Expect(c => c.CountProgress(Arg<Quest>.Is.Anything)).Repeat.Once().Return(new ProgressValue()
+            int expected = 100;
+            int position = 0;
+
+            Quest quest = new Quest
             {
-                Current = 5,
-                Total = 10
-            });
+                Progress = progress
+            };
 
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            List<Quest> leaves = new List<Quest>
+            {
+                quest
+            };
+
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(m => m.Leaves).
+                Repeat.Once().
+                Return(leaves);
+
+
             IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
-            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
 
 
-            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(repository, stateCommands, repoCommands, counter);
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
 
 
             //Act
-            int progress = viewModel.CountProgress(new Quest());
+            int progressInt = viewModel.CountProgress(position);
 
             //Assert
-            Assert.AreEqual(50, progress);
-            counter.VerifyAllExpectations();
+            Assert.AreEqual(expected, progressInt);
+
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
         }
 
         [Test]
-        public void CountProgressNullException()
+        public void IsRootDoneInTopRootTest()
         {
             //Arrange
-            IQuestProgressCounter counter = MockRepository.GenerateStrictMock<IQuestProgressCounter>();
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(mo => mo.IsInTheRoot).Repeat.Once().Return(true);
+
             IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
-            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
 
-
-            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(repository, stateCommands, repoCommands, counter);
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
 
             //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => viewModel.CountProgress(null));
+            bool isRootDone = viewModel.IsRootHasState(State.Done);
 
             //Assert
-            Assert.IsNotNull(ex);
-            Assert.AreEqual(ex.ParamName, "quest");
+            Assert.IsFalse(isRootDone);
+
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
         }
 
         [Test]
@@ -169,32 +165,267 @@ namespace Justus.QuestApp.ViewModelLayer.UnitTests.ViewModelsTest
             {
                 new FakeQuest()
                 {
-                    CurrentState = QuestState.Progress,
-                    Children = new List<Quest>()
-                    {
-                        new FakeQuest()
-                    }
+                    State = State.Progress
                 }
             };
 
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            repository.Expect(rep => rep.GetAll(Arg<Predicate<Quest>>.Is.NotNull)).Repeat.Once().Return(list);
+            Quest root = list[0];
+
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(mo => mo.IsInTheRoot).Repeat.Twice().Return(false);
+            model.Expect(mo => mo.Parent).Repeat.Twice().Return(root);
 
             IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
-            IRepositoryCommandsFactory repoCommands = MockRepository.GenerateStrictMock<IRepositoryCommandsFactory>();
-            IQuestProgressCounter counter = MockRepository.GenerateStrictMock<IQuestProgressCounter>();
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
 
-            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(repository, stateCommands, repoCommands, counter);
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
 
             //Act
-            viewModel.TraverseToLeaf(0);
-            bool isRootDoneBefore = viewModel.IsRootDone();
-            viewModel.Root.CurrentState = QuestState.Done;
-            bool isRootDoneAfter = viewModel.IsRootDone();
+            bool isRootDoneBefore = viewModel.IsRootHasState(State.Done);
+            root.State = State.Done;
+            bool isRootDoneAfter = viewModel.IsRootHasState(State.Done);
 
             //Assert
             Assert.IsFalse(isRootDoneBefore);
             Assert.IsTrue(isRootDoneAfter);
+
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void FailQuestWrongPositionTest()
+        {
+            //Arrange
+            int position = 1;
+
+            List<Quest> leaves = new List<Quest>();
+
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(m => m.Leaves).
+                Repeat.Once().
+                Return(leaves);
+
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
+
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
+
+
+            //Act
+            Task failTask = viewModel.FailQuest(position);
+
+            //Assert
+            Assert.IsNull(failTask);
+
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void FailQuestTest()
+        {
+            //Arrange
+            int position = 0;
+
+            Quest toFail = new FakeQuest();
+
+            List<Quest> leaves = new List<Quest> {toFail};
+
+            ICommand returnedCommand = MockRepository.GenerateStrictMock<ICommand>();
+            returnedCommand.Expect(rc => rc.Execute()).
+                Repeat.Once().
+                Return(true);
+            returnedCommand.Expect(rc => rc.Commit()).
+                Repeat.Once().
+                Return(true);
+
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(m => m.Leaves).
+                Repeat.Once().
+                Return(leaves);
+
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            stateCommands.Expect(sc => sc.FailQuest(Arg<Quest>.Is.Equal(toFail))).
+                Repeat.Once().
+                Return(returnedCommand);
+
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
+
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
+
+
+            //Act
+            Task failTask = viewModel.FailQuest(position);
+
+            //Assert
+            Assert.IsNotNull(failTask);
+            failTask.Wait();
+
+            returnedCommand.VerifyAllExpectations();
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void DoneQuestWrongPositionTest()
+        {
+            //Arrange
+            int position = 1;
+
+            List<Quest> leaves = new List<Quest>();
+
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(m => m.Leaves).
+                Repeat.Once().
+                Return(leaves);
+
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
+
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
+
+
+            //Act
+            Task doneTask = viewModel.DoneQuest(position);
+
+            //Assert
+            Assert.IsNull(doneTask);
+
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void DoneQuestTest()
+        {
+            //Arrange
+            int position = 0;
+
+            Quest toFail = new FakeQuest();
+
+            List<Quest> leaves = new List<Quest> { toFail };
+
+            ICommand returnedCommand = MockRepository.GenerateStrictMock<ICommand>();
+            returnedCommand.Expect(rc => rc.Execute()).
+                Repeat.Once().
+                Return(true);
+            returnedCommand.Expect(rc => rc.Commit()).
+                Repeat.Once().
+                Return(true);
+
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(m => m.Leaves).
+                Repeat.Once().
+                Return(leaves);
+
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            stateCommands.Expect(sc => sc.DoneQuest(Arg<Quest>.Is.Equal(toFail))).
+                Repeat.Once().
+                Return(returnedCommand);
+
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
+
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
+
+
+            //Act
+            Task doneTask = viewModel.DoneQuest(position);
+
+            //Assert
+            Assert.IsNotNull(doneTask);
+            doneTask.Wait();
+
+            returnedCommand.VerifyAllExpectations();
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void CancelQuestWrongPositionTest()
+        {
+            //Arrange
+            int position = 1;
+
+            List<Quest> leaves = new List<Quest>();
+
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(m => m.Leaves).
+                Repeat.Once().
+                Return(leaves);
+
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
+
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
+
+
+            //Act
+            Task cancelTask = viewModel.CancelQuest(position);
+
+            //Assert
+            Assert.IsNull(cancelTask);
+
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void CancelQuestTest()
+        {
+            //Arrange
+            int position = 0;
+
+            Quest toFail = new FakeQuest();
+
+            List<Quest> leaves = new List<Quest> { toFail };
+
+            ICommand returnedCommand = MockRepository.GenerateStrictMock<ICommand>();
+            returnedCommand.Expect(rc => rc.Execute()).
+                Repeat.Once().
+                Return(true);
+            returnedCommand.Expect(rc => rc.Commit()).
+                Repeat.Once().
+                Return(true);
+
+            IQuestListModel model = MockRepository.GenerateStrictMock<IQuestListModel>();
+            model.Expect(m => m.Leaves).
+                Repeat.Once().
+                Return(leaves);
+
+            IStateCommandsFactory stateCommands = MockRepository.GenerateStrictMock<IStateCommandsFactory>();
+            stateCommands.Expect(sc => sc.CancelQuest(Arg<Quest>.Is.Equal(toFail))).
+                Repeat.Once().
+                Return(returnedCommand);
+
+            ITreeCommandsFactory repoCommands = MockRepository.GenerateStrictMock<ITreeCommandsFactory>();
+
+
+            ActiveQuestListViewModel viewModel = new ActiveQuestListViewModel(model, stateCommands, repoCommands);
+
+
+            //Act
+            Task cancelTask = viewModel.CancelQuest(position);
+
+            //Assert
+            Assert.IsNotNull(cancelTask);
+            cancelTask.Wait();
+
+            returnedCommand.VerifyAllExpectations();
+            stateCommands.VerifyAllExpectations();
+            repoCommands.VerifyAllExpectations();
+            model.VerifyAllExpectations();
         }
     }
 }

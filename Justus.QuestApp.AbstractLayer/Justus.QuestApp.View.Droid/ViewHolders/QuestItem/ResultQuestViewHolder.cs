@@ -36,12 +36,18 @@ namespace Justus.QuestApp.View.Droid.ViewHolders.QuestItem
 
         public Button DeleteButton { get; set; }
 
-        #region ToggledViewHolder overridng
+        #region ToggledViewHolder overriding
 
-        ///<inhericdoc/>
+        ///<inheritdoc cref="ToggledViewHolder"/>
         protected override int GetExpandDetailsId()
         {
             return Resource.Id.resultQuestItemDetails;
+        }
+
+        ///<inheritdoc cref="ToggledViewHolder"/>
+        public override void Refresh()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

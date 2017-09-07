@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.AbstractLayer.Services;
 using Justus.QuestApp.View.Droid.Abstract.Adapters;
-using Justus.QuestApp.View.Droid.Adapters.Quests;
-using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.View.Droid.ViewHolders.QuestItem;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -40,7 +38,7 @@ namespace Justus.QuestApp.View.Droid.Services.ViewServices
             for (int i = 0; i < length; ++i)
             {
                 Quest currentQuest = _viewModel.Leaves[i];
-                if (currentQuest.Deadline > DateTime.Now && currentQuest.CurrentState == QuestState.Progress)
+                if (currentQuest.Deadline > DateTime.Now && currentQuest.State == State.Progress)
                 {
                     _toUpdate.Add(i);
                 }

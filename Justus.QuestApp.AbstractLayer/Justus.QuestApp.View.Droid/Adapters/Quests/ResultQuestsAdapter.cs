@@ -4,7 +4,6 @@ using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.Abstract.Adapters;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
-using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.View.Droid.ViewHolders.QuestItem;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -47,17 +46,17 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         {
             holder.Collapse();
             holder.ItemPosition = position;
-            holder.RestartButton.Visibility = questData.Parent == null ? ViewStates.Visible : ViewStates.Gone;
+            holder.RestartButton.Visibility = QuestsViewModel.InTopRoot ? ViewStates.Visible : ViewStates.Gone;
             holder.Title.Text = questData.Title;
             holder.Description.Text = questData.Description;
-            holder.ChildrenButton.Enabled = questData.Children != null;
-            switch (questData.CurrentState)
+            holder.ChildrenButton.Enabled = !questData.IsLeaf;
+            switch (questData.State)
             {
-                case QuestState.Done:
+                case State.Done:
                     holder.Status.SetText(Resource.String.DoneStatus);
                     holder.Status.SetTextColor(Color.Green);
                     break;
-                case QuestState.Failed:
+                case State.Failed:
                     holder.Status.SetText(Resource.String.FailedStatus);
                     holder.Status.SetTextColor(Color.Red);
                     break;

@@ -50,12 +50,18 @@ namespace Justus.QuestApp.View.Droid.ViewHolders.QuestItem
 
         #endregion
 
-        #region ToggledViewHolder overridng
+        #region ToggledViewHolder overriding
 
-        ///<inheritdoc/>
+        ///<inheritdoc cref="ToggledViewHolder"/>
         protected override int GetExpandDetailsId()
         {
             return Resource.Id.childItemLayout;
+        }
+
+        ///<inheritdoc cref="ToggledViewHolder"/>
+        public override void Refresh()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -5,7 +5,6 @@ using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.Abstract.Adapters;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
-using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.View.Droid.ViewHolders.QuestItem;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -54,26 +53,30 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
             holder.Collapse();
             holder.Title.Text = questData.Title;
             holder.Description.Text = questData.Description;
-            holder.TimeLeft.Text = FormLeftTime(questData.Deadline);
-            holder.Progress.Progress = QuestsViewModel.CountProgress(questData);
-            holder.ChildrenButton.Enabled = questData.Children != null;
+            if (questData.Deadline != null)
+            {
+                holder.TimeLeft.Text = FormLeftTime(questData.Deadline.Value);
+            }
+            
+            holder.Progress.Progress = QuestsViewModel.CountProgress(position);
+            holder.ChildrenButton.Enabled = !questData.IsLeaf;
             holder.ItemPosition = position;
 
-            switch (questData.CurrentState)
+            switch (questData.State)
             {
-                case QuestState.Done:
+                case State.Done:
                     holder.Title.SetTextColor(Color.Green);
                     HandleButtonsForDone(holder, questData);
                     break;
-                case QuestState.Failed:
+                case State.Failed:
                     holder.Title.SetTextColor(Color.Red);
                     HandleButtonsForFailed(holder, questData);
                     break;
-                case QuestState.Idle:
+                case State.Idle:
                     holder.Title.SetTextColor(Color.Gray);
                     HandleButtonsForIdle(holder, questData);
                     break;
-                case QuestState.Progress:
+                case State.Progress:
                     holder.Title.SetTextColor(Color.Orange);
                     HandleButtonsForProgress(holder, questData);
                     break;
@@ -86,7 +89,7 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
 
         private void HandleButtonsForProgress(ActiveQuestViewHolder holder, Quest questData)
         {
-            ViewStates doneFailState = questData.Children != null && questData.Children.Count != 0 ? ViewStates.Gone : ViewStates.Visible;
+            ViewStates doneFailState = questData.IsLeaf ? ViewStates.Visible : ViewStates.Gone;
 
             holder.StartButton.Visibility = ViewStates.Gone;
             holder.CancelButton.Visibility = ViewStates.Visible;

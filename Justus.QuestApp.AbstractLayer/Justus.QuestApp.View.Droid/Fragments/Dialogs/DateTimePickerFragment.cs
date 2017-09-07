@@ -1,18 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 using Java.Lang;
-using Justus.QuestApp.ModelLayer.Helpers;
+using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.View.Droid.Abstract.EntityStateHandlers;
 using Justus.QuestApp.View.Droid.EntityStateHandlers;
 using DialogFragment = Android.Support.V4.App.DialogFragment;
@@ -35,7 +28,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         private TimePicker _timePicker;
         private TimeSpan _currentTime;
 
-        private static readonly IEntityStateHandler<DateTime> DateTimeHandler = new DateTimeStateHandler();
+        private static readonly IEntityStateHandler<DateTime?> DateTimeHandler = new DateTimeStateHandler();
 
         public DateTimePickerFragment()
         {
@@ -45,6 +38,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         public DateTimePickerFragment(DateTime dateTime)
         {
             Bundle arguments = new Bundle();
+
             PutItsDateTime(arguments, dateTime);
             Arguments = arguments;
         }
@@ -60,10 +54,8 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         /// <returns></returns>
         public static DateTimePickerFragment NewInstance(DateTime dateTime, Fragment targetFragment, int requestCode)
         {
-            if (targetFragment == null)
-            {
-                throw new ArgumentNullException(nameof(targetFragment));
-            }
+            targetFragment.ThrowIfNull(nameof(targetFragment));
+
             DateTimePickerFragment fragment = new DateTimePickerFragment(dateTime);
             fragment.SetTargetFragment(targetFragment, requestCode);
             return fragment;
@@ -74,9 +66,9 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
         /// </summary>
         /// <param name="bundle"></param>
         /// <returns></returns>
-        public static DateTime GetItsDateTime(Bundle bundle)
+        public static DateTime? GetItsDateTime(Bundle bundle)
         {
-            DateTime dateTime = default(DateTime);
+            DateTime? dateTime = null;
             DateTimeHandler.Extract(DateTimeValueId, bundle, ref dateTime);
             return dateTime;
         }
@@ -93,7 +85,7 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
             _datePicker = dialogView.FindViewById<DatePicker>(Resource.Id.datePicker);
             _timePicker = dialogView.FindViewById<TimePicker>(Resource.Id.timePicker);
 
-            DateTime dateTime = GetItsDateTime(Arguments);
+            DateTime? dateTime = GetItsDateTime(Arguments);
             HandleDatePicker(_datePicker, dateTime);
             HandleTimePicker(_timePicker, dateTime);
             
@@ -116,21 +108,21 @@ namespace Justus.QuestApp.View.Droid.Fragments.Dialogs
 
         #region Private methods
 
-        private void HandleTimePicker(TimePicker timePicker, DateTime dateTime)
+        private void HandleTimePicker(TimePicker timePicker, DateTime? dateTime)
         {
             _timePicker.TimeChanged += TimePickerOnTimeChanged;
-            if (dateTime != default(DateTime))
+            if (dateTime != null)
             {
-                timePicker.CurrentHour = new Integer(dateTime.Hour);
-                timePicker.CurrentMinute = new Integer(dateTime.Minute);
+                timePicker.CurrentHour = new Integer(dateTime.Value.Hour);
+                timePicker.CurrentMinute = new Integer(dateTime.Value.Minute);
             }            
         }
 
-        private void HandleDatePicker(DatePicker datePicker, DateTime dateTime)
+        private void HandleDatePicker(DatePicker datePicker, DateTime? dateTime)
         {
-            if (dateTime != DateTime.MinValue)
+            if (dateTime != null)
             {
-                datePicker.DateTime = dateTime;
+                datePicker.DateTime = dateTime.Value;
             }
         }
 

@@ -10,12 +10,12 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
     /// </summary>
     public static class QuestHelper
     {
-        public static Quest CreateQuest(QuestState state)
+        public static Quest CreateQuest(State state)
         {
             return new FakeQuest()
             {
                 Children = new List<Quest>(),
-                CurrentState = state,
+                State = state,
                 Title = "Title",
                 Description = "Description",
                 Id = 0,
@@ -24,7 +24,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
             };
         }
 
-        public static Quest CreateCompositeQuest(int compositionLevel, int childNumber, QuestState state)
+        public static Quest CreateCompositeQuest(int compositionLevel, int childNumber, State state)
         {
             Quest quest = CreateQuest(state);
             if (compositionLevel == 0 || childNumber == 0)
@@ -68,6 +68,15 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
             return false;
         }
 
+        public static void ExecuteForUpHierarchy(Quest quest, Action<Quest> action, Func<Quest, bool> stopCondition)
+        {
+            while (!stopCondition(quest))
+            {
+                action?.Invoke(quest);
+                quest = quest.Parent;
+            }
+        }
+
         public static int CountSubQuests(List<Quest> childs)
         {
             if (childs == null || childs.Count == 0)
@@ -89,7 +98,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
                 Id = id,
                 Title = "title",
                 Description = "description",
-                CurrentState = QuestState.Idle,
+                State = State.Idle,
                 Children = new List<Quest>()
             };
         }
@@ -156,6 +165,22 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Helpers
                 quests.Add(CreateQuest(i + 1));
             }
             return quests;
+        }
+
+        public static void GatherAllHierarchy(Quest parent, ref List<Quest> allQuests)
+        {
+            if (parent != null)
+            {
+                allQuests.Add(parent);
+                if (parent.Children != null)
+                {
+                    foreach (Quest child in parent.Children)
+                    {
+                        GatherAllHierarchy(child, ref allQuests);
+                    }
+                }
+            }
+
         }
     }
 }

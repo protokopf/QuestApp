@@ -4,17 +4,17 @@ using Justus.QuestApp.AbstractLayer.Entities.Quest;
 
 namespace Justus.QuestApp.ModelLayer.UnitTests.Stubs
 {
-    public class FakeQuestStorage : IDataAccessInterface<Quest>
+    public class FakeQuestStorage : IQuestDataLayer
     {
         public List<Quest> QuestStorage { get; set; }
         private bool _isClosed = true;
 
-        public virtual void Dispose()
+        public void Dispose()
         {
             Close();
         }
 
-        public virtual void Open(string pathToStorage)
+        public void Open()
         {
             if (QuestStorage == null)
             {
@@ -23,22 +23,22 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Stubs
             _isClosed = false;
         }
 
-        public virtual void Close()
+        public void Close()
         {
             _isClosed = true;
         }
 
-        public virtual bool IsClosed()
+        public bool IsClosed()
         {
             return _isClosed;
         }
 
-        public virtual void Insert(Quest entity)
+        public void Insert(Quest entity)
         {
             QuestStorage?.Add(entity);
         }
 
-        public virtual void InsertAll(List<Quest> entities)
+        public void InsertAll(IEnumerable<Quest> entities)
         {
             QuestStorage?.AddRange(entities);
         }
@@ -52,7 +52,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Stubs
             }
         }
 
-        public virtual void UpdateAll(List<Quest> entities)
+        public void UpdateAll(IEnumerable<Quest> entities)
         {
             if (QuestStorage != null)
             {
@@ -69,7 +69,7 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Stubs
             return QuestStorage?.Find(x => x.Id == id);
         }
 
-        public virtual List<Quest> GetAll()
+        public virtual IEnumerable<Quest> GetAll()
         {
             List<Quest> clonedList = new List<Quest>(QuestStorage.Count);
             foreach (Quest quest in QuestStorage)
@@ -79,7 +79,17 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Stubs
             return clonedList;
         }
 
-        public virtual void Delete(int id)
+        public virtual IEnumerable<Quest> GetAll(int parentId)
+        {
+            List<Quest> clonedList = new List<Quest>(QuestStorage.Count);
+            foreach (Quest quest in QuestStorage)
+            {
+                clonedList.Add(quest);
+            }
+            return clonedList;
+        }
+
+        public void Delete(int id)
         {
             Quest quest = QuestStorage?.Find(x => x.Id == id);
             if (quest != null)
@@ -88,9 +98,15 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.Stubs
             }
         }
 
-        public virtual void DeleteAll()
+        public void DeleteAll()
         {
             QuestStorage?.Clear();
         }
+
+        public void DeleteAll(int parentID)
+        {
+            QuestStorage?.RemoveAll(q => q.ParentId == parentID);
+        }
+
     }
 }

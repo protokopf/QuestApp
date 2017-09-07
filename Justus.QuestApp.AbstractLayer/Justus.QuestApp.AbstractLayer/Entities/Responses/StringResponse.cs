@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Justus.QuestApp.AbstractLayer.Entities.Responses
+﻿namespace Justus.QuestApp.AbstractLayer.Entities.Responses
 {
     /// <summary>
     /// Represents result of some action with string response.

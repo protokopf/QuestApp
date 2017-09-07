@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Justus.QuestApp.AbstractLayer.Entities.Errors
+﻿namespace Justus.QuestApp.AbstractLayer.Entities.Errors
 {
     /// <summary>
     /// Represents class for errors, that have sub error, that specify it.

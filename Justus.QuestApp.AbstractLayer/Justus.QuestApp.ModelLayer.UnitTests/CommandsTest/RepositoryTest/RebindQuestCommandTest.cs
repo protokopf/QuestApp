@@ -1,10 +1,8 @@
 ﻿using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
-using Justus.QuestApp.AbstractLayer.Model;
 using Justus.QuestApp.ModelLayer.Commands.Repository;
 using Justus.QuestApp.ModelLayer.UnitTests.Helpers;
 using NUnit.Framework;
-using Rhino.Mocks;
 using System;
 using System.Collections.Generic;
 
@@ -14,33 +12,15 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
     class RebindQuestCommandTest
     {
         [Test]
-        public void InitializeFailRepositoryNullTest()
-        {
-            //Arrange
-            Quest toAdd = QuestHelper.CreateQuest();
-            Quest parent = QuestHelper.CreateQuest();
-            Quest oldParent = QuestHelper.CreateQuest();
-            IQuestRepository repository = null;
-
-            //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(repository, toAdd, parent, oldParent));
-
-            //Assert
-            Assert.IsNotNull(ex);
-            Assert.AreEqual("repository", ex.ParamName);
-        }
-
-        [Test]
         public void InitializeFailQuestNullTest()
         {
             //Arrange
             Quest toAdd = null;
             Quest parent = QuestHelper.CreateQuest();
             Quest oldParent = QuestHelper.CreateQuest();
-            IQuestRepository repository = MockRepository.GenerateMock<IQuestRepository>();
 
             //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(repository, toAdd, parent, oldParent));
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(toAdd, parent, oldParent));
 
             //Assert
             Assert.IsNotNull(ex);
@@ -54,10 +34,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             Quest toAdd = QuestHelper.CreateQuest();
             Quest parent = null;
             Quest oldParent = QuestHelper.CreateQuest();
-            IQuestRepository repository = MockRepository.GenerateMock<IQuestRepository>();
 
             //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(repository, toAdd, parent, oldParent));
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(toAdd, parent, oldParent));
 
             //Assert
             Assert.IsNotNull(ex);
@@ -71,10 +50,9 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
             Quest toAdd = QuestHelper.CreateQuest();
             Quest oldParent = null;
             Quest parent = QuestHelper.CreateQuest();
-            IQuestRepository repository = MockRepository.GenerateMock<IQuestRepository>();
 
             //Act
-            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(repository, toAdd, parent, oldParent));
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new RebindQuestCommand(toAdd, parent, oldParent));
 
             //Assert
             Assert.IsNotNull(ex);
@@ -85,68 +63,95 @@ namespace Justus.QuestApp.ModelLayer.UnitTests.CommandsTest.RepositoryTest
         public void ExecuteTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            List<Quest> repositoryCache = new List<Quest>()
-            {
-                QuestHelper.CreateCompositeQuest(2,3,QuestState.Progress)
-            };
-            int beforeCommandlength = QuestHelper.CountSubQuests(repositoryCache);
+            int oldParentId = 12;
+            int newParentId = 42;
+            int rebindId = 144;
 
-            Quest newParent = repositoryCache[0];
-            Quest toRebind = repositoryCache[0].Children[0].Children[0];
-            Quest oldParent = toRebind.Parent;
+            Quest oldParent = new Quest() {Id = oldParentId, Children = new List<Quest>()};
 
-            repository.Expect(rep => rep.Update(null)).IgnoreArguments().Repeat.Once();
+            Quest newParent = new Quest() {Id = newParentId, Children = new List<Quest>()};
+            Quest toRebind = new Quest() {Id = rebindId, Parent = oldParent, ParentId = oldParentId};
 
-            Command command = new RebindQuestCommand(repository, toRebind, newParent, oldParent);
+            oldParent.Children.Add(toRebind);
+            
+
+            ICommand command = new RebindQuestCommand(toRebind, newParent, oldParent);
 
             //Act
             command.Execute();
 
             //Assert
-            Assert.AreEqual(beforeCommandlength, QuestHelper.CountSubQuests(repositoryCache));
-            Assert.AreEqual(newParent, toRebind.Parent);
-            Assert.Contains(toRebind, newParent.Children);
-
-            Assert.AreNotEqual(oldParent, toRebind.Parent);
             Assert.IsFalse(oldParent.Children.Contains(toRebind));
+            Assert.IsFalse(toRebind.Parent == oldParent);
+            Assert.IsFalse(toRebind.ParentId == oldParentId);
 
-            repository.VerifyAllExpectations();
+            Assert.IsTrue(newParent.Children.Contains(toRebind));
+            Assert.IsTrue(toRebind.Parent == newParent);
+            Assert.IsTrue(toRebind.ParentId == newParentId);
         }
 
         [Test]
         public void UndoTest()
         {
             //Arrange
-            IQuestRepository repository = MockRepository.GenerateStrictMock<IQuestRepository>();
-            List<Quest> repositoryCache = new List<Quest>()
-            {
-                QuestHelper.CreateCompositeQuest(2,3,QuestState.Progress)
-            };
-            int beforeCommandlength = QuestHelper.CountSubQuests(repositoryCache);
+            int oldParentId = 12;
+            int newParentId = 42;
+            int rebindId = 144;
 
-            Quest newParent = repositoryCache[0];
-            Quest toRebind = repositoryCache[0].Children[0].Children[0];
-            Quest oldParent = toRebind.Parent;
+            Quest oldParent = new Quest() { Id = oldParentId, Children = new List<Quest>() };
 
-            repository.Expect(rep => rep.Update(null)).IgnoreArguments().Repeat.Once();
-            repository.Expect(rep => rep.RevertUpdate(null)).IgnoreArguments().Return(true).Repeat.Once();
+            Quest newParent = new Quest() { Id = newParentId, Children = new List<Quest>() };
+            Quest toRebind = new Quest() { Id = rebindId, Parent = oldParent, ParentId = oldParentId };
 
-            Command command = new RebindQuestCommand(repository, toRebind, newParent, oldParent);
+            oldParent.Children.Add(toRebind);
+            ICommand command = new RebindQuestCommand(toRebind, newParent, oldParent);
 
             //Act
             command.Execute();
             command.Undo();
 
             //Assert
-            Assert.AreEqual(beforeCommandlength, QuestHelper.CountSubQuests(repositoryCache));
-            Assert.AreNotEqual(newParent, toRebind.Parent);
-            Assert.IsFalse(newParent.Children.Contains(toRebind));
-
-            Assert.AreEqual(oldParent, toRebind.Parent);
             Assert.IsTrue(oldParent.Children.Contains(toRebind));
+            Assert.IsTrue(toRebind.Parent == oldParent);
+            Assert.IsTrue(toRebind.ParentId == oldParentId);
 
-            repository.VerifyAllExpectations();
+            Assert.IsFalse(newParent.Children.Contains(toRebind));
+            Assert.IsFalse(toRebind.Parent == newParent);
+            Assert.IsFalse(toRebind.ParentId == newParentId);
+        }
+
+        [Test]
+        public void CommitTest()
+        {
+            //Arrange
+            Quest oldParent = new Quest();
+            Quest newParent = new Quest();
+            Quest toRebind = new Quest();
+
+            ICommand command = new RebindQuestCommand(toRebind, newParent, oldParent);
+
+            //Act
+            bool result = command.Commit();
+
+            //Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void IsValidTest()
+        {
+            //Arrange
+            Quest oldParent = new Quest();
+            Quest newParent = new Quest();
+            Quest toRebind = new Quest();
+
+            ICommand command = new RebindQuestCommand(toRebind, newParent, oldParent);
+
+            //Act
+            bool result = command.IsValid();
+
+            //Assert
+            Assert.IsTrue(result);
         }
     }
 }

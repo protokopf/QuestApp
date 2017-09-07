@@ -2,12 +2,11 @@ using System;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Justus.QuestApp.View.Droid.Abstract.ViewHolders;
 
 namespace Justus.QuestApp.View.Droid.Abstract.ViewHolders
 {
     /// <summary>
-    /// Type for view, which can expand and have definit position.
+    /// Type for view, which can expand and have position.
     /// </summary>
     public abstract class ToggledViewHolder : PositionedViewHolder
     {

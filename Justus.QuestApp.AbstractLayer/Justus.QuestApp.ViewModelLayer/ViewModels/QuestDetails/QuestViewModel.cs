@@ -1,79 +1,172 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
+using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails.Abstract;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
 {
     /// <summary>
     /// View model for holding quest details.
     /// </summary>
-    public class QuestViewModel : BaseViewModel, IQuestViewModel
+    public class QuestViewModel : IQuestViewModel
     {
-        private readonly Quest _innerQuest;
+        private bool _useStartTime = true;
+        private DateTime? _cachedStartTime;
 
-        /// <summary>
-        /// Receives reference to quest model.
-        /// </summary>
-        /// <param name="questModel"></param>
-        public QuestViewModel(Quest questModel)
-        {
-            if (questModel == null)
-            {
-                throw new ArgumentNullException(nameof(questModel));
-            }
-            _innerQuest = questModel;
-        }
+        private bool _useDeadline = true;
+        private DateTime? _cachedDeadline;
+
+        private Quest _innerQuest;
 
         #region IQuestViewModel implementation
 
         ///<inheritdoc cref="IQuestViewModel"/>
         public string Title
         {
-            get { return _innerQuest.Title; }
-            set { _innerQuest.Title = value.Trim(); }
+            get
+            {
+                return _innerQuest?.Title;
+            }
+            set
+            {
+                if (_innerQuest != null)
+                {
+                    _innerQuest.Title = value.Trim();
+                }              
+            }
         }
 
         ///<inheritdoc cref="IQuestViewModel"/>
         public string Description
         {
-            get { return _innerQuest.Description; }
-            set { _innerQuest.Description = value.Trim(); }
+            get { return _innerQuest?.Description; }
+            set
+            {
+                if (_innerQuest != null)
+                {
+                    _innerQuest.Description = value.Trim();
+                }
+            }
         }
 
         ///<inheritdoc cref="IQuestViewModel"/>
         public bool IsImportant
         {
-            get { return _innerQuest.IsImportant; }
-            set { _innerQuest.IsImportant = value; }
+            get
+            {
+                return _innerQuest?.IsImportant ?? default(bool);
+            }
+            set
+            {
+                if (_innerQuest != null)
+                {
+                    _innerQuest.IsImportant = value;
+                }       
+            }
         }
 
         ///<inheritdoc cref="IQuestViewModel"/>
-        public bool UseStartTime { get; set; }
+        public bool UseStartTime
+        {
+            get { return _useStartTime; }
+            set
+            {
+                if (value && !_useStartTime)
+                {
+                    if (_innerQuest != null)
+                    {
+                        _innerQuest.StartTime = _cachedStartTime;
+                    }
+                    _useStartTime = true;         
+                }
+                else if(!value && _useStartTime)
+                {
+                    if (_innerQuest != null)
+                    {
+                        _innerQuest.StartTime = null;
+                    }
+                    _useStartTime = false;            
+                }
+            }
+        }
 
         /// <summary>
         /// Start time.
         /// </summary>
-        public DateTime StartTime
+        public DateTime? StartTime
         {
-            get { return _innerQuest.StartTime; }
-            set { _innerQuest.StartTime = value; }
+            get
+            {
+                return UseStartTime ? _innerQuest?.StartTime : _cachedStartTime;
+            }
+            set
+            {
+                _cachedStartTime = value;
+                if (_innerQuest != null && UseStartTime)
+                {
+                    _innerQuest.StartTime = value;
+                }
+            }
         }
 
         ///<inheritdoc cref="IQuestViewModel"/>
-        public bool UseDeadline { get; set; }
-
-        ///<inheritdoc cref="IQuestViewModel"/>
-        public DateTime Deadline
+        public bool UseDeadline
         {
-            get { return _innerQuest.Deadline; }
-            set { _innerQuest.Deadline = value; }
+            get
+            {
+                return _useDeadline;
+            }
+            set
+            {
+                if (value && !_useDeadline)
+                {
+                    if (_innerQuest != null)
+                    {
+                        _innerQuest.Deadline = _cachedDeadline;
+                    }
+                    _useDeadline = true;
+                }
+                else if (!value && _useDeadline)
+                {
+                    if (_innerQuest != null)
+                    {
+                        _innerQuest.Deadline = null;
+                    }
+                    _useDeadline = false;
+                }
+            }
         }
 
         ///<inheritdoc cref="IQuestViewModel"/>
-        public Quest Model => _innerQuest;
+        public DateTime? Deadline
+        {
+            get
+            {
+                return UseDeadline ? _innerQuest?.Deadline : _cachedDeadline;
+            }
+            set
+            {
+                _cachedDeadline = value;
+                if (_innerQuest != null && UseDeadline)
+                {
+                    _innerQuest.Deadline = value;
+                }
+            }
+        }
+
+        ///<inheritdoc cref="IQuestViewModel"/>
+        public Quest Model
+        {
+            set
+            {
+                _innerQuest = value;
+                _cachedStartTime = _innerQuest?.StartTime;
+                _cachedDeadline = _innerQuest?.Deadline;
+            }
+            get
+            {
+                return _innerQuest;;
+            }
+        }
 
         #endregion
     }

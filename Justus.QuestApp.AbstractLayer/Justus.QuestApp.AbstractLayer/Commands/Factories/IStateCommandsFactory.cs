@@ -12,27 +12,27 @@ namespace Justus.QuestApp.AbstractLayer.Commands.Factories
         /// </summary>
         /// <param name="quest"></param>
         /// <returns></returns>
-        Command DoneQuest(Quest quest);
+        ICommand DoneQuest(Quest quest);
 
         /// <summary>
         /// Returns command which makes quest failed.
         /// </summary>
         /// <param name="quest"></param>
         /// <returns></returns>
-        Command FailQuest(Quest quest);
+        ICommand FailQuest(Quest quest);
 
         /// <summary>
         /// Returns command which starts quest.
         /// </summary>
         /// <param name="quest"></param>
         /// <returns></returns>
-        Command StartQuest(Quest quest);
+        ICommand StartQuest(Quest quest);
 
         /// <summary>
         /// Returns command which cancel quest.
         /// </summary>
         /// <param name="quest"></param>
         /// <returns></returns>
-        Command CancelQuest(Quest quest);
+        ICommand CancelQuest(Quest quest);
     }
 }

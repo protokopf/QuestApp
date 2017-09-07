@@ -4,7 +4,6 @@ using Android.Views;
 using Justus.QuestApp.AbstractLayer.Entities.Quest;
 using Justus.QuestApp.View.Droid.Abstract.Adapters;
 using Justus.QuestApp.View.Droid.Abstract.ViewHoldersClickManagers;
-using Justus.QuestApp.View.Droid.ViewHolders;
 using Justus.QuestApp.View.Droid.ViewHolders.QuestItem;
 using Justus.QuestApp.ViewModelLayer.ViewModels;
 
@@ -45,16 +44,25 @@ namespace Justus.QuestApp.View.Droid.Adapters.Quests
         ///<inheritdoc/>
         protected override void FillViewHolder(AvailableQuestViewHolder holder, Quest questData, int position)
         {
+            holder.Refresh();
             holder.Collapse();
 
             holder.HandleIsImportantButton(questData.IsImportant);
-            holder.StartTime.Text = FormTime(questData.StartTime);
-            holder.Deadline.Text = FormTime(questData.Deadline);
+            if (questData.StartTime != null)
+            {
+                holder.StartTime.Text = FormTime(questData.StartTime.Value);
+            }
+
+            if (questData.Deadline != null)
+            {
+                holder.Deadline.Text = FormTime(questData.Deadline.Value);
+            }
+            
 
             holder.ItemPosition = position;
             holder.Title.Text = questData.Title;
             holder.Description.Text = questData.Description;
-            holder.StartButton.Visibility = questData.Parent == null ? ViewStates.Visible : ViewStates.Gone;
+            holder.StartButton.Visibility = QuestsViewModel.InTopRoot ? ViewStates.Visible : ViewStates.Gone;
             holder.ChildrenButton.Enabled = questData.Children != null;
         } 
 

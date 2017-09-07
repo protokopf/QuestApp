@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Justus.QuestApp.AbstractLayer.Entities.Quest;
+﻿using Justus.QuestApp.AbstractLayer.Commands;
 using Justus.QuestApp.AbstractLayer.Entities.Responses;
-using Justus.QuestApp.AbstractLayer.Helpers;
 using Justus.QuestApp.AbstractLayer.Helpers.Extentions;
 using Justus.QuestApp.AbstractLayer.Validators;
+using Justus.QuestApp.ViewModelLayer.Factories;
+using Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails.Abstract;
 
 namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
 {
@@ -16,17 +12,21 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
     /// </summary>
     public abstract class QuestAbstractActionViewModel : BaseViewModel
     {
+        private readonly IQuestViewModelFactory _questViewModelFactory;
         private readonly IQuestValidator<ClarifiedResponse<int>> _questValidator;
 
         /// <summary>
-        /// Receives references to quest model and quest validator.
+        /// Receives references to the quest view models factory and quest validator.
         /// </summary>
-        /// <param name="questModel"></param>
+        /// <param name="questViewModelFactory"></param>
         /// <param name="questValidator"></param>
-        protected QuestAbstractActionViewModel(IQuestValidator<ClarifiedResponse<int>> questValidator)
+        protected QuestAbstractActionViewModel(IQuestViewModelFactory questViewModelFactory, 
+            IQuestValidator<ClarifiedResponse<int>> questValidator)
         {
+            questViewModelFactory.ThrowIfNull(nameof(questViewModelFactory));
             questValidator.ThrowIfNull(nameof(questValidator));
 
+            _questViewModelFactory = questViewModelFactory;
             _questValidator = questValidator;
         }
 
@@ -54,13 +54,22 @@ namespace Justus.QuestApp.ViewModelLayer.ViewModels.QuestDetails
         /// </summary>
         public virtual void Initialize()
         {
-            QuestViewModel = InitializeQuestViewModel();
+            QuestViewModel = _questViewModelFactory.CreateQuestViewModel();
         }
 
         /// <summary>
-        /// Returns initialized quest details view model.
+        /// Executes given command.
         /// </summary>
-        /// <returns></returns>
-        protected abstract IQuestViewModel InitializeQuestViewModel();
+        /// <param name="command"></param>
+        protected void ExecuteCommand(ICommand command)
+        {
+            if (command != null)
+            {
+                if (command.Execute())
+                {
+                    command.Commit();
+                }
+            }
+        }
     }
 }
